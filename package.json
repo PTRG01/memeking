@@ -2,7 +2,9 @@
   "name": "memeking",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "backend": "cd pocketbase && pocketbase.exe serve"
+  },
   "private": true,
   "devDependencies": {
     "@nrwl/cypress": "^15.7.2",
@@ -40,7 +42,12 @@
     "vitest": "^0.25.8"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@mantine/core": "^6.0.0",
+    "@mantine/form": "^6.0.0",
+    "@mantine/hooks": "^6.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.8.2"
   }
 }
