@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { AuthProvider } from './contexts/auth-provider/auth-provider';
 import MemeEditor from './components/meme-editor/meme-editor';
 import EditorProvider from './contexts/editor-provider/editor-provider';
 import { useState } from 'react';
@@ -36,23 +37,25 @@ export function App() {
       withGlobalStyles
       theme={{ colorScheme: 'dark' }}
     >
-      <ApplicationFrame
-        header={<Header />}
-        navbar={<Navbar />}
-        sidebar={<Sidebar />}
-        footer={<Footer />}
-      >
-        <EditorProvider
-          images={sampleMemes}
-          onDocumentSubmit={(data) => {
-            console.log('Document submitted', data);
-            setDoc(data);
-          }}
+      <AuthProvider>
+        <ApplicationFrame
+          header={<Header />}
+          navbar={<Navbar />}
+          sidebar={<Sidebar />}
+          footer={<Footer />}
         >
-          <MemeEditor />
-        </EditorProvider>
-        {doc && <img src={doc.image} alt="Generated meme" />}
-      </ApplicationFrame>
+          <EditorProvider
+            images={sampleMemes}
+            onDocumentSubmit={(data) => {
+              console.log('Document submitted', data);
+              setDoc(data);
+            }}
+          >
+            <MemeEditor />
+          </EditorProvider>
+          {doc && <img src={doc.image} alt="Generated meme" />}
+        </ApplicationFrame>
+      </AuthProvider>
     </MantineProvider>
   );
 }
