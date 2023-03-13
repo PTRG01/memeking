@@ -3,10 +3,15 @@ import MemeEditor from './components/meme-editor/meme-editor';
 import EditorProvider from './contexts/editor-provider/editor-provider';
 import { useState } from 'react';
 import { EditorDocument } from './types';
+import ApplicationFrame from './layouts/application-frame/application-frame';
+import Header from './layouts/header/header';
+import Navbar from './layouts/navbar/navbar';
+import Sidebar from './layouts/sidebar/sidebar';
+import Footer from './layouts/footer/footer';
 
 const sampleMemes = [
   {
-    url: 'https://images-ext-2.discordapp.net/external/Yq9r5xwqHCDH2DIqO6Q-OvfF8swFNw1O7iGtpDPmEuk/https/indianmemetemplates.com/wp-content/uploads/Quiz-Kid.jpg?width=594&height=562',
+    url: 'https:images-ext-2.discordapp.net/external/Yq9r5xwqHCDH2DIqO6Q-OvfF8swFNw1O7iGtpDPmEuk/https/indianmemetemplates.com/wp-content/uploads/Quiz-Kid.jpg?width=594&height=562',
     id: 'hi-mom',
   },
   {
@@ -31,16 +36,23 @@ export function App() {
       withGlobalStyles
       theme={{ colorScheme: 'dark' }}
     >
-      <EditorProvider
-        images={sampleMemes}
-        onDocumentSubmit={(data) => {
-          console.log('Document submitted', data);
-          setDoc(data);
-        }}
+      <ApplicationFrame
+        header={<Header />}
+        navbar={<Navbar />}
+        sidebar={<Sidebar />}
+        footer={<Footer />}
       >
-        <MemeEditor />
-      </EditorProvider>
-      {doc && <img src={doc.image} alt="Generated meme" />}
+        <EditorProvider
+          images={sampleMemes}
+          onDocumentSubmit={(data) => {
+            console.log('Document submitted', data);
+            setDoc(data);
+          }}
+        >
+          <MemeEditor />
+        </EditorProvider>
+        {doc && <img src={doc.image} alt="Generated meme" />}
+      </ApplicationFrame>
     </MantineProvider>
   );
 }
