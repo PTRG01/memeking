@@ -64,10 +64,10 @@ export function MemeEditor(props: MemeEditorProps) {
           />
         )}
       </Modal>
-      <Group ref={rootRef} bg="white" mt={8}>
+      <Group ref={rootRef} bg="grey" mt={8}>
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
-        <Stage ref={stageRef} width={window.innerWidth} height={600}>
+        <Stage ref={stageRef} width={300} height={600}>
           <Layer>
             {Array.from(objects.entries()).map(([id, object]) => (
               <EditorObject key={id} object={object} id={id} />
