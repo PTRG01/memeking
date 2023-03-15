@@ -1,6 +1,5 @@
 import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from './contexts/auth-provider/auth-provider';
-import MemeEditor from './components/meme-editor/meme-editor';
 import EditorProvider from './contexts/editor-provider/editor-provider';
 import { useState } from 'react';
 import { EditorDocument } from './types';
@@ -9,6 +8,19 @@ import Header from './layouts/header/header';
 import Navbar from './layouts/navbar/navbar';
 import Sidebar from './layouts/sidebar/sidebar';
 import Footer from './layouts/footer/footer';
+import { BrowserRouter, Routes } from 'react-router-dom';
+import { Route } from 'tabler-icons-react';
+import Home from './screens/home/home';
+import Login from './screens/login/login';
+import Register from './screens/register/register';
+import Groups from './screens/groups/groups';
+import Group from './screens/group/group';
+import Creator from './screens/creator/creator';
+import Create from './screens/create/create';
+import Games from './screens/games/games';
+import Game from './screens/game/game';
+import Profile from './screens/profile/profile';
+import Settings from './screens/settings/settings';
 
 const sampleMemes = [
   {
@@ -30,33 +42,46 @@ const sampleMemes = [
 ];
 
 export function App() {
-  const [doc, setDoc] = useState<EditorDocument>();
+  const [setDoc] = useState<EditorDocument>();
   return (
-    <MantineProvider
-      withCSSVariables
-      withGlobalStyles
-      theme={{ colorScheme: 'dark' }}
-    >
-      <AuthProvider>
-        <ApplicationFrame
-          header={<Header />}
-          navbar={<Navbar />}
-          sidebar={<Sidebar />}
-          footer={<Footer />}
-        >
-          <EditorProvider
-            images={sampleMemes}
-            onDocumentSubmit={(data) => {
-              console.log('Document submitted', data);
-              setDoc(data);
-            }}
+      <MantineProvider
+        withCSSVariables
+        withGlobalStyles
+        theme={{ colorScheme: 'dark' }}
+      >
+        <AuthProvider>
+          <ApplicationFrame
+            header={<Header />}
+            navbar={<Navbar />}
+            sidebar={<Sidebar />}
+            footer={<Footer />}
           >
-            <MemeEditor />
-          </EditorProvider>
-          {doc && <img src={doc.image} alt="Generated meme" />}
-        </ApplicationFrame>
-      </AuthProvider>
-    </MantineProvider>
+            <EditorProvider
+              images={sampleMemes}
+              onDocumentSubmit={(data) => {
+                console.log('Document submitted', data);
+                setDoc(data);
+              }}
+            >
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Home/>}/>
+                  <Route path="/login" element={<Login/>}/>
+                  <Route path="/register" element={<Register/>}/>
+                  <Route path="/groups" element={<Groups/>}/>
+                  <Route path="/groups/:groupId" element={<Group/>}/>
+                  <Route path="/create" element={<Creator/>}/>
+                  <Route path="/create/:createId" element={<Create/>}/>
+                  <Route path="/games" element={<Games/>}/>
+                  <Route path="/games/:gameId" element={<Game/>}/>
+                  <Route path="/profile" element={<Profile/>}/>
+                  <Route path="/settings" element={<Settings/>}/>
+                </Routes>
+              </BrowserRouter>
+            </EditorProvider>
+          </ApplicationFrame>
+        </AuthProvider>
+      </MantineProvider>
   );
 }
 
