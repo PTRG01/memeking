@@ -1,5 +1,5 @@
 import { Button, Group, Text } from '@mantine/core';
-
+import Signup from '../../screens/signup/signup';
 /* eslint-disable-next-line */
 export interface HeaderProps {}
 
@@ -19,9 +19,11 @@ export function Header(props: HeaderProps) {
       <Group position="right">
         {/* TODO add account menu when loggedIn */}
         <Button size="xs" variant="default">
-          Log up
+          Log in
         </Button>
-        <Button size="xs">Sign up</Button>
+        <Button size="xs" onClick={() => console.log('test')}>
+          Sign Up
+        </Button>
       </Group>
     </>
   );

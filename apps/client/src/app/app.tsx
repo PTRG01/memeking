@@ -9,6 +9,7 @@ import Header from './layouts/header/header';
 import Navbar from './layouts/navbar/navbar';
 import Sidebar from './layouts/sidebar/sidebar';
 import Footer from './layouts/footer/footer';
+import Signup from './screens/signup/signup';
 
 const sampleMemes = [
   {
@@ -31,6 +32,7 @@ const sampleMemes = [
 
 export function App() {
   const [doc, setDoc] = useState<EditorDocument>();
+
   return (
     <MantineProvider
       withCSSVariables
@@ -44,7 +46,8 @@ export function App() {
           sidebar={<Sidebar />}
           footer={<Footer />}
         >
-          <EditorProvider
+          <Signup />
+          {/* <EditorProvider
             images={sampleMemes}
             onDocumentSubmit={(data) => {
               console.log('Document submitted', data);
@@ -52,7 +55,7 @@ export function App() {
             }}
           >
             <MemeEditor />
-          </EditorProvider>
+          </EditorProvider> */}
           {doc && <img src={doc.image} alt="Generated meme" />}
         </ApplicationFrame>
       </AuthProvider>

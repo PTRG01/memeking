@@ -35,7 +35,7 @@ export interface IAuthContext {
   isLoggedIn: boolean;
 }
 
-const AuthContext = React.createContext<IAuthContext | null>(null);
+export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<TUserModel>(null);
@@ -53,11 +53,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   }, []);
 
   const signUp: TSignUpFunction = async (params) => {
-    const authData = await pb.collection('users').create({
-      emailVisibility: true,
-      ...params,
-    });
-    console.log(authData);
+    console.log(params);
+    await pb.collection('users').create({ ...params });
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {
