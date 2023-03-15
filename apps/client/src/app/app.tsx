@@ -10,6 +10,7 @@ import Navbar from './layouts/navbar/navbar';
 import Sidebar from './layouts/sidebar/sidebar';
 import Footer from './layouts/footer/footer';
 import Signup from './screens/signup/signup';
+import Signin from './screens/signin/signin';
 
 const sampleMemes = [
   {
@@ -47,6 +48,7 @@ export function App() {
           footer={<Footer />}
         >
           <Signup />
+          <Signin />
           {/* <EditorProvider
             images={sampleMemes}
             onDocumentSubmit={(data) => {
