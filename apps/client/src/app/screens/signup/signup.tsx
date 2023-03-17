@@ -1,13 +1,16 @@
 import { useContext } from 'react';
 import { TextInput, Checkbox, Button, Group, Center } from '@mantine/core';
 import { useForm, hasLength } from '@mantine/form/';
-import { AuthContext } from '../../contexts/auth-provider/auth-provider';
+import {
+  AuthContext,
+  useAuthContext,
+} from '../../contexts/auth-provider/auth-provider';
 
 /* eslint-disable-next-line */
 export interface ISignupProps {}
 
 export function Signup(props: ISignupProps) {
-  const setUser = useContext(AuthContext);
+  const { signUp } = useAuthContext();
   const form = useForm({
     initialValues: {
       username: '',
@@ -29,7 +32,7 @@ export function Signup(props: ISignupProps) {
   return (
     <Center>
       <Group title="Sign Up">
-        <form onSubmit={form.onSubmit((values) => setUser?.signUp(values))}>
+        <form onSubmit={form.onSubmit((values) => signUp(values))}>
           <TextInput
             withAsterisk
             label="Username"
@@ -51,13 +54,11 @@ export function Signup(props: ISignupProps) {
           <TextInput
             withAsterisk
             label="Password"
-            placeholder="Password"
             {...form.getInputProps('password')}
           />
           <TextInput
             withAsterisk
             label="Confirm Password"
-            placeholder=" Confirm password"
             {...form.getInputProps('passwordConfirm')}
           />
           {/* <Checkbox
