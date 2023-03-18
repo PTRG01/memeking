@@ -1,9 +1,10 @@
 import { Button, Group, Text } from '@mantine/core';
-
+import { useNavigate } from 'react-router-dom';
 /* eslint-disable-next-line */
 export interface HeaderProps {}
 
 export function Header(props: HeaderProps) {
+  const navigate = useNavigate();
   return (
     <>
       <Group>
@@ -18,10 +19,12 @@ export function Header(props: HeaderProps) {
 
       <Group position="right">
         {/* TODO add account menu when loggedIn */}
-        <Button size="xs" variant="default">
-          Log up
+        <Button size="xs" variant="default" onClick={() => navigate('/signin')}>
+          Log in
         </Button>
-        <Button size="xs">Sign up</Button>
+        <Button size="xs" onClick={() => navigate('/signup')}>
+          Sign Up
+        </Button>
       </Group>
     </>
   );

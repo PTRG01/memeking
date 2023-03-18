@@ -8,7 +8,7 @@ import Sidebar from './layouts/sidebar/sidebar';
 import Footer from './layouts/footer/footer';
 import Home from './screens/home/home';
 import Signin from './screens/signin/signin';
-import Signup from './screens/signup/singup';
+import Signup from './screens/signup/signup';
 import Groups from './screens/groups/groups';
 import Group from './screens/group/group';
 import Creator from './screens/creator/creator';
