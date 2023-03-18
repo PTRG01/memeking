@@ -1,10 +1,6 @@
-import { useContext } from 'react';
-import { TextInput, Checkbox, Button, Group, Center } from '@mantine/core';
+import { TextInput, Button, Group, Center } from '@mantine/core';
 import { useForm, hasLength } from '@mantine/form/';
-import {
-  AuthContext,
-  useAuthContext,
-} from '../../contexts/auth-provider/auth-provider';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 
 /* eslint-disable-next-line */
 export interface ISignupProps {}
@@ -61,11 +57,6 @@ export function Signup(props: ISignupProps) {
             label="Confirm Password"
             {...form.getInputProps('passwordConfirm')}
           />
-          {/* <Checkbox
-            mt="md"
-            label="I agree to terms of service"
-            {...form.getInputProps('termsOfService', { type: 'checkbox' })}
-          /> */}
 
           <Group position="right" mt="md">
             <Button type="submit">Sign Up</Button>

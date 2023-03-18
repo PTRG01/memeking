@@ -47,17 +47,6 @@ export function App() {
           sidebar={<Sidebar />}
           footer={<Footer />}
         >
-          <Signup />
-          <Signin />
-          {/* <EditorProvider
-            images={sampleMemes}
-            onDocumentSubmit={(data) => {
-              console.log('Document submitted', data);
-              setDoc(data);
-            }}
-          >
-            <MemeEditor />
-          </EditorProvider> */}
           {doc && <img src={doc.image} alt="Generated meme" />}
         </ApplicationFrame>
       </AuthProvider>
