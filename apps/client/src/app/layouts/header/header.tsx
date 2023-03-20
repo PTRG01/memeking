@@ -7,7 +7,6 @@ export interface HeaderProps {}
 
 export function Header(props: HeaderProps) {
   const { isLoggedIn } = useAuthContext();
-  const [visible, setVisible] = useState(isLoggedIn);
   const { logout } = useAuthContext();
   const navigate = useNavigate();
 
@@ -25,7 +24,7 @@ export function Header(props: HeaderProps) {
 
       <Group position="right">
         {/* TODO add account menu when loggedIn */}
-        {!visible && (
+        {!isLoggedIn && (
           <Button
             size="xs"
             variant="default"
@@ -34,21 +33,13 @@ export function Header(props: HeaderProps) {
             Log in
           </Button>
         )}
-        {!visible && (
+        {!isLoggedIn && (
           <Button size="xs" onClick={() => navigate('/signup')}>
             Sign Up
           </Button>
         )}
-        {visible && (
-          <Button
-            size="xs"
-            onClick={() =>
-              function () {
-                logout();
-                navigate('/');
-              }
-            }
-          >
+        {isLoggedIn && (
+          <Button size="xs" onClick={() => logout()}>
             Sign Out
           </Button>
         )}
