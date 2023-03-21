@@ -1,5 +1,6 @@
 import { Box, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { Cards, GoGame, Social } from 'tabler-icons-react';
+import { FormattedMessage } from 'react-intl';
 
 /* eslint-disable-next-line */
 export interface NavbarProps {}
@@ -21,7 +22,9 @@ export function Navbar(props: NavbarProps) {
           <ThemeIcon color="indigo" size={30}>
             <GoGame size="1.1rem" />
           </ThemeIcon>
-          <Box ml="md">Games</Box>
+          <Box ml="md">
+            <FormattedMessage id="nav.games"></FormattedMessage>
+          </Box>
         </Group>
       </UnstyledButton>
       <UnstyledButton>
@@ -29,7 +32,10 @@ export function Navbar(props: NavbarProps) {
           <ThemeIcon color="grape" size={30}>
             <Social size="1.1rem" />
           </ThemeIcon>
-          <Box ml="md">Groups</Box>
+          <Box ml="md">
+            {' '}
+            <FormattedMessage id="nav.groups"></FormattedMessage>
+          </Box>
         </Group>
       </UnstyledButton>
     </Box>

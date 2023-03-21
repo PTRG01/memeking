@@ -1,6 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from './contexts/auth-provider/auth-provider';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import TranslateProvider from './contexts/translate-provider/translate-provider';
 import ApplicationFrame from './layouts/application-frame/application-frame';
 import PrivateRoute from './containers/private-route/private-route';
 import Header from './layouts/header/header';
@@ -28,40 +29,42 @@ export function App() {
     >
       <AuthProvider>
         <BrowserRouter>
-          <ApplicationFrame
-            header={<Header />}
-            navbar={<Navbar />}
-            sidebar={<Sidebar />}
-            footer={<Footer />}
-          >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                element={<PrivateRoute hasToBeAuth={false} isAuth={true} />}
-              >
-                <Route path="/signin" element={<Signin />} />
-                <Route path="/signup" element={<Signup />} />
-              </Route>
-              <Route
-                element={
-                  <PrivateRoute
-                    hasToBeAuth={true}
-                    redirectPath="/"
-                    isAuth={true}
-                  />
-                }
-              >
-                <Route path="/groups" element={<Groups />} />
-                <Route path="/groups/:groupId" element={<Group />} />
-                <Route path="/create" element={<Create />} />
-                <Route path="/create/:createId" element={<Create />} />
-                <Route path="/games" element={<Games />} />
-                <Route path="/games/:gameId" element={<Game />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-              </Route>
-            </Routes>
-          </ApplicationFrame>
+          <TranslateProvider>
+            <ApplicationFrame
+              header={<Header />}
+              navbar={<Navbar />}
+              sidebar={<Sidebar />}
+              footer={<Footer />}
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route
+                  element={<PrivateRoute hasToBeAuth={false} isAuth={true} />}
+                >
+                  <Route path="/signin" element={<Signin />} />
+                  <Route path="/signup" element={<Signup />} />
+                </Route>
+                <Route
+                  element={
+                    <PrivateRoute
+                      hasToBeAuth={true}
+                      redirectPath="/"
+                      isAuth={true}
+                    />
+                  }
+                >
+                  <Route path="/groups" element={<Groups />} />
+                  <Route path="/groups/:groupId" element={<Group />} />
+                  <Route path="/create" element={<Create />} />
+                  <Route path="/create/:createId" element={<Create />} />
+                  <Route path="/games" element={<Games />} />
+                  <Route path="/games/:gameId" element={<Game />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Route>
+              </Routes>
+            </ApplicationFrame>
+          </TranslateProvider>
         </BrowserRouter>
       </AuthProvider>
     </MantineProvider>

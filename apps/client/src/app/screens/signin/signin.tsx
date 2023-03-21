@@ -1,7 +1,6 @@
 import { TextInput, Button, Group, Center } from '@mantine/core';
 import { useForm } from '@mantine/form/';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-
 /* eslint-disable-next-line */
 export interface ISigninProps {}
 
