@@ -2,7 +2,6 @@ import { LOCALES } from '../locales';
 
 export default {
   [LOCALES.ENGLISH]: {
-    Test: 'Test message',
     nav: {
       home: 'Home',
       groups: 'Groups',

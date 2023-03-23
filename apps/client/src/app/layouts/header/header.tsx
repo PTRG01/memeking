@@ -1,17 +1,17 @@
 import { Button, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { useTranslateContext } from '../../contexts/translate-provider/translate-provider';
-import { FormattedMessage } from 'react-intl';
+import { useTranslation, Trans } from 'react-i18next';
+import { changeLanguage } from 'i18next';
+import i18next from '../../contexts/translate-provider/translate-provider';
 /* eslint-disable-next-line */
 export interface HeaderProps {}
 
 export function Header(props: HeaderProps) {
   const { isLoggedIn } = useAuthContext();
-  const { setLocale } = useTranslateContext();
   const { logout } = useAuthContext();
   const navigate = useNavigate();
-
+  const { t, i18n } = useTranslation();
   return (
     <>
       <Group>
@@ -32,12 +32,12 @@ export function Header(props: HeaderProps) {
             variant="default"
             onClick={() => navigate('/signin')}
           >
-            <FormattedMessage id={'header.signin'}></FormattedMessage>
+            <Trans i18nKey={'header.signin'}></Trans>
           </Button>
         )}
         {!isLoggedIn && (
           <Button size="xs" onClick={() => navigate('/signup')}>
-            <FormattedMessage id={'header.signup'}></FormattedMessage>
+            <Trans i18nKey={'header.signup'}></Trans>
           </Button>
         )}
         {isLoggedIn && (
@@ -47,10 +47,18 @@ export function Header(props: HeaderProps) {
         )}
         <Group position="right">
           {' '}
-          <Button size="xs" onClick={() => setLocale('en-US')}>
+          <Button
+            size="xs"
+            key={'en'}
+            onClick={() => i18n.changeLanguage('en')}
+          >
             EN
           </Button>
-          <Button size="xs" onClick={() => setLocale('pl-PL')}>
+          <Button
+            size="xs"
+            key={'pl'}
+            onClick={() => i18n.changeLanguage('pl')}
+          >
             PL
           </Button>
         </Group>

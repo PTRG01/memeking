@@ -1,9 +1,11 @@
 import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from './contexts/auth-provider/auth-provider';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TranslateProvider from './contexts/translate-provider/translate-provider';
 import ApplicationFrame from './layouts/application-frame/application-frame';
 import PrivateRoute from './containers/private-route/private-route';
+import { I18nextProvider } from 'react-i18next';
+import i18n from 'i18next';
+import i18next from 'i18next';
 import Header from './layouts/header/header';
 import Navbar from './layouts/navbar/navbar';
 import Sidebar from './layouts/sidebar/sidebar';
@@ -29,13 +31,13 @@ export function App() {
     >
       <AuthProvider>
         <BrowserRouter>
-          <TranslateProvider>
-            <ApplicationFrame
-              header={<Header />}
-              navbar={<Navbar />}
-              sidebar={<Sidebar />}
-              footer={<Footer />}
-            >
+          <ApplicationFrame
+            header={<Header />}
+            navbar={<Navbar />}
+            sidebar={<Sidebar />}
+            footer={<Footer />}
+          >
+            <I18nextProvider i18n={i18next}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route
@@ -63,8 +65,8 @@ export function App() {
                   <Route path="/settings" element={<Settings />} />
                 </Route>
               </Routes>
-            </ApplicationFrame>
-          </TranslateProvider>
+            </I18nextProvider>
+          </ApplicationFrame>
         </BrowserRouter>
       </AuthProvider>
     </MantineProvider>

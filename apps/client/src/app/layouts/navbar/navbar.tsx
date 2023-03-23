@@ -1,12 +1,13 @@
 import { Box, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { Cards, GoGame, Social } from 'tabler-icons-react';
-import { FormattedMessage } from 'react-intl';
-
+import { useTranslation, Trans } from 'react-i18next';
 /* eslint-disable-next-line */
 export interface NavbarProps {}
 
 export function Navbar(props: NavbarProps) {
   // TODO add hover effects, improve ui of navbar, add routing
+  const { t, i18n } = useTranslation();
+
   return (
     <Box>
       <UnstyledButton mb={8}>
@@ -23,7 +24,7 @@ export function Navbar(props: NavbarProps) {
             <GoGame size="1.1rem" />
           </ThemeIcon>
           <Box ml="md">
-            <FormattedMessage id="nav.games"></FormattedMessage>
+            <Trans i18nKey="nav.games"></Trans>
           </Box>
         </Group>
       </UnstyledButton>
@@ -34,7 +35,7 @@ export function Navbar(props: NavbarProps) {
           </ThemeIcon>
           <Box ml="md">
             {' '}
-            <FormattedMessage id="nav.groups"></FormattedMessage>
+            <Trans i18nKey="nav.groups"></Trans>
           </Box>
         </Group>
       </UnstyledButton>

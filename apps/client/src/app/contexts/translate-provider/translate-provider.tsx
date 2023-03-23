@@ -1,58 +1,104 @@
-import React from 'react';
-import { useMemo, useState, useContext } from 'react';
-import { IntlProvider } from 'react-intl';
-import PropTypes from 'prop-types';
-import { Fragment } from 'react';
-import flattenObject from '../../helpers/flatten';
-import messages from '../../config/i18n/messages';
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+// import en from '../../config/i18n/messages';
+// import pl from '../../config/i18n/messages';
 
 /* eslint-disable-next-line */
 
-export type TLocaleModel = 'en-US' | 'pl-PL';
+i18next.use(initReactI18next).init({
+  resources: {
+    en: {
+      nav: {
+        home: 'Home',
+        groups: 'Groups',
+        create: 'Create',
+        games: 'Games',
+        profile: 'Profile',
+        settings: 'Settings',
+      },
+      header: {
+        signin: 'Sign In',
+        signup: 'Sign Up',
+      },
+      form: {
+        email: 'Email',
+        password: 'Password',
+      },
+    },
+    pl: {
+      nav: {
+        home: 'Strona główna',
+        groups: 'Grupy',
+        create: 'Stwórz',
+        games: 'Gry',
+        profile: 'Profil',
+        settings: 'Ustawienia',
+      },
+      header: {
+        signin: 'Zaloguj',
+        signup: 'Stwórz konto',
+      },
+      form: {
+        email: 'Email',
+        password: 'Hasło',
+      },
+    },
+  },
+  lng: 'en',
+  fallbackLng: 'en',
+  debug: true,
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
-export interface ITranslateContext {
-  locale: object | string;
-  setLocale: object | string;
-}
+export default i18next;
 
-export const TranslateContext = React.createContext<ITranslateContext | null>(
-  null
-);
+// export type TLocaleModel = 'en-US' | 'pl-PL';
 
-export const TranslateProvider = ({ children }) => {
-  const [locale, setLocale] = useState<TLocaleModel>('en-US');
+// export interface ITranslateContext {
+//   locale: object | string;
+//   setLocale: object | string;
+// }
 
-  return (
-    <TranslateContext.Provider value={{ locale, setLocale }}>
-      <IntlProvider
-        textComponent={Fragment}
-        locale={locale}
-        messages={flattenObject(messages[locale])}
-        defaultLocale="en-US"
-      >
-        {children}
-      </IntlProvider>
-    </TranslateContext.Provider>
-  );
-};
+// export const TranslateContext = React.createContext<ITranslateContext | null>(
+//   null
+// );
 
-TranslateProvider.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
-};
+// export const TranslateProvider = ({ children }) => {
+//   const [locale, setLocale] = useState<TLocaleModel>('en-US');
 
-export const useTranslateContext = () => {
-  const data = useContext(TranslateContext);
+//   return (
+//     <TranslateContext.Provider value={{ locale, setLocale }}>
+//       <IntlProvider
+//         textComponent={Fragment}
+//         locale={locale}
+//         messages={flattenObject(messages[locale])}
+//         defaultLocale="en-US"
+//       >
+//         {children}
+//       </IntlProvider>
+//     </TranslateContext.Provider>
+//   );
+// };
 
-  if (!data) {
-    throw Error(
-      'useTranslateContext should be used inside of TranslateProvider'
-    );
-  }
+// TranslateProvider.propTypes = {
+//   children: PropTypes.oneOfType([
+//     PropTypes.arrayOf(PropTypes.node),
+//     PropTypes.node,
+//   ]).isRequired,
+// };
 
-  return data;
-};
+// export const useTranslateContext = () => {
+//   const data = useContext(TranslateContext);
 
-export default TranslateProvider;
+//   if (!data) {
+//     throw Error(
+//       'useTranslateContext should be used inside of TranslateProvider'
+//     );
+//   }
+
+//   return data;
+// };
+
+// export default TranslateProvider;
