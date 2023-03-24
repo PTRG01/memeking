@@ -1,9 +1,8 @@
 import { Button, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { useTranslation, Trans } from 'react-i18next';
-import { changeLanguage } from 'i18next';
-import i18next from '../../contexts/translate-provider/translate-provider';
+import { useTranslation } from 'react-i18next';
+
 /* eslint-disable-next-line */
 export interface HeaderProps {}
 
@@ -32,17 +31,17 @@ export function Header(props: HeaderProps) {
             variant="default"
             onClick={() => navigate('/signin')}
           >
-            <Trans i18nKey={'header.signin'}></Trans>
+            {t('header.signin')}
           </Button>
         )}
         {!isLoggedIn && (
           <Button size="xs" onClick={() => navigate('/signup')}>
-            <Trans i18nKey={'header.signup'}></Trans>
+            {t('header.signup')}
           </Button>
         )}
         {isLoggedIn && (
           <Button size="xs" onClick={() => logout()}>
-            Sign Out
+            {t('header.signout')}
           </Button>
         )}
         <Group position="right">

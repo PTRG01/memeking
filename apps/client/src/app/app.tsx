@@ -3,9 +3,6 @@ import { AuthProvider } from './contexts/auth-provider/auth-provider';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ApplicationFrame from './layouts/application-frame/application-frame';
 import PrivateRoute from './containers/private-route/private-route';
-import { I18nextProvider } from 'react-i18next';
-import i18n from 'i18next';
-import i18next from 'i18next';
 import Header from './layouts/header/header';
 import Navbar from './layouts/navbar/navbar';
 import Sidebar from './layouts/sidebar/sidebar';
@@ -21,6 +18,7 @@ import Games from './screens/games/games';
 import Game from './screens/game/game';
 import Profile from './screens/profile/profile';
 import Settings from './screens/settings/settings';
+
 /* eslint-disable-next-line */
 export function App() {
   return (
@@ -37,35 +35,33 @@ export function App() {
             sidebar={<Sidebar />}
             footer={<Footer />}
           >
-            <I18nextProvider i18n={i18next}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                  element={<PrivateRoute hasToBeAuth={false} isAuth={true} />}
-                >
-                  <Route path="/signin" element={<Signin />} />
-                  <Route path="/signup" element={<Signup />} />
-                </Route>
-                <Route
-                  element={
-                    <PrivateRoute
-                      hasToBeAuth={true}
-                      redirectPath="/"
-                      isAuth={true}
-                    />
-                  }
-                >
-                  <Route path="/groups" element={<Groups />} />
-                  <Route path="/groups/:groupId" element={<Group />} />
-                  <Route path="/create" element={<Create />} />
-                  <Route path="/create/:createId" element={<Create />} />
-                  <Route path="/games" element={<Games />} />
-                  <Route path="/games/:gameId" element={<Game />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                </Route>
-              </Routes>
-            </I18nextProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                element={<PrivateRoute hasToBeAuth={false} isAuth={true} />}
+              >
+                <Route path="/signin" element={<Signin />} />
+                <Route path="/signup" element={<Signup />} />
+              </Route>
+              <Route
+                element={
+                  <PrivateRoute
+                    hasToBeAuth={true}
+                    redirectPath="/"
+                    isAuth={true}
+                  />
+                }
+              >
+                <Route path="/groups" element={<Groups />} />
+                <Route path="/groups/:groupId" element={<Group />} />
+                <Route path="/create" element={<Create />} />
+                <Route path="/create/:createId" element={<Create />} />
+                <Route path="/games" element={<Games />} />
+                <Route path="/games/:gameId" element={<Game />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+            </Routes>
           </ApplicationFrame>
         </BrowserRouter>
       </AuthProvider>

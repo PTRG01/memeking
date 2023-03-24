@@ -1,11 +1,14 @@
 import { TextInput, Button, Group, Center } from '@mantine/core';
 import { useForm } from '@mantine/form/';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
 /* eslint-disable-next-line */
 export interface ISigninProps {}
 
 export function Signin(props: ISigninProps) {
   const { signIn } = useAuthContext();
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -21,19 +24,19 @@ export function Signin(props: ISigninProps) {
         <form onSubmit={form.onSubmit((values) => signIn(values))}>
           <TextInput
             withAsterisk
-            label="Email"
-            placeholder="your@email.com"
+            label={t('form.email')}
+            placeholder={t('form.placeholderEmail')}
             {...form.getInputProps('email')}
           />
 
           <TextInput
             withAsterisk
-            label="Password"
+            label={t('form.password')}
             {...form.getInputProps('password')}
           />
 
           <Group position="right" mt="md">
-            <Button type="submit">Sign In</Button>
+            <Button type="submit">{t('header.signin')}</Button>
           </Group>
         </form>
       </Group>

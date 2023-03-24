@@ -1,12 +1,15 @@
 import { TextInput, Button, Group, Center } from '@mantine/core';
 import { useForm, hasLength } from '@mantine/form/';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 export interface ISignupProps {}
 
 export function Signup(props: ISignupProps) {
   const { signUp } = useAuthContext();
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       username: '',
@@ -31,35 +34,35 @@ export function Signup(props: ISignupProps) {
         <form onSubmit={form.onSubmit((values) => signUp(values))}>
           <TextInput
             withAsterisk
-            label="Username"
-            placeholder="Username"
+            label={t('form.username')}
+            placeholder={t('form.username')}
             {...form.getInputProps('username')}
           />
           <TextInput
             withAsterisk
-            label="Name"
-            placeholder="Your name"
+            label={t('form.name')}
+            placeholder={t('form.placeholderName')}
             {...form.getInputProps('name')}
           />
           <TextInput
             withAsterisk
-            label="Email"
-            placeholder="your@email.com"
+            label={t('form.email')}
+            placeholder={t('form.placeholderEmail')}
             {...form.getInputProps('email')}
           />
           <TextInput
             withAsterisk
-            label="Password"
+            label={t('form.password')}
             {...form.getInputProps('password')}
           />
           <TextInput
             withAsterisk
-            label="Confirm Password"
+            label={t('form.confirm')}
             {...form.getInputProps('passwordConfirm')}
           />
 
           <Group position="right" mt="md">
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit">{t('header.signup')}</Button>
           </Group>
         </form>
       </Group>

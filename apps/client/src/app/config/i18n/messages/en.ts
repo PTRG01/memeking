@@ -1,7 +1,5 @@
-import { LOCALES } from '../locales';
-
 export default {
-  [LOCALES.ENGLISH]: {
+  translation: {
     nav: {
       home: 'Home',
       groups: 'Groups',
@@ -13,10 +11,16 @@ export default {
     header: {
       signin: 'Sign In',
       signup: 'Sign Up',
+      signout: 'Sign Out',
     },
     form: {
+      username: 'Username',
       email: 'Email',
       password: 'Password',
+      confirm: 'Confirm Password',
+      name: 'Name',
+      placeholderName: 'Your name',
+      placeholderEmail: ' your@mail.com',
     },
   },
 };

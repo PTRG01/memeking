@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import TranslateProvider from './translate-provider';
+import i18n from './i18n';
 
 describe('TranslateProvider', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<TranslateProvider />);
+    const { baseElement } = render(<i18n />);
     expect(baseElement).toBeTruthy();
   });
 });
