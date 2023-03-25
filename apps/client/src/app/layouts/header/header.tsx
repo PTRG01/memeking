@@ -1,7 +1,8 @@
 import { Button, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
 /* eslint-disable-next-line */
 export interface HeaderProps {}
 
@@ -9,7 +10,7 @@ export function Header(props: HeaderProps) {
   const { isLoggedIn } = useAuthContext();
   const { logout } = useAuthContext();
   const navigate = useNavigate();
-
+  const { t, i18n } = useTranslation();
   return (
     <>
       <Group>
@@ -30,19 +31,36 @@ export function Header(props: HeaderProps) {
             variant="default"
             onClick={() => navigate('/signin')}
           >
-            Log in
+            {t('header.signin')}
           </Button>
         )}
         {!isLoggedIn && (
           <Button size="xs" onClick={() => navigate('/signup')}>
-            Sign Up
+            {t('header.signup')}
           </Button>
         )}
         {isLoggedIn && (
           <Button size="xs" onClick={() => logout()}>
-            Sign Out
+            {t('header.signout')}
           </Button>
         )}
+        <Group position="right">
+          {' '}
+          <Button
+            size="xs"
+            key={'en'}
+            onClick={() => i18n.changeLanguage('en')}
+          >
+            EN
+          </Button>
+          <Button
+            size="xs"
+            key={'pl'}
+            onClick={() => i18n.changeLanguage('pl')}
+          >
+            PL
+          </Button>
+        </Group>
       </Group>
     </>
   );

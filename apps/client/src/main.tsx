@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-
+import './app/contexts/i18n-provider/i18n-provider';
 import App from './app/app';
 
 const root = ReactDOM.createRoot(

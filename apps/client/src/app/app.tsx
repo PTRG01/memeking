@@ -18,6 +18,7 @@ import Games from './screens/games/games';
 import Game from './screens/game/game';
 import Profile from './screens/profile/profile';
 import Settings from './screens/settings/settings';
+
 /* eslint-disable-next-line */
 export function App() {
   return (
