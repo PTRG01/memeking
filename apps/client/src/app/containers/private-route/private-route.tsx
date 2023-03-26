@@ -17,8 +17,10 @@ export const PrivateRoute = ({
   isAuth,
   children,
 }: IPrivateRoute) => {
-  const { isLoggedIn } = useAuthContext();
-  if (hasToBeAuth === isLoggedIn) {
+  const { isLoggedIn, isLoading } = useAuthContext();
+  if (isLoading) {
+    return <Navigate to={redirectPath} replace />;
+  } else if (hasToBeAuth === isLoggedIn) {
     return isAuth ? (
       children ? (
         children

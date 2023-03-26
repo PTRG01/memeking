@@ -42,12 +42,10 @@ export const AuthContext = React.createContext<IAuthContext | null>(null);
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<TUserModel>(null);
   const isLoggedIn = useMemo(() => !!user, [user]);
-  let isLoading = false;
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const unregister = pb.authStore.onChange((token) => {
       setUser(pb.authStore.model);
-      console.log(pb.authStore);
     });
 
     return () => {
@@ -58,40 +56,40 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   useEffect(() => {
     const refreshAuth = async () => {
       try {
-        isLoading = true;
+        setIsLoading(true);
         await pb.collection('users').authRefresh();
       } catch (e) {
         console.error(e);
-        isLoading = false;
+        setIsLoading(false);
       }
-      isLoading = false;
+      setIsLoading(false);
     };
 
-    return () => {
-      refreshAuth();
-    };
+    refreshAuth();
   }, []);
 
   const signUp: TSignUpFunction = async (params) => {
     try {
-      isLoading = true;
+      setIsLoading(true);
+
       await pb.collection('users').create(params);
     } catch (e) {
       console.error(e);
-      isLoading = false;
+      setIsLoading(false);
     }
-    isLoading = false;
+    setIsLoading(false);
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {
     try {
-      isLoading = true;
+      setIsLoading(true);
+
       await pb.collection('users').authWithPassword(email, password);
     } catch (e) {
       console.error(e);
-      isLoading = false;
+      setIsLoading(false);
     }
-    isLoading = false;
+    setIsLoading(false);
   };
 
   const logout: TLogoutFunction = async () => {
