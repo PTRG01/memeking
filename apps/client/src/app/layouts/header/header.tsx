@@ -2,6 +2,7 @@ import { Button, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
+import AuthLoader from '../../components/auth-loader/auth-loader';
 
 /* eslint-disable-next-line */
 export interface HeaderProps {}
@@ -25,25 +26,30 @@ export function Header(props: HeaderProps) {
 
       <Group position="right">
         {/* TODO add account menu when loggedIn */}
-        {!isLoggedIn && (
-          <Button
-            size="xs"
-            variant="default"
-            onClick={() => navigate('/signin')}
-          >
-            {t('header.signin')}
-          </Button>
-        )}
-        {!isLoggedIn && (
-          <Button size="xs" onClick={() => navigate('/signup')}>
-            {t('header.signup')}
-          </Button>
-        )}
-        {isLoggedIn && (
-          <Button size="xs" onClick={() => logout()}>
-            {t('header.signout')}
-          </Button>
-        )}
+        <AuthLoader>
+          <Group>
+            {!isLoggedIn && (
+              <Button
+                size="xs"
+                variant="default"
+                onClick={() => navigate('/signin')}
+              >
+                {t('header.signin')}
+              </Button>
+            )}
+            {!isLoggedIn && (
+              <Button size="xs" onClick={() => navigate('/signup')}>
+                {t('header.signup')}
+              </Button>
+            )}
+            {isLoggedIn && (
+              <Button size="xs" onClick={() => logout()}>
+                {t('header.signout')}
+              </Button>
+            )}
+          </Group>
+        </AuthLoader>
+
         <Group position="right">
           {' '}
           <Button
