@@ -18,20 +18,8 @@ export const PrivateRoute = ({
   children,
 }: IPrivateRoute) => {
   const { isLoggedIn, isLoading } = useAuthContext();
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    const checkLoading = () => {
-      if (!isLoading) {
-        setLoaded(true);
-      }
-    };
-    return () => {
-      checkLoading();
-    };
-  });
-
-  if (loaded)
+  if (!isLoading)
     return hasToBeAuth === isLoggedIn ? (
       children ? (
         children
@@ -42,7 +30,7 @@ export const PrivateRoute = ({
       <Navigate to={redirectPath} replace />
     );
 
-  return;
+  return null;
 };
 
 export default PrivateRoute;
