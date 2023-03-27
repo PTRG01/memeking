@@ -1,6 +1,6 @@
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { Navigate, Outlet } from 'react-router-dom';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 /* eslint-disable-next-line */
 export interface IPrivateRoute {
@@ -18,10 +18,21 @@ export const PrivateRoute = ({
   children,
 }: IPrivateRoute) => {
   const { isLoggedIn, isLoading } = useAuthContext();
-  if (isLoading) {
-    return <Navigate to={redirectPath} replace />;
-  } else if (hasToBeAuth === isLoggedIn) {
-    return isAuth ? (
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkLoading = () => {
+      if (!isLoading) {
+        setLoaded(true);
+      }
+    };
+    return () => {
+      checkLoading();
+    };
+  });
+
+  if (loaded)
+    return hasToBeAuth === isLoggedIn ? (
       children ? (
         children
       ) : (
@@ -30,8 +41,8 @@ export const PrivateRoute = ({
     ) : (
       <Navigate to={redirectPath} replace />
     );
-  }
-  return <Navigate to={redirectPath} replace />;
+
+  return;
 };
 
 export default PrivateRoute;

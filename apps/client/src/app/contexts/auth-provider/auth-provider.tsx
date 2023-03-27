@@ -42,7 +42,7 @@ export const AuthContext = React.createContext<IAuthContext | null>(null);
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<TUserModel>(null);
   const isLoggedIn = useMemo(() => !!user, [user]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const unregister = pb.authStore.onChange((token) => {
       setUser(pb.authStore.model);
