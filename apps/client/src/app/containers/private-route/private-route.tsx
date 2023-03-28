@@ -1,35 +1,26 @@
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { Navigate, Outlet } from 'react-router-dom';
-import { ReactElement } from 'react';
+import { Loader } from '@mantine/core';
 
 /* eslint-disable-next-line */
-export interface IPrivateRoute {
+export interface IPrivateRoute extends React.PropsWithChildren {
   redirectPath?: string;
   redirectUserPath?: string;
   hasToBeAuth?: boolean;
-  isAuth?: boolean;
-  children?: ReactElement;
 }
 
 export const PrivateRoute = ({
   redirectPath = '',
   hasToBeAuth,
-  isAuth,
   children,
 }: IPrivateRoute) => {
-  const { isLoggedIn } = useAuthContext();
-  if (hasToBeAuth === isLoggedIn) {
-    return isAuth ? (
-      children ? (
-        children
-      ) : (
-        <Outlet />
-      )
-    ) : (
-      <Navigate to={redirectPath} replace />
-    );
+  const { isLoggedIn, isLoading } = useAuthContext();
+
+  if (isLoading) {
+    return <Loader />;
   }
-  return <Navigate to={redirectPath} replace />;
+  if (hasToBeAuth === isLoggedIn) return children ? children : <Outlet />;
+  else return <Navigate to={redirectPath} />;
 };
 
 export default PrivateRoute;

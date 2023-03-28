@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
+
 import { pb } from '../../utils/pocketbase';
 import { Record, Admin } from 'pocketbase';
 
@@ -33,18 +34,20 @@ export interface IAuthContext {
   logout: TLogoutFunction;
   user: TUserModel;
   isLoggedIn: boolean;
+  isLoading: boolean;
 }
 
 export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<TUserModel>(null);
-
   const isLoggedIn = useMemo(() => !!user, [user]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unregister = pb.authStore.onChange((token) => {
+    const unregister = pb.authStore.onChange((token, arg) => {
       setUser(pb.authStore.model);
+      setIsLoading(false);
     });
 
     return () => {
@@ -52,12 +55,49 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     };
   }, []);
 
+  useEffect(() => {
+    const refreshAuth = async () => {
+      try {
+        setIsLoading(true);
+        await pb.collection('users').authRefresh();
+      } catch (e) {
+        console.error(e);
+
+        // TODO create interface for Pocketbase errors
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if ((e as Error).status === 401) {
+          setIsLoading(false);
+          logout();
+        }
+      }
+    };
+
+    refreshAuth();
+  }, []);
+
   const signUp: TSignUpFunction = async (params) => {
-    await pb.collection('users').create(params);
+    try {
+      setIsLoading(true);
+
+      await pb.collection('users').create(params);
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+    }
+    setIsLoading(false);
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {
-    await pb.collection('users').authWithPassword(email, password);
+    try {
+      setIsLoading(true);
+
+      await pb.collection('users').authWithPassword(email, password);
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+    }
+    setIsLoading(false);
   };
 
   const logout: TLogoutFunction = async () => {
@@ -65,7 +105,9 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn, logout, user, isLoggedIn }}>
+    <AuthContext.Provider
+      value={{ signUp, signIn, logout, user, isLoggedIn, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
