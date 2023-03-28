@@ -43,9 +43,11 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<TUserModel>(null);
   const isLoggedIn = useMemo(() => !!user, [user]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    const unregister = pb.authStore.onChange((token) => {
+    const unregister = pb.authStore.onChange((token, arg) => {
       setUser(pb.authStore.model);
+      setIsLoading(false);
     });
 
     return () => {
@@ -60,9 +62,15 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         await pb.collection('users').authRefresh();
       } catch (e) {
         console.error(e);
-        setIsLoading(false);
+
+        // TODO create interface for Pocketbase errors
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if ((e as Error).status === 401) {
+          setIsLoading(false);
+          logout();
+        }
       }
-      setIsLoading(false);
     };
 
     refreshAuth();
