@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-
 import { pb } from '../../utils/pocketbase';
 import { Record, Admin } from 'pocketbase';
+import { useUser, useUserSubscription } from '../../hooks/pb-utils';
 
 export type TSignInFunction = (params: {
   email: string;
@@ -19,34 +19,44 @@ export type TSignUpFunction = (params: {
 
 export type TLogoutFunction = () => void;
 
-export interface IUser {
+export interface IUser extends Record {
   email: string;
   avatar: string;
-  id: string;
-  load: string;
+  followers: string[];
 }
-
+export type TUseUpdateUser = (params: IUser) => Promise<void>;
 export type TUserModel = Record | Admin | null;
 
 export interface IAuthContext {
   signIn: TSignInFunction;
   signUp: TSignUpFunction;
   logout: TLogoutFunction;
-  user: TUserModel;
+  user: IUser | null;
   isLoggedIn: boolean;
+  isAuthLoading: boolean;
   isLoading: boolean;
+  updateCurrentUser: (
+    data: Partial<IUser>,
+    overrideId?: string | undefined
+  ) => Promise<void>;
 }
 
 export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
-  const [user, setUser] = useState<TUserModel>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const isLoggedIn = useMemo(() => !!user, [user]);
   const [isLoading, setIsLoading] = useState(true);
+  const { loading, updateOne } = useUser(user?.id);
+  const { data: updatedUser } = useUserSubscription(user?.id || '');
+
+  useEffect(() => {
+    setUser(updatedUser as IUser);
+  }, [updatedUser]);
 
   useEffect(() => {
     const unregister = pb.authStore.onChange((token, arg) => {
-      setUser(pb.authStore.model);
+      setUser(pb.authStore.model as IUser);
       setIsLoading(false);
     });
 
@@ -106,7 +116,16 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   return (
     <AuthContext.Provider
-      value={{ signUp, signIn, logout, user, isLoggedIn, isLoading }}
+      value={{
+        signUp,
+        signIn,
+        logout,
+        user,
+        isLoggedIn,
+        isLoading: loading,
+        isAuthLoading: isLoading,
+        updateCurrentUser: updateOne,
+      }}
     >
       {children}
     </AuthContext.Provider>

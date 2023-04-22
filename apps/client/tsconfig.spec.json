@@ -14,7 +14,8 @@
     "src/**/*.spec.js",
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/app/components/user-list/following-list-spec.tsx"
   ],
   "files": [
     "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",

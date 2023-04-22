@@ -9,7 +9,7 @@ export interface IAuthLoaderProps {
 }
 
 export const AuthLoader = ({ children }: IAuthLoaderProps) => {
-  const { isLoading } = useAuthContext();
+  const { isAuthLoading: isLoading } = useAuthContext();
 
   return <LoaderComponent isLoading={isLoading} children={children} />;
 };
