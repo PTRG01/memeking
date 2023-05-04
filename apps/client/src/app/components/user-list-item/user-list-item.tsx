@@ -5,6 +5,8 @@ import {
   UnstyledButton,
   Loader,
   Group,
+  Card,
+  Text,
 } from '@mantine/core';
 import { CircleMinus, CirclePlus } from 'tabler-icons-react';
 import { useUser } from '../../hooks/pb-utils';
@@ -18,6 +20,7 @@ export interface IUserListItemProps {
   onAddValue: (value: string) => void;
   onRemoveValue: (value: string) => void;
   loading: boolean;
+  card: boolean;
 }
 
 export function UserListItem({
@@ -28,6 +31,7 @@ export function UserListItem({
   onAddValue,
   onRemoveValue,
   loading,
+  card,
 }: IUserListItemProps) {
   const onClick = () => {
     if (values.includes(id)) {
@@ -36,23 +40,50 @@ export function UserListItem({
       onAddValue(id);
     }
   };
-
-  return (
-    <Flex align="center" gap="md">
-      <NavLink icon={<Avatar size="md" src={avatar} />} label={label} />
-      <Group position="right">
-        <UnstyledButton onClick={onClick}>
-          {loading ? (
-            <Loader size={'sm'} />
-          ) : values.includes(id) ? (
-            <CircleMinus stroke="red" />
-          ) : (
-            <CirclePlus stroke="green" />
-          )}
-        </UnstyledButton>
-      </Group>
-    </Flex>
-  );
+  if (card) {
+    return (
+      <Flex gap="md" direction="column">
+        <Flex direction="row" justify="space-between" align="center">
+          <UnstyledButton>
+            <Group>
+              <Avatar size="xl" src={avatar} />
+              <div>
+                <Text>{label}</Text>
+              </div>
+            </Group>
+          </UnstyledButton>
+          <Group position="right">
+            <UnstyledButton onClick={onClick}>
+              {loading ? (
+                <Loader size={'sm'} />
+              ) : values.includes(id) ? (
+                <CircleMinus stroke="red" />
+              ) : (
+                <CirclePlus stroke="green" />
+              )}
+            </UnstyledButton>
+          </Group>
+        </Flex>
+      </Flex>
+    );
+  } else {
+    return (
+      <Flex align="center" gap="md">
+        <NavLink icon={<Avatar size="md" src={avatar} />} label={label} />
+        <Group position="right">
+          <UnstyledButton onClick={onClick}>
+            {loading ? (
+              <Loader size={'sm'} />
+            ) : values.includes(id) ? (
+              <CircleMinus stroke="red" />
+            ) : (
+              <CirclePlus stroke="green" />
+            )}
+          </UnstyledButton>
+        </Group>
+      </Flex>
+    );
+  }
 }
 
 export default UserListItem;
