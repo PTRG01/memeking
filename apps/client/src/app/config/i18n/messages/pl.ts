@@ -12,6 +12,7 @@ export default {
       signin: 'Zaloguj',
       signup: 'Stwórz konto',
       signout: 'Wyloguj',
+      profile: 'Profil',
     },
     form: {
       username: 'Nazwa użytkownika',

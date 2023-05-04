@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
 import { ListResult, Record, RecordService } from 'pocketbase';
+import { IUser } from '../contexts/auth-provider/auth-provider';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
 
 const gameCollection = createPbCollection('game');
-const userCollection = createPbCollection('user');
+const userCollection = createPbCollection('users');
 const roundCollection = createPbCollection('round');
 const memeCollection = createPbCollection('meme');
 
@@ -28,6 +29,7 @@ export const createSearchHook = (collection: RecordService) => {
         setData(result);
         setResult(result.items);
         setLoading(false);
+        console.log(result);
       },
       []
     );
@@ -43,45 +45,60 @@ export const createSearchHook = (collection: RecordService) => {
   };
 };
 
-export const createCRUDHook = (collection: RecordService) => {
-  return (id: string) => {
-    const [data, setData] = useState<Record | null>(null);
-    const [loading, setLoading] = useState(true);
+export const createCRUDHook = <T extends Record>(collection: RecordService) => {
+  return (id?: string) => {
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const getOne = useCallback(
-      async (query = {}) => {
+      async (query = {}, overrideId?: string) => {
+        if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        const result = await collection.getOne(id, query);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const result = (await collection.getOne(id || overrideId, query)) as T;
         setData(result);
         setLoading(false);
       },
       [id]
     );
 
-    const createOne = useCallback(async (data: Record) => {
+    const createOne = useCallback(async (data: T) => {
       setLoading(true);
-      const result = await collection.create(data);
+      const result = (await collection.create(data)) as T;
       setData(result);
       setLoading(false);
     }, []);
 
     const updateOne = useCallback(
-      async (data: Record, overrideId?: string) => {
+      async (data: Partial<T>, overrideId?: string) => {
+        if (!id && !overrideId) {
+          throw new Error('No id provided');
+          return;
+        }
         setLoading(true);
-        const result = await collection.update(
+        const result = (await collection.update(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           overrideId ? overrideId : id,
           data
-        );
+        )) as T;
         setData(result);
         setLoading(false);
+        console.log(result);
       },
       [id]
     );
 
     const deleteOne = useCallback(
       async (overrideId?: string) => {
+        if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        await collection.delete(overrideId ? overrideId : id);
+        await collection.delete(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          overrideId ? overrideId : id
+        );
         setData(null);
         setLoading(false);
       },
@@ -92,9 +109,11 @@ export const createCRUDHook = (collection: RecordService) => {
   };
 };
 
-const createSubscriptionHook = (collection: RecordService) => {
-  return (id: string) => {
-    const [data, setData] = useState<Record | null>(null);
+const createSubscriptionHook = <T extends Record>(
+  collection: RecordService
+) => {
+  return (id?: string) => {
+    const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
 
     const unsubscribe = useCallback(async () => {
@@ -105,8 +124,9 @@ const createSubscriptionHook = (collection: RecordService) => {
     }, [id]);
 
     useEffect(() => {
+      if (!id) return;
       collection.subscribe(id, (e) => {
-        setData(e.record);
+        setData(e.record as T);
       });
 
       return () => {
@@ -119,7 +139,7 @@ const createSubscriptionHook = (collection: RecordService) => {
 };
 
 export const useGame = createCRUDHook(gameCollection);
-export const useUser = createCRUDHook(userCollection);
+export const useUser = createCRUDHook<IUser>(userCollection);
 export const useRound = createCRUDHook(roundCollection);
 export const useMeme = createCRUDHook(memeCollection);
 

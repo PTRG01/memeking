@@ -14,7 +14,7 @@ export const PrivateRoute = ({
   hasToBeAuth,
   children,
 }: IPrivateRoute) => {
-  const { isLoggedIn, isLoading } = useAuthContext();
+  const { isLoggedIn, isAuthLoading: isLoading } = useAuthContext();
 
   if (isLoading) {
     return <Loader />;

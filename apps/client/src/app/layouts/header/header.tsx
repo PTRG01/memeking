@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import AuthLoader from '../../components/auth-loader/auth-loader';
+import UserSearch from '../../components/search/search';
 
 /* eslint-disable-next-line */
 export interface HeaderProps {}
@@ -12,6 +13,7 @@ export function Header(props: HeaderProps) {
   const { logout } = useAuthContext();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
   return (
     <>
       <Group>
@@ -40,6 +42,11 @@ export function Header(props: HeaderProps) {
             {!isLoggedIn && (
               <Button size="xs" onClick={() => navigate('/signup')}>
                 {t('header.signup')}
+              </Button>
+            )}
+            {isLoggedIn && (
+              <Button size="xs" onClick={() => navigate('/profile')}>
+                {t('header.profile')}
               </Button>
             )}
             {isLoggedIn && (
