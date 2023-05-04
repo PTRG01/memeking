@@ -8,7 +8,7 @@ import {
   TextInput,
   Button,
   List,
-  Grid,
+  SimpleGrid,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import {
@@ -74,32 +74,31 @@ export function Profile(props: ProfileProps) {
           Messages tab content
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
-          <Grid>
-            <List mt="lg" size="sm" w="100%">
-              {data
-                ? data.expand.followers.map((item: IUser) => (
-                    <UserListItem
-                      label={item.name}
-                      avatar={item.avatar}
-                      id={item.id}
-                      key={item.id}
-                      values={user?.followers}
-                      onAddValue={function (): void {
-                        throw new Error('Function not implemented.');
-                      }}
-                      onRemoveValue={function (): void {
-                        updateCurrentUser({
-                          followers: user?.followers.filter(
-                            (follower: string) => follower !== item.id
-                          ),
-                        });
-                      }}
-                      loading={false}
-                    />
-                  ))
-                : null}
-            </List>
-          </Grid>
+          <SimpleGrid cols={3}>
+            {data
+              ? data.expand.followers.map((item: IUser) => (
+                  <UserListItem
+                    card={true}
+                    label={item.name}
+                    avatar={item.avatar}
+                    id={item.id}
+                    key={item.id}
+                    values={user?.followers}
+                    onAddValue={function (): void {
+                      throw new Error('Function not implemented.');
+                    }}
+                    onRemoveValue={function (): void {
+                      updateCurrentUser({
+                        followers: user?.followers.filter(
+                          (follower: string) => follower !== item.id
+                        ),
+                      });
+                    }}
+                    loading={false}
+                  />
+                ))
+              : null}
+          </SimpleGrid>
         </Tabs.Panel>
         <Tabs.Panel value="settings" pt="xs">
           <TextInput placeholder={user?.name} label="Full name" />
