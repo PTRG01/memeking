@@ -22,33 +22,31 @@ export function FollowersSearch() {
   if (!user) return null;
 
   return (
-    <Group>
-      <NavLink
-        label="Search"
-        childrenOffset={0}
-        active={active}
-        variant="filled"
-        icon={<User />}
-        onClick={() => setActive(!active)}
-      >
-        <UserSearch
-          onAddUser={(id) => {
-            updateCurrentUser({
-              followers: [...user.followers, id],
-            });
-          }}
-          onRemoveUser={(id) =>
-            updateCurrentUser({
-              followers: user.followers.filter(
-                (follower: string) => follower !== id
-              ),
-            })
-          }
-          values={user?.followers}
-          loading={isLoading}
-        />
-      </NavLink>
-    </Group>
+    <NavLink
+      label="Search"
+      childrenOffset={0}
+      active={active}
+      variant="filled"
+      icon={<User />}
+      onClick={() => setActive(!active)}
+    >
+      <UserSearch
+        onAddUser={(id) => {
+          updateCurrentUser({
+            followers: [...user.followers, id],
+          });
+        }}
+        onRemoveUser={(id) =>
+          updateCurrentUser({
+            followers: user.followers.filter(
+              (follower: string) => follower !== id
+            ),
+          })
+        }
+        values={user?.followers}
+        loading={isLoading}
+      />
+    </NavLink>
   );
 }
 

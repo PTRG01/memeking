@@ -10,6 +10,8 @@ const gameCollection = createPbCollection('game');
 const userCollection = createPbCollection('users');
 const roundCollection = createPbCollection('round');
 const memeCollection = createPbCollection('meme');
+const chatCollection = createPbCollection('chats');
+const messageCollection = createPbCollection('messages');
 
 export const createSearchHook = (collection: RecordService) => {
   return () => {
@@ -29,7 +31,6 @@ export const createSearchHook = (collection: RecordService) => {
         setData(result);
         setResult(result.items);
         setLoading(false);
-        console.log(result);
       },
       []
     );
@@ -37,8 +38,10 @@ export const createSearchHook = (collection: RecordService) => {
     const getFullList = useCallback(async (queryParams = {}) => {
       setLoading(true);
       setData(null);
-      setResult(await collection.getFullList(queryParams));
+      const result = await collection.getFullList(queryParams);
+      setData(result);
       setLoading(false);
+      console.log(result);
     }, []);
 
     return { data, result, loading, items, getList, getFullList };
@@ -142,13 +145,19 @@ export const useGame = createCRUDHook(gameCollection);
 export const useUser = createCRUDHook<IUser>(userCollection);
 export const useRound = createCRUDHook(roundCollection);
 export const useMeme = createCRUDHook(memeCollection);
+export const useChat = createCRUDHook(chatCollection);
+export const useMessage = createCRUDHook(messageCollection);
 
 export const useGameList = createSearchHook(gameCollection);
 export const useUserList = createSearchHook(userCollection);
 export const useRoundList = createSearchHook(roundCollection);
 export const useMemeList = createSearchHook(memeCollection);
+export const useChatList = createSearchHook(chatCollection);
+export const useMessageList = createSearchHook(messageCollection);
 
 export const useGameSubscription = createSubscriptionHook(gameCollection);
 export const useUserSubscription = createSubscriptionHook(userCollection);
 export const useRoundSubscription = createSubscriptionHook(roundCollection);
 export const useMemeSubscription = createSubscriptionHook(memeCollection);
+export const useChatSubscription = createSubscriptionHook(chatCollection);
+export const useMessageSubscription = createSubscriptionHook(messageCollection);

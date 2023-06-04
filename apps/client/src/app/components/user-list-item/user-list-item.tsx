@@ -9,8 +9,9 @@ import {
   Text,
 } from '@mantine/core';
 import { CircleMinus, CirclePlus } from 'tabler-icons-react';
-import { useUser } from '../../hooks/pb-utils';
+import { useChat, useUser } from '../../hooks/pb-utils';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 /* eslint-disable-next-line */
 export interface IUserListItemProps {
   label: string;
@@ -33,7 +34,10 @@ export function UserListItem({
   loading,
   card,
 }: IUserListItemProps) {
-  const onClick = () => {
+  const { user } = useAuthContext();
+  const { createChatWithUser } = useChatContext();
+
+  const handleValues = () => {
     if (values.includes(id)) {
       onRemoveValue(id);
     } else {
@@ -53,7 +57,7 @@ export function UserListItem({
             </Group>
           </UnstyledButton>
           <Group position="right">
-            <UnstyledButton onClick={onClick}>
+            <UnstyledButton onClick={handleValues}>
               {loading ? (
                 <Loader size={'sm'} />
               ) : values.includes(id) ? (
@@ -68,10 +72,15 @@ export function UserListItem({
     );
   } else {
     return (
-      <Flex align="center" gap="md">
-        <NavLink icon={<Avatar size="md" src={avatar} />} label={label} />
-        <Group position="right">
-          <UnstyledButton onClick={onClick}>
+      <Flex align="center" justify="space-between">
+        <UnstyledButton onClick={() => createChatWithUser(id)}>
+          <Group>
+            <Avatar size="lg" src={avatar} />
+            <Text>{label}</Text>
+          </Group>
+        </UnstyledButton>
+        <Group position="apart" ml={60}>
+          <UnstyledButton onClick={handleValues}>
             {loading ? (
               <Loader size={'sm'} />
             ) : values.includes(id) ? (
