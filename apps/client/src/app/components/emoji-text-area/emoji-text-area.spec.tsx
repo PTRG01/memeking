@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import TestComponent from './test-component';
+import EmojiTextArea from './emoji-text-area';
 
-describe('TestComponent', () => {
+describe('EmojiTextArea', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<TestComponent />);
+    const { baseElement } = render(<EmojiTextArea />);
     expect(baseElement).toBeTruthy();
   });
 });

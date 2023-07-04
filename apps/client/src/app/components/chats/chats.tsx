@@ -7,6 +7,7 @@ export interface IChatsProps {}
 
 export function Chats(props: IChatsProps) {
   const { openChats } = useChatContext();
+
   return (
     <div className={styles['chat-container']}>
       <SimpleGrid cols={4}>

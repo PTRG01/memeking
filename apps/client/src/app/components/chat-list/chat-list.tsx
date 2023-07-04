@@ -6,6 +6,9 @@ import {
   NavLink,
   ScrollArea,
   UnstyledButton,
+  Text,
+  Group,
+  Container,
 } from '@mantine/core';
 import { Message2 } from 'tabler-icons-react';
 import { useEffect, useState } from 'react';
@@ -55,16 +58,22 @@ export function ChatList(props: IChatListProps) {
         <Menu.Dropdown>
           <Menu.Label>Messages</Menu.Label>
           <ScrollArea>
-            {userChatsList?.map((chat) => (
-              <ChatItem
-                key={chat.id}
-                id={chat.id}
-                users={chat.users
-                  .filter((record) => record.id !== user.id)
-                  .map((user) => user.name)}
-                avatar={chat.users.map((record) => record.avatar)}
-              />
-            ))}
+            {userChatsList?.length === 0 ? (
+              <Container p={10}>
+                <Text>'No chats, start a new one.' </Text>
+              </Container>
+            ) : (
+              userChatsList?.map((chat) => (
+                <ChatItem
+                  key={chat.id}
+                  id={chat.id}
+                  users={chat.users
+                    .filter((record) => record.id !== user.id)
+                    .map((user) => user.name)}
+                  avatar={chat.users.map((record) => record.avatar)}
+                />
+              ))
+            )}
           </ScrollArea>
         </Menu.Dropdown>
       </Menu>

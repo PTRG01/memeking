@@ -7,8 +7,9 @@ import {
   Group,
   Card,
   Text,
+  Button,
 } from '@mantine/core';
-import { CircleMinus, CirclePlus } from 'tabler-icons-react';
+import { CircleMinus, CirclePlus, Message } from 'tabler-icons-react';
 import { useChat, useUser } from '../../hooks/pb-utils';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
@@ -22,6 +23,7 @@ export interface IUserListItemProps {
   onRemoveValue: (value: string) => void;
   loading: boolean;
   card: boolean;
+  addUser?: boolean;
 }
 
 export function UserListItem({
@@ -33,8 +35,8 @@ export function UserListItem({
   onRemoveValue,
   loading,
   card,
+  addUser,
 }: IUserListItemProps) {
-  const { user } = useAuthContext();
   const { createChatWithUser } = useChatContext();
 
   const handleValues = () => {
@@ -72,24 +74,26 @@ export function UserListItem({
     );
   } else {
     return (
-      <Flex align="center" justify="space-between">
-        <UnstyledButton onClick={() => createChatWithUser(id)}>
+      <Flex align="center" justify="space-between " mt={5}>
+        <UnstyledButton
+          ml={5}
+          onClick={() => (addUser ? null : createChatWithUser(id))}
+        >
           <Group>
             <Avatar size="lg" src={avatar} />
             <Text>{label}</Text>
           </Group>
         </UnstyledButton>
-        <Group position="apart" ml={60}>
-          <UnstyledButton onClick={handleValues}>
-            {loading ? (
-              <Loader size={'sm'} />
-            ) : values.includes(id) ? (
-              <CircleMinus stroke="red" />
-            ) : (
-              <CirclePlus stroke="green" />
-            )}
-          </UnstyledButton>
-        </Group>
+
+        <UnstyledButton ml={90} onClick={handleValues}>
+          {loading ? (
+            <Loader size={'sm'} />
+          ) : values.includes(id) ? (
+            <CircleMinus stroke="red" />
+          ) : (
+            <CirclePlus stroke="green" />
+          )}
+        </UnstyledButton>
       </Flex>
     );
   }

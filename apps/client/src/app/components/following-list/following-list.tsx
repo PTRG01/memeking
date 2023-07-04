@@ -1,28 +1,26 @@
 import { Badge, Group, List, NavLink } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   IUser,
   useAuthContext,
 } from '../../contexts/auth-provider/auth-provider';
 import UserListItem from '../user-list-item/user-list-item';
-import { useUser } from '../../hooks/pb-utils';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
+import LoaderComponent from '../loader/loader';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 /* eslint-disable-next-line */
-export interface IFollowingListProps {
-  listOnly: boolean;
-}
+export interface IFollowingListProps {}
 
 export function FollowingList(props: IFollowingListProps) {
   const [active, setActive] = useState(false);
   const { user, updateCurrentUser } = useAuthContext();
-  const { getOne, data } = useUser(user?.id);
-
-  useEffect(() => {
-    getOne({ expand: 'followers' });
-  }, [user?.id]);
+  const { loading, followersList } = useChatContext();
+  const { t, i18n } = useTranslation();
 
   return (
     <NavLink
-      label={'Following'}
+      label={t('following.following')}
       childrenOffset={0}
       active={active}
       variant="filled"
@@ -33,30 +31,34 @@ export function FollowingList(props: IFollowingListProps) {
       }
       onClick={() => setActive(!active)}
     >
-      <List mt="lg" size="sm" w="100%">
-        {data
-          ? data.expand.followers.map((item: IUser) => (
+      <Group>
+        <List mt="lg" size="sm" w="100%">
+          <LoaderComponent isLoading={loading}>
+            {followersList?.map((record: IUser) => (
               <UserListItem
-                label={item.name}
-                avatar={item.avatar}
-                id={item.id}
-                key={item.id}
-                values={user?.followers}
-                onAddValue={function (): void {
+                label={record.name}
+                avatar={record.avatar}
+                id={record.id}
+                key={record.id}
+                values={user.followers}
+                card={false}
+                onAddValue={function () {
                   throw new Error('Function not implemented.');
                 }}
-                onRemoveValue={function (): void {
+                onRemoveValue={function () {
                   updateCurrentUser({
-                    followers: user?.followers.filter(
-                      (follower: string) => follower !== item.id
+                    followers: user.followers.filter(
+                      (follower: string) => follower !== record.id
                     ),
                   });
                 }}
                 loading={false}
+                addUser={false}
               />
-            ))
-          : null}
-      </List>
+            ))}
+          </LoaderComponent>
+        </List>
+      </Group>
     </NavLink>
   );
 }

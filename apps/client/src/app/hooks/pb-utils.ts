@@ -41,7 +41,6 @@ export const createSearchHook = (collection: RecordService) => {
       const result = await collection.getFullList(queryParams);
       setData(result);
       setLoading(false);
-      console.log(result);
     }, []);
 
     return { data, result, loading, items, getList, getFullList };
@@ -77,7 +76,6 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (data: Partial<T>, overrideId?: string) => {
         if (!id && !overrideId) {
           throw new Error('No id provided');
-          return;
         }
         setLoading(true);
         const result = (await collection.update(

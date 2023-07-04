@@ -16,7 +16,7 @@ import {
   Menu,
   List,
 } from '@mantine/core';
-import { MoodSmile, Plus, X } from 'tabler-icons-react';
+import { DoorExit, MoodSmile, Plus, X } from 'tabler-icons-react';
 import { Send } from 'tabler-icons-react';
 import { useForm } from '@mantine/form';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -30,64 +30,42 @@ import EmojiPicker from 'emoji-picker-react';
 import styles from './chat.module.css';
 import UserListItem from '../user-list-item/user-list-item';
 import FollowingList from '../following-list/following-list';
+import AddToChatList from '../add-to-chat-list/add-to-chat-list';
+import EmojiTextArea from '../emoji-text-area/emoji-text-area';
 
-export type TsendMessageFunction = (params: {
-  chatId: string;
-  message: string;
-}) => void;
-
-export type TaddUserFunction = (params: {
+export type TAddUserFunction = (params: {
   chatId: string;
   userId: string;
 }) => void;
 
 export interface IChatProps {
   id: string;
-  users: string[];
+  users?: string[];
   avatar: string;
-  sendMessage: TsendMessageFunction;
-  addUser: TaddUserFunction;
+  sendMessage: TSendMessageFunction;
+  addUser: TAddUserFunction;
 }
 
 export function Chat(props: IChatProps) {
-  const { loading, handleChatClose } = useChatContext();
+  const { loading, handleChatClose, loadChats, openChats, followersList } =
+    useChatContext();
   const [messages, setMessages] = useState([]);
   const { getFullList, data } = useMessageList();
-  const { createOne } = useMessage();
-  const { updateOne } = useChat();
+  const { updateOne } = useChat(props.id);
   const { user } = useAuthContext();
 
   const viewport = useRef<HTMLDivElement>(null);
 
-  const loadMessages = useCallback(
-    (chatId: string[]) => {
-      getFullList({
-        sort: 'created',
-        expand: 'author_id,',
-        filter: `chat_id="${chatId}"`,
-      });
-    },
-    [props.id]
-  );
-
-  const sendMessage: TsendMessageFunction = (params) => {
-    if (!params.message) return;
-    createOne({
-      content: `${params.message}`,
-      author_id: `${user.id}`,
-      chat_id: `${params.chatId}`,
+  const loadMessages = useCallback(() => {
+    getFullList({
+      sort: 'created',
+      expand: 'author_id,',
+      filter: `chat_id="${props.id}"`,
     });
-  };
-
-  const addUser: TaddUserFunction = (params) => {
-    updateOne({
-      id: params.chatId,
-      users: props.users + params.userId,
-    });
-  };
+  }, [props.id]);
 
   useEffect(() => {
-    loadMessages(props.id);
+    loadMessages();
   }, [props.id]);
 
   useEffect(() => {
@@ -100,31 +78,6 @@ export function Chat(props: IChatProps) {
     });
   }, [data]);
 
-  const form = useForm({
-    initialValues: {
-      chatInput: '',
-    },
-  });
-
-  const insertAtCursor = (message: string, emoji: string) => {
-    const input = emoji.trim();
-
-    if (!input) {
-      return message;
-    }
-    const textarea = document.getElementById('textarea');
-    textarea.value = message;
-
-    const startPos = textarea.selectionStart;
-    const endPos = textarea.selectionEnd;
-    console.log(textarea, startPos, endPos);
-
-    const newMessage =
-      message.slice(0, startPos) + input + message.slice(endPos);
-
-    return newMessage;
-  };
-
   const listRef = useRef(null);
 
   useEffect(() => {
@@ -133,16 +86,46 @@ export function Chat(props: IChatProps) {
     }
   }, [messages]);
 
+  const leaveChat: TupdateChatFunction = useCallback((userId) => {
+    updateOne({
+      users: [props?.users.filter((user) => user.id === user?.id)],
+    });
+  }, []);
+
   return (
     <Paper radius={10} pb={25} w={400} withBorder={true}>
       <Group position="apart" px={20} py={10} mb={30} bg={'blue'} radius={25}>
         <Group>
-          <Avatar src="" size={45} radius="xl" />
-          <Title color="white" weight={500} size={17}>
-            {props.users.join(', ')}
-          </Title>
+          <Menu shadow="md" width={200} position="right-start" offset={25}>
+            <Menu.Target>
+              <UnstyledButton>
+                <Group>
+                  <Avatar src="" size={45} radius="xl" />
+                  <Title
+                    color="white"
+                    weight={500}
+                    size={17}
+                    maw={230}
+                    truncate={true}
+                  >
+                    {props.users
+                      .flatMap((users) => users.name)
+                      .filter((userName) => userName !== user.name)
+                      .join(', ')}
+                  </Title>
+                </Group>
+              </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                onClick={() => leaveChat(user?.id)}
+                icon={<DoorExit />}
+              >
+                Leave chat
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
-
         <UnstyledButton onClick={() => handleChatClose(props)}>
           <X />
         </UnstyledButton>
@@ -161,9 +144,9 @@ export function Chat(props: IChatProps) {
         </LoaderComponent>
       </ScrollArea>
       <Flex align="center" justify="space-evenly" mx={10}>
-        <Popover position="top">
-          <Popover.Dropdown>
-            <FollowingList />
+        <Popover position="top" offset={25}>
+          <Popover.Dropdown maw={300}>
+            <AddToChatList users={props.users} id={props.id} />
           </Popover.Dropdown>
           <Popover.Target>
             <ActionIcon radius="xl" variant="filled" size="xl">
@@ -171,65 +154,7 @@ export function Chat(props: IChatProps) {
             </ActionIcon>
           </Popover.Target>
         </Popover>
-        <Popover
-          withArrow={true}
-          arrowPosition="center"
-          arrowSize={25}
-          arrowRadius={5}
-          withinPortal={true}
-          offset={25}
-        >
-          <Popover.Dropdown p={0}>
-            <EmojiPicker
-              lazyLoadEmojis={true}
-              theme="dark"
-              onEmojiClick={(e) =>
-                form.setFieldValue(
-                  'chatInput',
-                  insertAtCursor(form.values.chatInput, e.emoji)
-                )
-              }
-            />
-          </Popover.Dropdown>
-          <Popover.Target>
-            <ActionIcon size="xl" type="submit" variant="filled" radius="xl">
-              <MoodSmile size={28} />
-            </ActionIcon>
-          </Popover.Target>
-        </Popover>
-        <form
-          key={props.id}
-          id={props.id}
-          onSubmit={form.onSubmit((message) => {
-            sendMessage({
-              message: message.chatInput,
-              chatId: props.id,
-            });
-            form.setValues({ chatInput: '' });
-          })}
-        >
-          <Group position="apart">
-            <Textarea
-              radius="xl"
-              size="md"
-              id={'textarea'}
-              key={props.id}
-              {...form.getInputProps('chatInput')}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  sendMessage({
-                    message: event.currentTarget.value,
-                    chatId: props.id,
-                  });
-                  form.setValues({ chatInput: '' });
-                }
-              }}
-            />
-            <ActionIcon size="xl" type="submit" variant="filled" radius="xl">
-              <Send />
-            </ActionIcon>
-          </Group>
-        </form>
+        <EmojiTextArea id={props.id} />
       </Flex>
     </Paper>
   );

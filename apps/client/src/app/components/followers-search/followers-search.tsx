@@ -7,6 +7,7 @@ import {
   TUserModel,
   useAuthContext,
 } from '../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 
@@ -14,6 +15,7 @@ export function FollowersSearch() {
   const { getList, result } = useUserList();
   const { user, updateCurrentUser, isLoading } = useAuthContext();
   const [active, setActive] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const filterQueryResult = (currentUser: TUserModel) => {
     return result?.filter((user) => user.id !== currentUser?.id);
@@ -23,7 +25,7 @@ export function FollowersSearch() {
 
   return (
     <NavLink
-      label="Search"
+      label={t('search.search')}
       childrenOffset={0}
       active={active}
       variant="filled"
@@ -45,6 +47,8 @@ export function FollowersSearch() {
         }
         values={user?.followers}
         loading={isLoading}
+        hideExisting={false}
+        onInputUsed={() => null}
       />
     </NavLink>
   );

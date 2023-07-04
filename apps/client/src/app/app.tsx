@@ -45,15 +45,12 @@ export function App() {
             >
               <Routes>
                 <Route path="/" element={<Home />} />
-                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                {/* @ts-ignore */}
+
                 <Route element={<PrivateRoute hasToBeAuth={false} />}>
                   <Route path="/signin" element={<Signin />} />
                   <Route path="/signup" element={<Signup />} />
                 </Route>
                 <Route
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
                   element={<PrivateRoute hasToBeAuth={true} redirectPath="/" />}
                 >
                   <Route path="/groups" element={<Groups />} />

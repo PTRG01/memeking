@@ -1,6 +1,6 @@
 .chat-container {
   position: fixed;
-  bottom: 4rem;
-  left: 4rem;
+  bottom: 5%;
+  left: 3%;
   z-index: 200;
 }

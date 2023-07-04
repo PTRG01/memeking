@@ -13,16 +13,13 @@ export function ChatItem(props: IChatItemProps) {
   const { handleChatOpen } = useChatContext();
 
   return (
-    <Menu.Item
-      onClick={() => handleChatOpen({ id: props.id, users: props.users })}
-    >
+    <Menu.Item onClick={() => handleChatOpen({ id: props.id })}>
       <Flex mb={5} align="center">
         <Avatar size="lg">{props.avatar}</Avatar>
         <Flex ml={15} direction="column">
           <Text fw={500}>{props.users.join(', ')}</Text>
         </Flex>
       </Flex>
-      {/* {props.users.join(', ')} */}
     </Menu.Item>
   );
 }
