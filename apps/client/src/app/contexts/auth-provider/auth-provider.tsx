@@ -21,6 +21,7 @@ export type TLogoutFunction = () => void;
 
 export interface IUser extends Record {
   email: string;
+  name: string;
   avatar: string;
   followers: string[];
 }
@@ -89,7 +90,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const signUp: TSignUpFunction = async (params) => {
     try {
       setIsLoading(true);
-
       await pb.collection('users').create(params);
     } catch (e) {
       console.error(e);

@@ -57,6 +57,7 @@
     "@mantine/core": "^6.0.0",
     "@mantine/form": "^6.0.0",
     "@mantine/hooks": "^6.0.0",
+    "emoji-picker-react": "^4.4.9",
     "i18next": "^22.4.13",
     "i18next-browser-languagedetector": "^7.0.1",
     "konva": "^8.4.2",
