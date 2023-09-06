@@ -18,6 +18,13 @@ import Games from './screens/games/games';
 import Game from './screens/game/game';
 import Profile from './screens/profile/profile';
 import Settings from './screens/settings/settings';
+import Chat from './components/chat/chat';
+import { useState } from 'react';
+import {
+  useChatContext,
+  ChatProvider,
+} from './contexts/chat-provider/chat-provider';
+import Chats from './components/chats/chats';
 
 /* eslint-disable-next-line */
 export function App() {
@@ -28,6 +35,7 @@ export function App() {
       theme={{ colorScheme: 'dark' }}
     >
       <AuthProvider>
+        {/* <ChatProvider> */}
         <BrowserRouter>
           <ApplicationFrame
             header={<Header />}
@@ -37,15 +45,12 @@ export function App() {
           >
             <Routes>
               <Route path="/" element={<Home />} />
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
+
               <Route element={<PrivateRoute hasToBeAuth={false} />}>
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/signup" element={<Signup />} />
               </Route>
               <Route
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 element={<PrivateRoute hasToBeAuth={true} redirectPath="/" />}
               >
                 <Route path="/groups" element={<Groups />} />
@@ -58,8 +63,10 @@ export function App() {
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Routes>
+            {/* <Chats /> */}
           </ApplicationFrame>
         </BrowserRouter>
+        {/* </ChatProvider> */}
       </AuthProvider>
     </MantineProvider>
   );

@@ -11,24 +11,19 @@ import {
   SimpleGrid,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
-import {
-  IUser,
-  useAuthContext,
-} from '../../contexts/auth-provider/auth-provider';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { useEffect } from 'react';
 import { useUser } from '../../hooks/pb-utils';
 import UserListItem from '../../components/user-list-item/user-list-item';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
 
 export function Profile(props: ProfileProps) {
   const { user, updateCurrentUser } = useAuthContext();
-  const { getOne, data } = useUser(user?.id);
-
-  useEffect(() => {
-    getOne({ expand: 'followers' });
-  }, [user?.id]);
+  const { followersList } = useChatContext();
 
   return (
     <Flex direction="column" mx={100} mt={20}>
@@ -75,29 +70,27 @@ export function Profile(props: ProfileProps) {
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>
-            {data
-              ? data.expand.followers.map((item: IUser) => (
-                  <UserListItem
-                    card={true}
-                    label={item.name}
-                    avatar={item.avatar}
-                    id={item.id}
-                    key={item.id}
-                    values={user?.followers}
-                    onAddValue={function (): void {
-                      throw new Error('Function not implemented.');
-                    }}
-                    onRemoveValue={function (): void {
-                      updateCurrentUser({
-                        followers: user?.followers.filter(
-                          (follower: string) => follower !== item.id
-                        ),
-                      });
-                    }}
-                    loading={false}
-                  />
-                ))
-              : null}
+            {followersList?.map((item: IUser) => (
+              <UserListItem
+                card={true}
+                label={item.name}
+                avatar={item.avatar}
+                id={item.id}
+                key={item.id}
+                values={user?.followers}
+                onAddValue={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+                onRemoveValue={function (): void {
+                  updateCurrentUser({
+                    followers: user?.followers.filter(
+                      (follower: string) => follower !== item.id
+                    ),
+                  });
+                }}
+                loading={false}
+              />
+            ))}
           </SimpleGrid>
         </Tabs.Panel>
         <Tabs.Panel value="settings" pt="xs">

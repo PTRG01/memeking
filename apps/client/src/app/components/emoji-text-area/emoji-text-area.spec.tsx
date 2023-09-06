@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Auth from './auth-provider-2tsx';
+import EmojiTextArea from './emoji-text-area';
 
-describe('Auth', () => {
+describe('EmojiTextArea', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Auth />);
+    const { baseElement } = render(<EmojiTextArea />);
     expect(baseElement).toBeTruthy();
   });
 });

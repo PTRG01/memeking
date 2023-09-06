@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Auth from './auth-provider-2tsx';
+import Message from './message';
 
-describe('Auth', () => {
+describe('Message', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Auth />);
+    const { baseElement } = render(<Message />);
     expect(baseElement).toBeTruthy();
   });
 });

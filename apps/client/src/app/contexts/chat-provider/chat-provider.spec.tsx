@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Auth from './auth-provider-2tsx';
+import ChatProvider from './chat-provider';
 
-describe('Auth', () => {
+describe('ChatProvider', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Auth />);
+    const { baseElement } = render(<ChatProvider />);
     expect(baseElement).toBeTruthy();
   });
 });
