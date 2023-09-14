@@ -13,7 +13,7 @@ export interface IFollowingListProps {}
 export function FollowingList(props: IFollowingListProps) {
   const [active, setActive] = useState(false);
   const { user, updateCurrentUser } = useAuthContext();
-  const { loading, followersList } = useChatContext();
+  const { isLoading, followersList } = useChatContext();
   const { t, i18n } = useTranslation();
 
   return (
@@ -31,7 +31,7 @@ export function FollowingList(props: IFollowingListProps) {
     >
       <Group>
         <List mt="lg" size="sm" w="100%">
-          <LoaderComponent isLoading={loading}>
+          <LoaderComponent isLoading={isLoading}>
             {followersList?.map((record: IUser) => (
               <UserListItem
                 label={record.name}

@@ -1,4 +1,4 @@
-import { IUser } from '../contexts/auth-provider/auth-provider.interface';
+import { IUser } from '../auth-provider/auth-provider.interface';
 
 export interface IActionState<T> {
   data: T | null;
@@ -12,6 +12,7 @@ export type TActionResult<T> =
   | { type: 'loading/stop' }
   | { type: 'request/success'; payload: T }
   | { type: 'request/failure'; payload: string }
+  | { type: 'clearData'; payload: T }
   | { type: 'clearError'; payload: string }
   | { type: 'resetState' };
 
@@ -20,12 +21,13 @@ const Actions = {
   loadingStop: 'loading/stop',
   requestSuccess: 'request/success',
   requestFailure: 'request/failure',
+  clearData: 'clearData',
   clearError: 'clearError',
   resetState: 'resetState',
 };
 
 export const createActionReducer =
-  <T>() =>
+  <T,>(customActions) =>
   (state: IActionState<T>, action: TActionResult<T>): IActionState<T> => {
     switch (action.type) {
       case Actions.loading:
@@ -51,9 +53,13 @@ export const createActionReducer =
           ...state,
           isLoading: false,
           isLoggedIn: true,
-          data: action.payload,
+          data: { ...state.data, ...action.payload },
         };
-
+      case Actions.clearData:
+        return {
+          ...state,
+          data: { ...state.data, ...action.payload },
+        };
       case Actions.clearError:
         return {
           ...state,

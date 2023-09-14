@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import { IUser } from '../auth-provider/auth-provider.interface';
+import React, { useCallback, useContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
 import {
   useChat,
@@ -6,9 +7,9 @@ import {
   useUser,
   useUserList,
 } from '../../hooks/pb-utils';
-import { useAuthContext } from '../auth-provider/auth-provider';
-import { IUser } from '../auth-provider/auth-provider.interface';
 import { pb } from '../../utils/pocketbase';
+// import { createActionReducer } from '../auth-provider/auth-reducer';
+import { useAuthContext } from '../auth-provider/auth-provider';
 
 export type THandleChatOpenFunction = (params: {
   id: string;
@@ -48,48 +49,68 @@ export interface IChatContext {
   userChatsList: IChat[] | undefined;
   followersList: IUser[] | undefined;
   getList: TGetListFunction;
-  loading: boolean;
+  isLoading: boolean;
 }
+
+export interface IChatData {
+  data: {
+    searchList: IUser[];
+    followersList: IUser[];
+    userChatsList: IChat[];
+    openChats: IChat[];
+  };
+  isLoading: boolean;
+  error: string;
+}
+
+const initialState: IChatData = {
+  data: { searchList: [], followersList: [], userChatsList: [], openChats: [] },
+  isLoading: false,
+  error: '',
+};
+
 export const ChatContext = React.createContext<IChatContext | null>(null);
 
 export function ChatProvider({ children }: React.PropsWithChildren) {
+  const [
+    {
+      data: { searchList, followersList, userChatsList, openChats },
+      isLoading,
+      isLoggedIn,
+      error,
+    },
+    dispatch,
+  ] = useReducer(createActionReducer<IChatData>(), initialState);
   const { user } = useAuthContext();
+
   const { getList, result } = useUserList();
   const { getOne, data: userData } = useUser(user?.id);
-  const [searchList, setSearchList] = useState<IUser[]>();
-  const [openChats, setOpenChats] = useState<IChat[]>([]);
-  const [userChatsList, setUserChatsList] = useState<IChat[]>();
-  const [followersList, setFollowersList] = useState<IUser[]>();
   const { getFullList, data: chatListData, loading } = useChatList();
   const { createOne, updateOne } = useChat(user?.id);
+
+  //  FOLLOWERS SEARCH
 
   const handleSearch = useCallback((value: string) => {
     if (value.length >= 3) {
       getList({
         queryParams: { filter: `name~"${value}"` },
       });
+    } else {
+      dispatch({ type: 'clearData', payload: { searchList: null } });
     }
   }, []);
 
   useEffect(() => {
-    setSearchList(result);
+    const filteredList = result?.filter((follower) => follower.id !== user.id);
+    if (result)
+      dispatch({
+        type: 'request/success',
+        payload: { searchList: filteredList },
+      });
   }, [result]);
 
-  const loadChats = useCallback(() => {
-    if (user) {
-      console.log(user);
-      getFullList({
-        sort: 'created',
-        expand: 'users',
-        filter: `users~"${user?.id}"`,
-      });
-    }
-  }, [user?.id]);
+  // FOLLOWERS LIST
 
-  useEffect(() => {
-    filterUserList(chatListData);
-  }, [chatListData]);
-  console.log(user);
   useEffect(() => {
     if (user) {
       getOne({ expand: 'followers' });
@@ -98,30 +119,49 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
 
   useEffect(() => {
     if (!userData) return;
-    setFollowersList(userData.expand.followers?.map((user: IUser) => user));
+    const followersList = userData.expand.followers?.map((user: IUser) => user);
+    dispatch({
+      type: 'request/success',
+      payload: { followersList: followersList },
+    });
   }, [userData?.followers]);
 
-  const createChatWithUser = (otherUser: IUser) => {
-    if (
-      userChatsList
-        ?.flatMap((record) => record.users.flatMap((user: IUser) => user.id))
-        .includes(otherUser)
-    )
-      return;
+  // useEffect(() => {
+  //   filterUserList(chatListData);
+  // }, [chatListData]);
 
-    createOne({ users: [user.id, otherUser] });
-  };
+  // const loadChats = useCallback(() => {
+  //   if (user) {
+  //     console.log(user);
+  //     getFullList({
+  //       sort: 'created',
+  //       expand: 'users',
+  //       filter: `users~"${user?.id}"`,
+  //     });
+  //   }
+  // }, [user?.id]);
 
-  const leaveChat = (chatId: string, users: IUser[]) => {
-    updateOne({
-      chatId,
-      users: [
-        users
-          .filter((chatUser) => chatUser.id === user.id)
-          .map((chatUser) => chatUser.id),
-      ],
-    });
-  };
+  // const createChatWithUser = (otherUser: IUser) => {
+  //   if (
+  //     userChatsList
+  //       ?.flatMap((record) => record.users.flatMap((user: IUser) => user.id))
+  //       .includes(otherUser)
+  //   )
+  //     return;
+
+  //   createOne({ users: [user.id, otherUser] });
+  // };
+
+  // const leaveChat = (chatId: string, users: IUser[]) => {
+  //   updateOne({
+  //     chatId,
+  //     users: [
+  //       users
+  //         .filter((chatUser) => chatUser.id === user.id)
+  //         .map((chatUser) => chatUser.id),
+  //     ],
+  //   });
+  // };
   const filterUserList = (data: IUser[]) => {
     const mergedObject = data?.reduce((result, currentObject) => {
       const { id, expand } = currentObject;
@@ -133,43 +173,42 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
       return result;
     }, []);
 
-    setUserChatsList(mergedObject);
+    dispatch({ type: 'request/success', payload: mergedObject });
   };
 
-  const handleChatOpen: THandleChatOpenFunction = (params) => {
-    const chatExists = openChats.some((record) => record.id === params.id);
+  // const handleChatOpen: THandleChatOpenFunction = (params) => {
+  //   const chatExists = openChats.some((record) => record.id === params.id);
 
-    if (!chatExists) {
-      setOpenChats((openChats: IChat[]) => [
-        ...openChats,
-        ...userChatsList?.filter((chat: IChat[]) => chat.id === params.id),
-      ]);
-    }
-  };
+  //   if (!chatExists) {
+  //     setOpenChats((openChats: IChat[]) => [
+  //       ...openChats,
+  //       ...userChatsList?.filter((chat: IChat[]) => chat.id === params.id),
+  //     ]);
+  //   }
+  // };
 
-  const handleChatClose: THandleChatCloseFunction = (params) => {
-    const chatExists = openChats.some((record) => record.id === params.id);
-    if (chatExists) {
-      const updatedChats = openChats.filter((chat) => chat.id !== params.id);
-      setOpenChats(updatedChats);
-    }
-  };
+  // const handleChatClose: THandleChatCloseFunction = (params) => {
+  //   const chatExists = openChats.some((record) => record.id === params.id);
+  //   if (chatExists) {
+  //     const updatedChats = openChats.filter((chat) => chat.id !== params.id);
+  //     setOpenChats(updatedChats);
+  //   }
+  // };
 
   return (
     <ChatContext.Provider
       value={{
+        isLoading,
         handleSearch,
-        handleChatOpen,
-        handleChatClose,
-        createChatWithUser,
-        leaveChat,
-        openChats,
-        loadChats,
         searchList,
-        userChatsList,
-        getList,
-        loading,
         followersList,
+        // handleChatOpen,
+        // handleChatClose,
+        // createChatWithUser,
+        // leaveChat,
+        // openChats,
+        // loadChats,
+        // userChatsList,
       }}
     >
       {children}

@@ -8,11 +8,11 @@ import {
   TSignInFunction,
   TLogoutFunction,
 } from './auth-provider.interface';
-import { createActionReducer } from '../../hooks/create-action-reducer';
+import { authReducer, IAuthState, TAuthActions } from './auth-reducer';
 /*eslint-disable*/
 
-const initialState = {
-  data: null,
+const initialState: IAuthState = {
+  user: null,
   isLoading: false,
   isLoggedIn: false,
   error: '',
@@ -21,22 +21,22 @@ const initialState = {
 export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
-  const [{ data: user, isLoading, isLoggedIn, error }, dispatch] = useReducer(
-    createActionReducer<IUser>(),
+  const [{ user, isLoading, isLoggedIn, error }, dispatch] = useReducer(
+    authReducer,
     initialState
   );
-  console.log(user);
+
   const { loading, updateOne } = useUser(user?.id);
   const { data: updatedUser } = useUserSubscription(user?.id || '');
 
   useEffect(() => {
-    dispatch({ type: 'request/success', payload: updatedUser as IUser });
+    dispatch({ type: 'AUTH_SUCCESS', payload: updatedUser as IUser });
   }, [updatedUser]);
 
   useEffect(() => {
     const unregister = pb.authStore.onChange((token, arg) => {
       dispatch({
-        type: 'request/success',
+        type: 'AUTH_SUCCESS',
         payload: pb.authStore.model as IUser,
       });
     });
@@ -49,11 +49,11 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
   useEffect(() => {
     const refreshAuth = async () => {
       try {
-        dispatch({ type: 'loading' });
+        dispatch({ type: 'LOADING' });
         await pb.collection('users').authRefresh();
       } catch (e) {
         console.error(e);
-        dispatch({ type: 'request/failure', payload: (e as Error).message });
+        dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
         // TODO create interface for Pocketbase errors
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -68,29 +68,29 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
 
   const signUp: TSignUpFunction = async (params) => {
     try {
-      dispatch({ type: 'loading' });
+      dispatch({ type: 'LOADING' });
       await pb.collection('users').create(params);
     } catch (e) {
       console.error(e);
-      dispatch({ type: 'request/failure', payload: (e as Error).message });
+      dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
     }
-    dispatch({ type: 'loading/stop' });
+    dispatch({ type: 'LOADING_STOP' });
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {
     try {
-      dispatch({ type: 'loading' });
+      dispatch({ type: 'LOADING' });
 
       await pb.collection('users').authWithPassword(email, password);
     } catch (e) {
-      dispatch({ type: 'request/failure', payload: (e as Error).message });
+      dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
     }
-    dispatch({ type: 'loading/stop' });
+    dispatch({ type: 'LOADING_STOP' });
   };
 
   const logout: TLogoutFunction = async () => {
     pb.authStore.clear();
-    dispatch({ type: 'resetState' });
+    dispatch({ type: 'SIGNOUT' });
   };
 
   return (

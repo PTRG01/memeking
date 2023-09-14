@@ -15,10 +15,10 @@ export function Sidebar(props: SidebarProps) {
   return (
     <div>
       <AuthLoader>
-        {/* <Group position="apart">
-          {isLoggedIn && <FollowersSearch />}
-          {isLoggedIn && <FollowingList />}
-        </Group> */}
+        <Group position="apart">
+          {/* {isLoggedIn && <FollowersSearch />}
+          {isLoggedIn && <FollowingList />} */}
+        </Group>
       </AuthLoader>
     </div>
   );

@@ -25,6 +25,7 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/app/contexts/auth-provider/auth-provider-2tsx"
+    "src/app/contexts/auth-provider/auth-provider-2tsx",
+    "src/app/contexts/chat-provider/chat-reducer.tx"
   ]
 }
