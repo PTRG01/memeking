@@ -1,28 +1,34 @@
 import { Group, NavLink } from '@mantine/core';
 import { useUserList } from '../../hooks/pb-utils';
 import { useState } from 'react';
-import UserSearch from '../search/search';
+import UserSearch from '../search/user-search';
 import { User } from 'tabler-icons-react';
-import {
-  TUserModel,
-  useAuthContext,
-} from '../../contexts/auth-provider/auth-provider';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { TUserModel } from '../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 
 export function FollowersSearch() {
-  const { getList, result } = useUserList();
   const { user, updateCurrentUser, isLoading } = useAuthContext();
   const [active, setActive] = useState(false);
   const { t, i18n } = useTranslation();
 
-  const filterQueryResult = (currentUser: TUserModel) => {
-    return result?.filter((user) => user.id !== currentUser?.id);
-  };
+  // const filterQueryResult = (currentUser: TUserModel) => {
+  //   return result?.filter((user) => user.id !== currentUser?.id);
+  // };
 
   if (!user) return null;
 
+  const handleAddUser = (id: string): void => {
+    updateCurrentUser({
+      followers: [...user.followers, id],
+    });
+  };
+  const handleRemoveUser = (id: string): Promise<void> =>
+    updateCurrentUser({
+      followers: user.followers.filter((follower: string) => follower !== id),
+    });
   return (
     <NavLink
       label={t('search.search')}
@@ -33,22 +39,11 @@ export function FollowersSearch() {
       onClick={() => setActive(!active)}
     >
       <UserSearch
-        onAddUser={(id) => {
-          updateCurrentUser({
-            followers: [...user.followers, id],
-          });
-        }}
-        onRemoveUser={(id) =>
-          updateCurrentUser({
-            followers: user.followers.filter(
-              (follower: string) => follower !== id
-            ),
-          })
-        }
+        onAddUser={handleAddUser}
+        onRemoveUser={handleRemoveUser}
         values={user?.followers}
         loading={isLoading}
         hideExisting={false}
-        onInputUsed={() => null}
       />
     </NavLink>
   );

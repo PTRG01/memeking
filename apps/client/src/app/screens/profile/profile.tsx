@@ -11,10 +11,8 @@ import {
   SimpleGrid,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
-import {
-  IUser,
-  useAuthContext,
-} from '../../contexts/auth-provider/auth-provider';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { useEffect } from 'react';
 import { useUser } from '../../hooks/pb-utils';
 import UserListItem from '../../components/user-list-item/user-list-item';

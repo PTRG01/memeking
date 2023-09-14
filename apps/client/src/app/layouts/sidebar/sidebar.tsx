@@ -6,6 +6,11 @@ import { Group } from '@mantine/core';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import ChatList from '../../components/chat-list/chat-list';
 import { ChatProvider } from '../../contexts/chat-provider/chat-provider';
+import Chat from '../../components/chat/chat';
+import { Group } from '@mantine/core';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import ChatList from '../../components/chat-list/chat-list';
+import { ChatProvider } from '../../contexts/chat-provider/chat-provider';
 /* eslint-disable-next-line */
 export interface SidebarProps {}
 
@@ -16,8 +21,8 @@ export function Sidebar(props: SidebarProps) {
     <div>
       <AuthLoader>
         <Group position="apart">
-          {isLoggedIn && <FollowersSearch />}
-          {isLoggedIn && <FollowingList />}
+          {/* {isLoggedIn && <FollowersSearch />}
+          {isLoggedIn && <FollowingList />} */}
         </Group>
       </AuthLoader>
     </div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import AuthLoader from '../../components/auth-loader/auth-loader';
-import UserSearch from '../../components/search/search';
+import UserSearch from '../../components/search/user-search';
 import ChatList from '../../components/chat-list/chat-list';
 
 /* eslint-disable-next-line */
@@ -31,7 +31,7 @@ export function Header(props: HeaderProps) {
         {/* TODO add account menu when loggedIn */}
         <AuthLoader>
           <Group>
-            {isLoggedIn && <ChatList />}
+            {/* {isLoggedIn && <ChatList />} */}
 
             {!isLoggedIn && (
               <Button
@@ -61,7 +61,6 @@ export function Header(props: HeaderProps) {
         </AuthLoader>
 
         <Group position="right">
-          {' '}
           <Button
             size="xs"
             key={'en'}

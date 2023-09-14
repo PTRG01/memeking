@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useChat, useUserList } from '../../hooks/pb-utils';
-import { UserSearch } from '../search/search';
+import { UserSearch } from '../search/user-search';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import UserListItem from '../user-list-item/user-list-item';
 import { Group, List, Title } from '@mantine/core';

@@ -6,7 +6,9 @@
   },
   "files": [
     "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
-    "../../node_modules/@nrwl/react/typings/image.d.ts"
+    "../../node_modules/@nrwl/react/typings/image.d.ts",
+    "src/app/contexts/auth-provider/auth-provider.interface.ts",
+    "src/app/contexts/auth-provider/auth-provider.interface.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",
@@ -18,5 +20,12 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/app/contexts/auth-provider/auth-provider-2tsx",
+    "src/app/contexts/chat-provider/chat-reducer.tx"
+  ]
 }

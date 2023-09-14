@@ -1,9 +1,7 @@
 import { Badge, Group, List, NavLink } from '@mantine/core';
 import { useState } from 'react';
-import {
-  IUser,
-  useAuthContext,
-} from '../../contexts/auth-provider/auth-provider';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import UserListItem from '../user-list-item/user-list-item';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../loader/loader';
@@ -15,7 +13,7 @@ export interface IFollowingListProps {}
 export function FollowingList(props: IFollowingListProps) {
   const [active, setActive] = useState(false);
   const { user, updateCurrentUser } = useAuthContext();
-  const { loading, followersList } = useChatContext();
+  const { isLoading, followersList } = useChatContext();
   const { t, i18n } = useTranslation();
 
   return (
@@ -33,7 +31,7 @@ export function FollowingList(props: IFollowingListProps) {
     >
       <Group>
         <List mt="lg" size="sm" w="100%">
-          <LoaderComponent isLoading={loading}>
+          <LoaderComponent isLoading={isLoading}>
             {followersList?.map((record: IUser) => (
               <UserListItem
                 label={record.name}

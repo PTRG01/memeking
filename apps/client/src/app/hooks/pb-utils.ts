@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
 import { ListResult, Record, RecordService } from 'pocketbase';
-import { IUser } from '../contexts/auth-provider/auth-provider';
+import { IUser } from '../contexts/auth-provider/auth-provider-2tsx';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
