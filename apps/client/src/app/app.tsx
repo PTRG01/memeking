@@ -25,6 +25,13 @@ import {
   ChatProvider,
 } from './contexts/chat-provider/chat-provider';
 import Chats from './components/chats/chats';
+import Chat from './components/chat/chat';
+import { useState } from 'react';
+import {
+  useChatContext,
+  ChatProvider,
+} from './contexts/chat-provider/chat-provider';
+import Chats from './components/chats/chats';
 
 /* eslint-disable-next-line */
 export function App() {

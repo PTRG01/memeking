@@ -8,6 +8,7 @@ import {
   Card,
   Text,
   Button,
+  Button,
 } from '@mantine/core';
 import { CircleMinus, CirclePlus, Message } from 'tabler-icons-react';
 import { useChat, useUser } from '../../hooks/pb-utils';
@@ -24,6 +25,7 @@ export interface IUserListItemProps {
   loading: boolean;
   card: boolean;
   addUser?: boolean;
+  addUser?: boolean;
 }
 
 export function UserListItem({
@@ -36,7 +38,11 @@ export function UserListItem({
   loading,
   card,
   addUser,
+  addUser,
 }: IUserListItemProps) {
+  const { createChatWithUser } = useChatContext();
+
+  const handleValues = () => {
   const { createChatWithUser } = useChatContext();
 
   const handleValues = () => {
@@ -60,6 +66,7 @@ export function UserListItem({
           </UnstyledButton>
           <Group position="right">
             <UnstyledButton onClick={handleValues}>
+            <UnstyledButton onClick={handleValues}>
               {loading ? (
                 <Loader size={'sm'} />
               ) : values.includes(id) ? (
@@ -74,6 +81,26 @@ export function UserListItem({
     );
   } else {
     return (
+      <Flex align="center" justify="space-between " mt={5}>
+        <UnstyledButton
+          ml={5}
+          onClick={() => (addUser ? null : createChatWithUser(id))}
+        >
+          <Group>
+            <Avatar size="lg" src={avatar} />
+            <Text>{label}</Text>
+          </Group>
+        </UnstyledButton>
+
+        <UnstyledButton ml={90} onClick={handleValues}>
+          {loading ? (
+            <Loader size={'sm'} />
+          ) : values.includes(id) ? (
+            <CircleMinus stroke="red" />
+          ) : (
+            <CirclePlus stroke="green" />
+          )}
+        </UnstyledButton>
       <Flex align="center" justify="space-between " mt={5}>
         <UnstyledButton
           ml={5}
