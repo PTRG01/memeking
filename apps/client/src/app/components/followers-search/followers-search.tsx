@@ -1,22 +1,20 @@
 import { Group, NavLink } from '@mantine/core';
 import { useUserList } from '../../hooks/pb-utils';
 import { useState } from 'react';
-import UserSearch from '../search/user-search';
+import UserSearch from '../user-search/user-search';
 import { User } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { TUserModel } from '../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
+import UserList from '../user-list/user-list';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 
 /* eslint-disable-next-line */
 
 export function FollowersSearch() {
   const { user, updateCurrentUser, isLoading } = useAuthContext();
+  const { handleSearch, followersSearchList, followingList } = useChatContext();
   const [active, setActive] = useState(false);
   const { t, i18n } = useTranslation();
-
-  // const filterQueryResult = (currentUser: TUserModel) => {
-  //   return result?.filter((user) => user.id !== currentUser?.id);
-  // };
 
   if (!user) return null;
 
@@ -38,13 +36,18 @@ export function FollowersSearch() {
       icon={<User />}
       onClick={() => setActive(!active)}
     >
-      <UserSearch
-        onAddUser={handleAddUser}
-        onRemoveUser={handleRemoveUser}
-        values={user?.followers}
-        loading={isLoading}
-        hideExisting={false}
-      />
+      <UserSearch handleSearch={handleSearch} loading={isLoading}>
+        <UserList
+          userList={followersSearchList}
+          onAddUser={handleAddUser}
+          onRemoveUser={handleRemoveUser}
+          currentList={followingList}
+          handleItemClick={() => ''}
+          isLoading={isLoading}
+          itemActive={false}
+          hideExisting={false}
+        />
+      </UserSearch>
     </NavLink>
   );
 }

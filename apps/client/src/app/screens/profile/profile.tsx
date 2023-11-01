@@ -7,23 +7,28 @@ import {
   Tabs,
   TextInput,
   Button,
-  List,
   SimpleGrid,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
-import { useEffect } from 'react';
-import { useUser } from '../../hooks/pb-utils';
-import UserListItem from '../../components/user-list-item/user-list-item';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
+import UserList from '../../components/user-list/user-list';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
 
 export function Profile(props: ProfileProps) {
-  const { user, updateCurrentUser } = useAuthContext();
-  const { followersList } = useChatContext();
+  const { user } = useAuthContext();
+  const {
+    followingList,
+    handleAddFollowing,
+    handleRemoveFollowing,
+    isLoading,
+  } = useChatContext();
+
+  const handleItemClick = () => {
+    return '';
+  };
 
   return (
     <Flex direction="column" mx={100} mt={20}>
@@ -70,27 +75,17 @@ export function Profile(props: ProfileProps) {
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>
-            {followersList?.map((item: IUser) => (
-              <UserListItem
-                card={true}
-                label={item.name}
-                avatar={item.avatar}
-                id={item.id}
-                key={item.id}
-                values={user?.followers}
-                onAddValue={function (): void {
-                  throw new Error('Function not implemented.');
-                }}
-                onRemoveValue={function (): void {
-                  updateCurrentUser({
-                    followers: user?.followers.filter(
-                      (follower: string) => follower !== item.id
-                    ),
-                  });
-                }}
-                loading={false}
-              />
-            ))}
+            <UserList
+              userList={followingList}
+              onAddUser={handleAddFollowing}
+              onRemoveUser={handleRemoveFollowing}
+              currentList={followingList}
+              isLoading={isLoading}
+              itemActive={true}
+              handleItemClick={handleItemClick}
+              hideExisting={false}
+              card={true}
+            />
           </SimpleGrid>
         </Tabs.Panel>
         <Tabs.Panel value="settings" pt="xs">

@@ -8,27 +8,16 @@ export interface IAuthState {
 }
 
 type TAuthActionsNoPayload =
-  | { type: 'LOADING' }
-  | { type: 'LOADING_STOP' }
-  | { type: 'CLEAR_ERROR' }
-  | { type: 'SIGNOUT' };
+  | { type: 'LOADING'; payload: null }
+  | { type: 'LOADING_STOP'; payload: null }
+  | { type: 'CLEAR_ERROR'; payload: null }
+  | { type: 'SIGNOUT'; payload: null };
 
 type TAuthActionsPayload =
   | { type: 'AUTH_SUCCESS'; payload: IUser }
   | { type: 'AUTH_FAILURE'; payload: string };
 
 export type TAuthActions = TAuthActionsNoPayload | TAuthActionsPayload;
-
-// export type TAuthActions = {
-//   type:
-//     | 'LOADING'
-//     | 'LOADING_STOP'
-//     | 'AUTH_SUCCESS'
-//     | 'AUTH_FAILURE'
-//     | 'CLEAR_ERROR'
-//     | 'SIGNOUT';
-//   payload: IUser | null;
-// };
 
 const Actions = {
   LOADING: 'LOADING',

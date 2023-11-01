@@ -1,7 +1,7 @@
 import { TextInput, Flex, Button, List, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useUserList } from '../../hooks/pb-utils';
-import UserListItem from '../../components/user-list-item/user-list-item';
+import UserListItem from '../user-list-item/UserListItem';
 import { Search } from 'tabler-icons-react';
 import { useCallback, useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

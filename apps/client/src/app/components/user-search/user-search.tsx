@@ -1,30 +1,18 @@
 import { TextInput, Flex, Button, List, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import UserListItem from '../user-list-item/user-list-item';
 import { Search } from 'tabler-icons-react';
 import { useEffect } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 /* eslint-disable-next-line */
 
 export interface IUserSearch {
-  onAddUser: (value: string) => void;
-  onRemoveUser: (value: string) => void;
-  values: string[];
+  handleSearch: (value: string) => void;
   loading: boolean;
-  hideExisting: boolean;
+  children: React.ReactElement;
 }
 
-export function UserSearch({
-  onAddUser,
-  onRemoveUser,
-  values,
-  loading,
-  hideExisting,
-}: IUserSearch) {
-  const { handleSearch, searchList } = useChatContext();
+export function UserSearch({ handleSearch, loading, children }: IUserSearch) {
   const { t, i18n } = useTranslation();
 
   const form = useForm({
@@ -35,7 +23,7 @@ export function UserSearch({
 
   useEffect(() => {
     handleSearch(form.values.search);
-  }, [form.values.search]);
+  }, [form.values.search, handleSearch]);
 
   return (
     <Group>
@@ -52,19 +40,7 @@ export function UserSearch({
         </form>
       </Group>
       <List mt="lg" size="sm" w="100%">
-        {searchList?.map((item) => (
-          <UserListItem
-            card={false}
-            label={item.name}
-            avatar={item.avatar}
-            id={item.id}
-            key={item.id}
-            onAddValue={onAddUser}
-            onRemoveValue={onRemoveUser}
-            values={values}
-            loading={loading}
-          />
-        ))}
+        {children}
       </List>
     </Group>
   );

@@ -1,43 +1,18 @@
-import {
-  ActionIcon,
-  Button,
-  List,
-  Menu,
-  NavLink,
-  ScrollArea,
-  UnstyledButton,
-  Text,
-  Group,
-  Container,
-} from '@mantine/core';
+import { ActionIcon, Menu, ScrollArea, Text, Container } from '@mantine/core';
 import { Message2 } from 'tabler-icons-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
+import LoaderComponent from '../../loader/loader';
+import { IChat } from '../../../contexts/chat-provider/chat-provider.interface';
 import ChatItem from '../chat-item/chat-item';
-import { useChatContext } from '../../contexts/chat-provider/chat-provider';
-import LoaderComponent from '../loader/loader';
-import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { pb } from '../../utils/pocketbase';
 
-/* eslint-disable-next-line */
-export interface IChatListProps {}
-
-export function ChatList(props: IChatListProps) {
+export function ChatList() {
   const [active, setActive] = useState(false);
-  const { loadChats, userChatsList, loading } = useChatContext();
-  const { user } = useAuthContext();
-
-  useEffect(() => {
-    loadChats();
-  }, []);
-
-  useEffect(() => {
-    pb.collection('chats').subscribe('*', async (e) => {
-      loadChats();
-    });
-  }, [userChatsList]);
+  const { userChatsList, isLoading } = useChatContext();
 
   return (
-    <LoaderComponent isLoading={loading}>
+    <LoaderComponent isLoading={isLoading}>
       <Menu
         width={250}
         zIndex={1000}
@@ -67,10 +42,9 @@ export function ChatList(props: IChatListProps) {
                 <ChatItem
                   key={chat.id}
                   id={chat.id}
-                  users={chat.users
-                    .filter((record) => record.id !== user.id)
-                    .map((user) => user.name)}
-                  avatar={chat.users.map((record) => record.avatar)}
+                  users={chat.users}
+                  avatar={chat.avatar}
+                  expand={chat.expand}
                 />
               ))
             )}

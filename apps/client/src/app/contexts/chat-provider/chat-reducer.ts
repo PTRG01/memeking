@@ -1,78 +1,120 @@
 import { IUser } from '../auth-provider/auth-provider.interface';
+import { IChat } from './chat-provider.interface';
 
-export interface IActionState<T> {
-  data: T | null;
+export interface IChatState {
+  user: IUser | null;
+  followersSearchList: IUser[] | [];
+  followingList: IUser[] | null;
+  userChatsList: IChat[] | null;
+  openChats: IChat[] | null;
   isLoading: boolean;
-  isLoggedIn: boolean;
-  error?: string | null;
+  error: string | null;
 }
 
-export type TActionResult<T> =
-  | { type: 'loading' }
-  | { type: 'loading/stop' }
-  | { type: 'request/success'; payload: T }
-  | { type: 'request/failure'; payload: string }
-  | { type: 'clearData'; payload: T }
-  | { type: 'clearError'; payload: string }
-  | { type: 'resetState' };
+export type TChatActions =
+  | { type: 'LOADING'; payload: null }
+  | { type: 'LOADING_STOP'; payload: null }
+  | { type: 'SET_ERROR'; payload: string }
+  | { type: 'CLEAR_ERROR'; payload: null | null }
+  | { type: 'SIGNOUT'; payload: null }
+  | { type: 'CANCEL_SEARCH'; payload?: null }
+  | { type: 'UPDATE_USER'; payload: IUser | null }
+  | { type: 'UPDATE_SEARCH'; payload: IUser[] | null }
+  | { type: 'UPDATE_FOLLOWING'; payload: IUser | null }
+  | { type: 'UPDATE_CHATS_LIST'; payload: IChat[] }
+  | { type: 'UPDATE_OPEN_CHATS'; payload: string };
 
 const Actions = {
-  loading: 'loading',
-  loadingStop: 'loading/stop',
-  requestSuccess: 'request/success',
-  requestFailure: 'request/failure',
-  clearData: 'clearData',
-  clearError: 'clearError',
-  resetState: 'resetState',
+  LOADING: 'LOADING',
+  LOADING_STOP: 'LOADING_STOP',
+  UPDATE_USER: 'UPDATE_USER',
+  UPDATE_SEARCH: 'UPDATE_SEARCH',
+  CANCEL_SEARCH: 'CANCEL_SEARCH',
+  UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
+  UPDATE_CHATS_LIST: 'UPDATE_CHATS_LIST',
+  UPDATE_OPEN_CHATS: 'UPDATE_OPEN_CHATS',
+  CLEAR_ERROR: 'CLEAR_ERROR',
+  SIGNOUT: 'SIGNOUT',
 };
 
-export const createActionReducer =
-  <T,>(customActions) =>
-  (state: IActionState<T>, action: TActionResult<T>): IActionState<T> => {
-    switch (action.type) {
-      case Actions.loading:
-        return {
-          ...state,
-          isLoading: true,
-        };
-      case Actions.loadingStop:
-        return {
-          ...state,
-          isLoading: false,
-        };
-      case Actions.requestFailure:
-        return {
-          ...state,
-          isLoading: false,
-          isLoggedIn: false,
-          error: action.payload,
-        };
+export const chatReducer = (
+  state: IChatState,
+  action: TChatActions
+): IChatState => {
+  switch (action.type) {
+    case Actions.LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case Actions.LOADING_STOP:
+      return {
+        ...state,
+        isLoading: false,
+      };
 
-      case Actions.requestSuccess:
+    case Actions.UPDATE_SEARCH:
+      return {
+        ...state,
+        isLoading: false,
+        followersSearchList: (action.payload as IUser[])?.filter(
+          (follower: IUser) => follower.id !== state.user?.id
+        ),
+      };
+
+    case Actions.CANCEL_SEARCH:
+      return {
+        ...state,
+        isLoading: false,
+        followersSearchList: [],
+      };
+    case Actions.UPDATE_USER:
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload as IUser,
+      };
+    case Actions.UPDATE_FOLLOWING:
+      return {
+        ...state,
+        isLoading: false,
+        followingList: (action.payload as IUser)?.expand.followers?.map(
+          (user: IUser) => user
+        ),
+      };
+    case Actions.UPDATE_CHATS_LIST:
+      return {
+        ...state,
+        isLoading: false,
+        userChatsList: action.payload as IChat[],
+      };
+
+    case Actions.UPDATE_OPEN_CHATS:
+      if (state.openChats?.some((chat) => chat.id === action.payload)) {
         return {
           ...state,
-          isLoading: false,
-          isLoggedIn: true,
-          data: { ...state.data, ...action.payload },
+          openChats: state.openChats?.filter(
+            (chat) => chat.id !== action.payload
+          ),
         };
-      case Actions.clearData:
+      } else {
         return {
           ...state,
-          data: { ...state.data, ...action.payload },
+          openChats: [
+            ...(state.openChats as IChat[]),
+            state.userChatsList?.filter(
+              (chat: IChat) => chat.id === action.payload
+            ),
+          ].flat() as IChat[],
         };
-      case Actions.clearError:
-        return {
-          ...state,
-          error: '',
-        };
-      case Actions.resetState:
-        return {
-          ...state,
-          isLoading: false,
-          isLoggedIn: false,
-          data: null,
-        };
-      default:
-        throw new Error('Unknown action type');
-    }
-  };
+      }
+    case Actions.CLEAR_ERROR:
+      return {
+        ...state,
+        error: '',
+      };
+
+    default:
+      throw new Error('Unknown action type');
+  }
+};

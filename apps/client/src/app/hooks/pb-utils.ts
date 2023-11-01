@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
 import { ListResult, Record, RecordService } from 'pocketbase';
-import { IUser } from '../contexts/auth-provider/auth-provider-2tsx';
+import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
@@ -37,13 +37,23 @@ export const createSearchHook = (collection: RecordService) => {
 
     const getFullList = useCallback(async (queryParams = {}) => {
       setLoading(true);
-      setData(null);
       const result = await collection.getFullList(queryParams);
       setData(result);
+      setResult(result);
       setLoading(false);
     }, []);
 
-    return { data, result, loading, items, getList, getFullList };
+    return useMemo(
+      () => ({
+        data,
+        result,
+        loading,
+        items,
+        getList,
+        getFullList,
+      }),
+      [data, getFullList, getList, items, loading, result]
+    );
   };
 };
 
@@ -65,7 +75,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       [id]
     );
 
-    const createOne = useCallback(async (data: T) => {
+    const createOne = useCallback(async (data: Partial<T>) => {
       setLoading(true);
       const result = (await collection.create(data)) as T;
       setData(result);
@@ -86,7 +96,6 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
         )) as T;
         setData(result);
         setLoading(false);
-        console.log(result);
       },
       [id]
     );

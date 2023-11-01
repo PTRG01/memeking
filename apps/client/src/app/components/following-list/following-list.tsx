@@ -1,21 +1,48 @@
 import { Badge, Group, List, NavLink } from '@mantine/core';
 import { useState } from 'react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
-import UserListItem from '../user-list-item/user-list-item';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../loader/loader';
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import UserList from '../user-list/user-list';
+
 /* eslint-disable-next-line */
 export interface IFollowingListProps {}
 
 export function FollowingList(props: IFollowingListProps) {
   const [active, setActive] = useState(false);
-  const { user, updateCurrentUser } = useAuthContext();
-  const { isLoading, followersList } = useChatContext();
+  const { user } = useAuthContext();
+  const {
+    isLoading,
+    followingList,
+    handleAddFollowing,
+    handleRemoveFollowing,
+    userChatsList,
+    createChatWithUser,
+    handleOpenChatToggle,
+  } = useChatContext();
   const { t, i18n } = useTranslation();
 
+  // TODO VERIFY HANDLE FUNCTION
+
+  function handleItemClick(id: string) {
+    if (!id) return;
+    const currentUsers = [user?.id, id];
+    const matchingChat = userChatsList?.find(
+      (chat) =>
+        chat?.users?.length === currentUsers.length &&
+        chat.users.every((userId) => currentUsers?.includes(userId))
+    );
+    if (!matchingChat) return;
+
+    const chatExists = matchingChat?.users?.includes(id);
+    if (chatExists) {
+      handleOpenChatToggle(matchingChat?.id);
+    } else {
+      createChatWithUser(id);
+    }
+  }
   return (
     <NavLink
       label={t('following.following')}
@@ -32,28 +59,19 @@ export function FollowingList(props: IFollowingListProps) {
       <Group>
         <List mt="lg" size="sm" w="100%">
           <LoaderComponent isLoading={isLoading}>
-            {followersList?.map((record: IUser) => (
-              <UserListItem
-                label={record.name}
-                avatar={record.avatar}
-                id={record.id}
-                key={record.id}
-                values={user.followers}
+            <Group>
+              <UserList
+                userList={followingList}
+                onAddUser={handleAddFollowing}
+                onRemoveUser={handleRemoveFollowing}
+                currentList={followingList}
+                isLoading={isLoading}
+                itemActive={true}
+                handleItemClick={handleItemClick}
+                hideExisting={false}
                 card={false}
-                onAddValue={function () {
-                  throw new Error('Function not implemented.');
-                }}
-                onRemoveValue={function () {
-                  updateCurrentUser({
-                    followers: user.followers.filter(
-                      (follower: string) => follower !== record.id
-                    ),
-                  });
-                }}
-                loading={false}
-                addUser={false}
               />
-            ))}
+            </Group>
           </LoaderComponent>
         </List>
       </Group>

@@ -1,10 +1,9 @@
 import { render } from '@testing-library/react';
+import Chats from './chats-container';
 
-import AddToChatList from './add-to-chat-list';
-
-describe('AddToChatList', () => {
+describe('Chats', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<AddToChatList />);
+    const { baseElement } = render(<Chats />);
     expect(baseElement).toBeTruthy();
   });
 });
