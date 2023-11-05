@@ -9,6 +9,7 @@ import { pb } from '../../../utils/pocketbase';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import UserList from '../../user-list/user-list';
+import UserListItemInline from '../../user-list-item-inline/user-list-item-inline';
 
 /* eslint-disable-next-line */
 
@@ -31,29 +32,44 @@ export function ChatAddList() {
     <Group>
       <UserSearch handleSearch={handleSearchToAdd} loading={isLoading}>
         <UserList
+          listItem={(item, values) => (
+            <UserListItemInline
+              user={item}
+              values={values}
+              onAddUser={updateChat}
+              onRemoveUser={() => ''}
+              handleItemClick={() => ''}
+              itemActive={false}
+              isLoading={isLoading}
+            />
+          )}
           key={'toAddSearchListKey'}
           userList={chatToAddList}
-          onAddUser={updateChat}
-          onRemoveUser={() => ''}
           currentList={currentChatUsers}
           isLoading={isLoading}
-          itemActive={false}
-          handleItemClick={() => ''}
           hideExisting={true}
         />
       </UserSearch>
+
       {!isSearchUsed ? (
         <Group>
-          <Title size={15}>Followers:</Title>
+          <Title size={15}>Following:</Title>
           <UserList
+            listItem={(item, values) => (
+              <UserListItemInline
+                user={item}
+                values={values}
+                onAddUser={updateChat}
+                onRemoveUser={() => ''}
+                handleItemClick={() => ''}
+                itemActive={false}
+                isLoading={isLoading}
+              />
+            )}
             key={'toAddFollowingListKey'}
             userList={followingList}
-            onAddUser={updateChat}
-            onRemoveUser={() => ''}
             currentList={currentChatUsers}
             isLoading={isLoading}
-            itemActive={false}
-            handleItemClick={() => ''}
             hideExisting={true}
           />
         </Group>

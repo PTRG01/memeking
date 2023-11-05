@@ -13,6 +13,7 @@ import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import UserList from '../../components/user-list/user-list';
+import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
@@ -76,15 +77,21 @@ export function Profile(props: ProfileProps) {
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>
             <UserList
+              listItem={(item, values) => (
+                <UserListItemCard
+                  user={item}
+                  values={values}
+                  onAddUser={handleAddFollowing}
+                  onRemoveUser={handleRemoveFollowing}
+                  handleItemClick={handleItemClick}
+                  itemActive={false}
+                  isLoading={isLoading}
+                />
+              )}
               userList={followingList}
-              onAddUser={handleAddFollowing}
-              onRemoveUser={handleRemoveFollowing}
               currentList={followingList}
               isLoading={isLoading}
-              itemActive={true}
-              handleItemClick={handleItemClick}
               hideExisting={false}
-              card={true}
             />
           </SimpleGrid>
         </Tabs.Panel>

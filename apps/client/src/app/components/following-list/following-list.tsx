@@ -6,11 +6,11 @@ import LoaderComponent from '../loader/loader';
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import UserList from '../user-list/user-list';
+import UserListItemInline from '../user-list-item-inline/user-list-item-inline';
 
 /* eslint-disable-next-line */
-export interface IFollowingListProps {}
 
-export function FollowingList(props: IFollowingListProps) {
+export function FollowingList() {
   const [active, setActive] = useState(false);
   const { user } = useAuthContext();
   const {
@@ -61,15 +61,21 @@ export function FollowingList(props: IFollowingListProps) {
           <LoaderComponent isLoading={isLoading}>
             <Group>
               <UserList
+                listItem={(item, values) => (
+                  <UserListItemInline
+                    user={item}
+                    values={values}
+                    onAddUser={handleAddFollowing}
+                    onRemoveUser={handleRemoveFollowing}
+                    handleItemClick={handleItemClick}
+                    itemActive={true}
+                    isLoading={isLoading}
+                  />
+                )}
                 userList={followingList}
-                onAddUser={handleAddFollowing}
-                onRemoveUser={handleRemoveFollowing}
                 currentList={followingList}
                 isLoading={isLoading}
-                itemActive={true}
-                handleItemClick={handleItemClick}
                 hideExisting={false}
-                card={false}
               />
             </Group>
           </LoaderComponent>
