@@ -1,4 +1,3 @@
-import { List } from '@mantine/core';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { IChat } from '../../contexts/chat-provider/chat-provider.interface';
 

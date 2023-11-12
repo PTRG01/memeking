@@ -14,6 +14,8 @@ import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import UserList from '../../components/user-list/user-list';
 import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
+import Post from '../../components/posts/post/post';
+import PostList from '../../components/posts/post-list/post-list';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
@@ -30,6 +32,30 @@ export function Profile(props: ProfileProps) {
   const handleItemClick = () => {
     return '';
   };
+
+  const tempPostList = [
+    {
+      id: '43254432544',
+      avatar: '',
+      title: 'Post 1',
+      contentText:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
+    },
+    {
+      id: '124235343',
+      avatar: '',
+      title: 'Post 2',
+      contentText:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
+    },
+    {
+      id: '53425663653',
+      avatar: '',
+      title: 'Post 3',
+      contentText:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
+    },
+  ];
 
   return (
     <Flex direction="column" mx={100} mt={20}>
@@ -67,12 +93,15 @@ export function Profile(props: ProfileProps) {
           <Tabs.Tab value="settings" icon={<Settings size="0.8rem" />}>
             Settings
           </Tabs.Tab>
-        </Tabs.List>{' '}
+        </Tabs.List>
         <Tabs.Panel value="memes" pt="xs">
           Gallery tab content
         </Tabs.Panel>
         <Tabs.Panel value="posts" pt="xs">
-          Messages tab content
+          <PostList
+            listItem={(item) => <Post post={item} />}
+            postList={tempPostList}
+          />
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>
