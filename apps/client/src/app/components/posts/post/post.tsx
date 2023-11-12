@@ -9,6 +9,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useState } from 'react';
+import VoteBar from '../../vote-bar/vote-bar';
 
 export interface IPost {
   id: string;
@@ -46,6 +47,7 @@ export function Post({ post }: IPostProps) {
       <Group my={15}>
         <Text>{post.contentText}</Text>
       </Group>
+      <VoteBar />
     </Paper>
   );
 }
