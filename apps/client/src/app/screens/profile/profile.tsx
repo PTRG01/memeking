@@ -16,6 +16,8 @@ import UserList from '../../components/user-list/user-list';
 import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
 import Post from '../../components/posts/post/post';
 import PostList from '../../components/posts/post-list/post-list';
+import PostForm from '../../components/posts/post-form/post-form';
+import { usePostContext } from '../../contexts/post-provider/post-provider';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
@@ -28,7 +30,7 @@ export function Profile(props: ProfileProps) {
     handleRemoveFollowing,
     isLoading,
   } = useChatContext();
-
+  const { userPostsList } = usePostContext();
   const handleItemClick = () => {
     return '';
   };
@@ -98,9 +100,10 @@ export function Profile(props: ProfileProps) {
           Gallery tab content
         </Tabs.Panel>
         <Tabs.Panel value="posts" pt="xs">
+          <PostForm />
           <PostList
             listItem={(item) => <Post post={item} />}
-            postList={tempPostList}
+            postList={userPostsList}
           />
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">

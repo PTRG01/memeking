@@ -1,46 +1,28 @@
-import { IUser } from '../auth-provider/auth-provider.interface';
-import { IChat } from './post-provider.interface';
+import { IPost } from './post-provider.interface';
 
-export interface IChatState {
-  user: IUser | null;
-  followersSearchList: IUser[] | [];
-  followingList: IUser[] | null;
-  userChatsList: IChat[] | null;
-  openChats: IChat[] | null;
+export interface IPostState {
+  userPostsList: IPost[] | null;
   isLoading: boolean;
   error: string | null;
 }
 
-export type TChatActions =
+export type TPostActions =
   | { type: 'LOADING'; payload: null }
   | { type: 'LOADING_STOP'; payload: null }
-  | { type: 'SET_ERROR'; payload: string }
   | { type: 'CLEAR_ERROR'; payload: null | null }
-  | { type: 'SIGNOUT'; payload: null }
-  | { type: 'CANCEL_SEARCH'; payload?: null }
-  | { type: 'UPDATE_USER'; payload: IUser | null }
-  | { type: 'UPDATE_SEARCH'; payload: IUser[] | null }
-  | { type: 'UPDATE_FOLLOWING'; payload: IUser | null }
-  | { type: 'UPDATE_CHATS_LIST'; payload: IChat[] }
-  | { type: 'UPDATE_OPEN_CHATS'; payload: string };
+  | { type: 'UPDATE_POSTS_LIST'; payload: IPost[] };
 
 const Actions = {
   LOADING: 'LOADING',
   LOADING_STOP: 'LOADING_STOP',
-  UPDATE_USER: 'UPDATE_USER',
-  UPDATE_SEARCH: 'UPDATE_SEARCH',
-  CANCEL_SEARCH: 'CANCEL_SEARCH',
-  UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
-  UPDATE_CHATS_LIST: 'UPDATE_CHATS_LIST',
-  UPDATE_OPEN_CHATS: 'UPDATE_OPEN_CHATS',
+  UPDATE_POSTS_LIST: 'UPDATE_POSTS_LIST',
   CLEAR_ERROR: 'CLEAR_ERROR',
-  SIGNOUT: 'SIGNOUT',
 };
 
-export const chatReducer = (
-  state: IChatState,
-  action: TChatActions
-): IChatState => {
+export const postReducer = (
+  state: IPostState,
+  action: TPostActions
+): IPostState => {
   switch (action.type) {
     case Actions.LOADING:
       return {
@@ -53,61 +35,13 @@ export const chatReducer = (
         isLoading: false,
       };
 
-    case Actions.UPDATE_SEARCH:
+    case Actions.UPDATE_POSTS_LIST:
       return {
         ...state,
         isLoading: false,
-        followersSearchList: (action.payload as IUser[])?.filter(
-          (follower: IUser) => follower.id !== state.user?.id
-        ),
+        userPostsList: action.payload as IPost[],
       };
 
-    case Actions.CANCEL_SEARCH:
-      return {
-        ...state,
-        isLoading: false,
-        followersSearchList: [],
-      };
-    case Actions.UPDATE_USER:
-      return {
-        ...state,
-        isLoading: false,
-        user: action.payload as IUser,
-      };
-    case Actions.UPDATE_FOLLOWING:
-      return {
-        ...state,
-        isLoading: false,
-        followingList: (action.payload as IUser)?.expand.followers?.map(
-          (user: IUser) => user
-        ),
-      };
-    case Actions.UPDATE_CHATS_LIST:
-      return {
-        ...state,
-        isLoading: false,
-        userChatsList: action.payload as IChat[],
-      };
-
-    case Actions.UPDATE_OPEN_CHATS:
-      if (state.openChats?.some((chat) => chat.id === action.payload)) {
-        return {
-          ...state,
-          openChats: state.openChats?.filter(
-            (chat) => chat.id !== action.payload
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          openChats: [
-            ...(state.openChats as IChat[]),
-            state.userChatsList?.filter(
-              (chat: IChat) => chat.id === action.payload
-            ),
-          ].flat() as IChat[],
-        };
-      }
     case Actions.CLEAR_ERROR:
       return {
         ...state,

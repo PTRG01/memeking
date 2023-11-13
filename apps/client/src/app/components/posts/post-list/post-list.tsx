@@ -1,5 +1,6 @@
 /* eslint-disable-next-line */
 
+import { Box } from '@mantine/core';
 import { IPost } from '../post/post';
 
 export interface IPostListProps {
@@ -9,7 +10,7 @@ export interface IPostListProps {
 
 export function PostList({ listItem, postList }: IPostListProps) {
   return postList?.map((post: IPost) => (
-    <div key={post.id}>{listItem(post)}</div>
+    <Box key={post.id}>{listItem(post)}</Box>
   ));
 }
 

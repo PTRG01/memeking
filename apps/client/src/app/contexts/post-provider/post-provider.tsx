@@ -1,180 +1,109 @@
-import { IUser } from '../auth-provider/auth-provider.interface';
 import React, { useCallback, useContext, useEffect, useReducer } from 'react';
-import {
-  useChat,
-  useChatList,
-  useUser,
-  useUserList,
-} from '../../hooks/pb-utils';
+import { usePostList, usePost } from '../../hooks/pb-utils';
 import { pb } from '../../utils/pocketbase';
 import { useAuthContext } from '../auth-provider/auth-provider';
-import {
-  IChat,
-  IChatContext,
-  THandleOpenChatToggleFunction,
-} from './post-provider.interface';
-import { IChatState, chatReducer } from './post-reducer';
-
-const initialState: IChatState = {
-  user: null,
-  followersSearchList: [],
-  followingList: null,
-  userChatsList: null,
-  openChats: [],
+import { IPostContext } from './post-provider.interface';
+import { IPostState, postReducer } from './post-reducer';
+import { IPost } from './post-provider.interface';
+const initialState: IPostState = {
+  userPostsList: null,
   isLoading: false,
   error: null,
 };
 
-export const ChatContext = React.createContext<IChatContext | null>(null);
+export const PostContext = React.createContext<IPostContext | null>(null);
 
-export function ChatProvider({ children }: React.PropsWithChildren) {
-  const [
-    {
-      followersSearchList,
-      followingList,
-      userChatsList,
-      openChats,
-      isLoading,
-      error,
-    },
-    dispatch,
-  ] = useReducer(chatReducer, initialState);
-  const { user, updateCurrentUser } = useAuthContext();
-
-  const { getList, result } = useUserList();
-  const { getOne, data: userData } = useUser(user?.id);
-  const { getFullList, result: chatListResult } = useChatList();
-  const { createOne } = useChat(user?.id);
-
-  //  LOAD USER
-
-  useEffect(() => {
-    dispatch({ type: 'UPDATE_USER', payload: user });
-  }, [user]);
-
-  //  HANDLE FOLLOWING SEARCH
-
-  const handleSearch = useCallback(
-    (value: string) => {
-      if (value.length >= 3) {
-        getList({
-          queryParams: { filter: `name~"${value}"` },
-        });
-      } else {
-        dispatch({ type: 'CANCEL_SEARCH' });
-      }
-    },
-    [getList]
+export function PostProvider({ children }: React.PropsWithChildren) {
+  const [{ isLoading, error }, dispatch] = useReducer(
+    postReducer,
+    initialState
   );
+  const { user } = useAuthContext();
 
-  useEffect(() => {
-    if (result)
-      dispatch({
-        type: 'UPDATE_SEARCH',
-        payload: result as IUser[],
-      });
-  }, [result]);
+  // const { getList, result } = useUserList();
+  // const { getOne, data: userData } = useUser(user?.id);
+  const { getFullList, result: postListResult } = usePostList();
+  const { createOne, deleteOne } = usePost();
 
-  // FOLLOWING LIST
-
-  useEffect(() => {
-    if (user) {
-      getOne({ expand: 'followers' });
-    }
-  }, [user?.followers, getOne, user]);
-
-  useEffect(() => {
-    if (!userData) return;
-    dispatch({
-      type: 'UPDATE_FOLLOWING',
-      payload: userData,
-    });
-  }, [userData?.followers, userData]);
-
+  const userPostsList = postListResult as IPost[];
   // CHAT
 
-  const loadChats = useCallback(() => {
+  const loadPosts = useCallback(() => {
     if (user) {
       getFullList({
         sort: 'created',
-        expand: 'users',
-        filter: `users~"${user?.id}"`,
+        filter: `author_id~"${user?.id}"`,
       });
     }
   }, [user, getFullList]);
 
   useEffect(() => {
-    loadChats();
-  }, [user?.id, loadChats]);
+    loadPosts();
+  }, [user?.id, loadPosts]);
 
-  useEffect(() => {
-    if (chatListResult)
-      dispatch({
-        type: 'UPDATE_CHATS_LIST',
-        payload: chatListResult as IChat[],
-      });
-  }, [chatListResult]);
+  // useEffect(() => {
+  //   if (postListResult)
+  //     dispatch({
+  //       type: 'UPDATE_POSTS_LIST',
+  //       payload: postListResult as IPost[],
+  //     });
+  // }, [postListResult]);
 
-  const createChatWithUser = (otherUser: string) => {
-    const newChatUsers = [user?.id, otherUser];
-    const userChatsListUsers = userChatsList?.map((chat) => chat.users);
-    const chatExists = userChatsListUsers?.map((chatUsers) =>
-      chatUsers?.every((usersArr, i) => usersArr === newChatUsers[i])
-    );
-
-    if (chatExists?.some((chat) => chat === true)) return;
-    createOne({ users: newChatUsers });
-  };
-
-  useEffect(() => {
-    pb.collection('chats').subscribe('*', async (e) => {
-      loadChats();
+  const createPost = (title: string, contentText: string) => {
+    createOne({
+      author_id: user?.id,
+      avatar: user?.avatar,
+      title: title,
+      contentText: contentText,
     });
-  }, [userChatsList, loadChats]);
-
-  const handleOpenChatToggle: THandleOpenChatToggleFunction = (id) => {
-    dispatch({ type: 'UPDATE_OPEN_CHATS', payload: id });
   };
+
+  useEffect(() => {
+    pb.collection('posts').subscribe('*', async (e) => {
+      loadPosts();
+    });
+  }, [userPostsList, loadPosts]);
+
+  const deletePost = (id: string) => {
+    deleteOne(id);
+  };
+
+  // const handleOpenChatToggle: THandleOpenChatToggleFunction = (id) => {
+  //   dispatch({ type: 'UPDATE_OPEN_CHATS', payload: id });
+  // };
 
   // UPDATE USERS FOLLOWING LIST
 
-  const handleAddFollowing = (id: string): void => {
-    updateCurrentUser({
-      followers: [...(user?.followers as string[]), id],
-    });
-  };
-  const handleRemoveFollowing = (id: string): Promise<void> =>
-    updateCurrentUser({
-      followers: user?.followers.filter((follower: string) => follower !== id),
-    });
+  // const handleAddFollowing = (id: string): void => {
+  //   updateCurrentUser({
+  //     followers: [...(user?.followers as string[]), id],
+  //   });
+  // };
+  // const handleRemoveFollowing = (id: string): Promise<void> =>
+  //   updateCurrentUser({
+  //     followers: user?.followers.filter((follower: string) => follower !== id),
+  //   });
 
   return (
-    <ChatContext.Provider
+    <PostContext.Provider
       value={{
         isLoading,
-        handleSearch,
-        followersSearchList,
-        followingList,
-        userChatsList,
-        createChatWithUser,
-        handleOpenChatToggle,
-        openChats,
-        loadChats,
-        handleAddFollowing,
-        handleRemoveFollowing,
+        userPostsList,
+        createPost,
+        deletePost,
         error,
       }}
     >
       {children}
-    </ChatContext.Provider>
+    </PostContext.Provider>
   );
 }
 
-export const useChatContext = () => {
-  const data = useContext(ChatContext);
+export const usePostContext = () => {
+  const data = useContext(PostContext);
 
   if (!data) {
-    throw Error('useChatContext should be used inside of ChatProvider');
+    throw Error('usePostContext should be used inside of PostProvider');
   }
 
   return data;

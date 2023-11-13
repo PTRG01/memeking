@@ -5,30 +5,20 @@ export type THandleOpenChatToggleFunction = (id: string) => void;
 
 export type TLoadChatsFunction = () => void;
 /* eslint-disable-next-line */
-export type TCreateChatWithUserFunction = (otherUser: string) => void;
-export type THandleSearchFuntion = (value: string) => void;
-export type TGetListFunction = (value: string) => void;
-export type THandleAddFollowingFunction = (id: string) => void;
-export type THandleRemoveFollowingFunction = (id: string) => void;
+export type TCreatePostFunction = (title: string, contentText: string) => void;
+export type TDeletePostFunction = (id: string) => void;
 
-export interface IChat extends Record {
+export interface IPost extends Record {
   id: string;
-  users: string[] | null;
   avatar: string;
-  lastMessage?: string;
+  title: string;
+  contentText: string;
 }
 
-export interface IChatContext {
-  openChats: IChat[] | null;
-  handleSearch: THandleSearchFuntion;
-  handleOpenChatToggle: THandleOpenChatToggleFunction;
-  createChatWithUser: TCreateChatWithUserFunction;
-  loadChats: TLoadChatsFunction;
-  followersSearchList: IUser[] | [];
-  userChatsList: IChat[] | null;
-  followingList: IUser[] | null;
+export interface IPostContext {
+  userPostsList: IPost[] | null;
+  createPost: TCreatePostFunction;
+  deletePost: TDeletePostFunction;
   isLoading: boolean;
   error: string | null;
-  handleAddFollowing: THandleAddFollowingFunction;
-  handleRemoveFollowing: THandleRemoveFollowingFunction;
 }

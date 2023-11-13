@@ -12,6 +12,7 @@ const roundCollection = createPbCollection('round');
 const memeCollection = createPbCollection('meme');
 const chatCollection = createPbCollection('chats');
 const messageCollection = createPbCollection('messages');
+const postCollection = createPbCollection('posts');
 
 export const createSearchHook = (collection: RecordService) => {
   return () => {
@@ -154,6 +155,7 @@ export const useRound = createCRUDHook(roundCollection);
 export const useMeme = createCRUDHook(memeCollection);
 export const useChat = createCRUDHook(chatCollection);
 export const useMessage = createCRUDHook(messageCollection);
+export const usePost = createCRUDHook(postCollection);
 
 export const useGameList = createSearchHook(gameCollection);
 export const useUserList = createSearchHook(userCollection);
@@ -161,6 +163,7 @@ export const useRoundList = createSearchHook(roundCollection);
 export const useMemeList = createSearchHook(memeCollection);
 export const useChatList = createSearchHook(chatCollection);
 export const useMessageList = createSearchHook(messageCollection);
+export const usePostList = createSearchHook(postCollection);
 
 export const useGameSubscription = createSubscriptionHook(gameCollection);
 export const useUserSubscription = createSubscriptionHook(userCollection);
@@ -168,3 +171,4 @@ export const useRoundSubscription = createSubscriptionHook(roundCollection);
 export const useMemeSubscription = createSubscriptionHook(memeCollection);
 export const useChatSubscription = createSubscriptionHook(chatCollection);
 export const useMessageSubscription = createSubscriptionHook(messageCollection);
+export const usePostSubscription = createSubscriptionHook(postCollection);

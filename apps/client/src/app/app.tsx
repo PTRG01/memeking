@@ -20,6 +20,7 @@ import Game from './screens/game/game';
 import Profile from './screens/profile/profile';
 import Settings from './screens/settings/settings';
 import ChatsContainer from './components/chat/chats-container/chats-container';
+import { PostProvider } from './contexts/post-provider/post-provider';
 
 /* eslint-disable-next-line */
 export function App() {
@@ -31,36 +32,40 @@ export function App() {
     >
       <AuthProvider>
         <ChatProvider>
-          <BrowserRouter>
-            <ApplicationFrame
-              header={<Header />}
-              navbar={<Navbar />}
-              sidebar={<Sidebar />}
-              footer={<Footer />}
-            >
-              <Routes>
-                <Route path="/" element={<Home />} />
+          <PostProvider>
+            <BrowserRouter>
+              <ApplicationFrame
+                header={<Header />}
+                navbar={<Navbar />}
+                sidebar={<Sidebar />}
+                footer={<Footer />}
+              >
+                <Routes>
+                  <Route path="/" element={<Home />} />
 
-                <Route element={<PrivateRoute hasToBeAuth={false} />}>
-                  <Route path="/signin" element={<Signin />} />
-                  <Route path="/signup" element={<Signup />} />
-                </Route>
-                <Route
-                  element={<PrivateRoute hasToBeAuth={true} redirectPath="/" />}
-                >
-                  <Route path="/groups" element={<Groups />} />
-                  <Route path="/groups/:groupId" element={<Group />} />
-                  <Route path="/create" element={<Create />} />
-                  <Route path="/create/:createId" element={<Create />} />
-                  <Route path="/games" element={<Games />} />
-                  <Route path="/games/:gameId" element={<Game />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                </Route>
-              </Routes>
-              <ChatsContainer />
-            </ApplicationFrame>
-          </BrowserRouter>
+                  <Route element={<PrivateRoute hasToBeAuth={false} />}>
+                    <Route path="/signin" element={<Signin />} />
+                    <Route path="/signup" element={<Signup />} />
+                  </Route>
+                  <Route
+                    element={
+                      <PrivateRoute hasToBeAuth={true} redirectPath="/" />
+                    }
+                  >
+                    <Route path="/groups" element={<Groups />} />
+                    <Route path="/groups/:groupId" element={<Group />} />
+                    <Route path="/create" element={<Create />} />
+                    <Route path="/create/:createId" element={<Create />} />
+                    <Route path="/games" element={<Games />} />
+                    <Route path="/games/:gameId" element={<Game />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/settings" element={<Settings />} />
+                  </Route>
+                </Routes>
+                <ChatsContainer />
+              </ApplicationFrame>
+            </BrowserRouter>
+          </PostProvider>
         </ChatProvider>
       </AuthProvider>
     </MantineProvider>

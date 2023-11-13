@@ -10,13 +10,8 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import VoteBar from '../../vote-bar/vote-bar';
-
-export interface IPost {
-  id: string;
-  avatar: string;
-  title: string;
-  contentText: string;
-}
+import { usePostContext } from '../../../contexts/post-provider/post-provider';
+import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 
 export interface IPostProps {
   post: IPost;
@@ -24,6 +19,7 @@ export interface IPostProps {
 
 export function Post({ post }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { deletePost } = usePostContext();
   return (
     <Paper p={15} my={10}>
       <Flex align="center" justify="space-between">
@@ -40,7 +36,10 @@ export function Post({ post }: IPostProps) {
             />
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item>Delete post</Menu.Item>
+            <Menu.Item onClick={() => ''}>Edit post</Menu.Item>
+            <Menu.Item onClick={() => deletePost(post?.id)}>
+              Delete post
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </Flex>
