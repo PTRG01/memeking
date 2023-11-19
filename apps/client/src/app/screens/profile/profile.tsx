@@ -8,15 +8,15 @@ import {
   TextInput,
   Button,
   SimpleGrid,
+  Container,
+  Stack,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import UserList from '../../components/user-list/user-list';
 import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
-import Post from '../../components/posts/post/post';
 import PostList from '../../components/posts/post-list/post-list';
-import PostForm from '../../components/posts/post-form/post-form';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
 
 /* eslint-disable-next-line */
@@ -35,30 +35,6 @@ export function Profile(props: ProfileProps) {
     return '';
   };
 
-  const tempPostList = [
-    {
-      id: '43254432544',
-      avatar: '',
-      title: 'Post 1',
-      contentText:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
-    },
-    {
-      id: '124235343',
-      avatar: '',
-      title: 'Post 2',
-      contentText:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
-    },
-    {
-      id: '53425663653',
-      avatar: '',
-      title: 'Post 3',
-      contentText:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate eos, quos vitae nisi doloremque ullam eligendi unde inventore dolorem voluptatibus minima dignissimos suscipit, repellendus earum voluptas  quas dolorum voluptatum commodi!',
-    },
-  ];
-
   return (
     <Flex direction="column" mx={100} mt={20}>
       <Group position="left" mb="xl">
@@ -72,7 +48,7 @@ export function Profile(props: ProfileProps) {
             </Group>
             <Group>
               <Text>Posts:</Text>
-              <Text>12</Text>
+              <Text>{userPostsList?.length}</Text>
             </Group>
             <Group>
               <Text>Following:</Text> <Text>{user?.followers.length}</Text>
@@ -100,11 +76,11 @@ export function Profile(props: ProfileProps) {
           Gallery tab content
         </Tabs.Panel>
         <Tabs.Panel value="posts" pt="xs">
-          <PostForm />
-          <PostList
-            listItem={(item) => <Post post={item} />}
-            postList={userPostsList}
-          />
+          <Container>
+            <Stack>
+              <PostList postList={userPostsList} />
+            </Stack>
+          </Container>
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>

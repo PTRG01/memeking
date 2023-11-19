@@ -1,26 +1,60 @@
-import { Button, Container, Divider, Flex, Group, Text } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Flex,
+  Group,
+  HoverCard,
+  Text,
+  UnstyledButton,
+} from '@mantine/core';
 import { ThumbUp } from 'tabler-icons-react';
+import { IPost } from '../../contexts/post-provider/post-provider.interface';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 
 /* eslint-disable-next-line */
 export interface IVoteBarProps {
-  handleVoteFunction: () => void;
-  voteCount: number;
+  onUpvote: (post: IPost) => void;
+  post: IPost;
 }
 
-export function VoteBar({ handleVoteFunction, voteCount = 0 }: IVoteBarProps) {
+export function VoteBar({ onUpvote, post }: IVoteBarProps) {
+  const { user } = useAuthContext();
+  const voteExists = post?.upvote_ids.length > 0;
+  const currentVote = user ? post?.upvote_ids?.includes(user?.id) : null;
+  const upvoteUserNames = post?.expand?.upvote_ids?.map((user: IUser) => user);
+
   return (
-    <Container>
-      <Divider mb={10} />
+    <Box>
+      {voteExists && (
+        <Group mb={10}>
+          <Divider />
+          <ThumbUp />
+          <HoverCard>
+            <HoverCard.Target>
+              <UnstyledButton>{post?.upvote_ids.length}</UnstyledButton>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              {upvoteUserNames?.map((user: IUser) => (
+                <Text key={user.id}>{user.name}</Text>
+              ))}
+            </HoverCard.Dropdown>
+          </HoverCard>
+        </Group>
+      )}
+      <Divider mb={15} />
       <Flex justify="space-between">
-        <Button px={50} color="gray" onClick={handleVoteFunction}>
+        <Button
+          px={50}
+          color={currentVote ? 'blue' : 'gray'}
+          onClick={() => onUpvote(post)}
+        >
           <ThumbUp />
         </Button>
-        <Group>
-          <Text>Likes:</Text>
-          <Text>{voteCount}</Text>
-        </Group>
       </Flex>
-    </Container>
+    </Box>
   );
 }
 

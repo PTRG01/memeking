@@ -14,10 +14,12 @@ const chatCollection = createPbCollection('chats');
 const messageCollection = createPbCollection('messages');
 const postCollection = createPbCollection('posts');
 
-export const createSearchHook = (collection: RecordService) => {
+export const createSearchHook = <T extends Record>(
+  collection: RecordService
+) => {
   return () => {
     const [data, setData] = useState<ListResult | null>(null);
-    const [result, setResult] = useState<Record[] | null>(null);
+    const [result, setResult] = useState<T[] | null>(null);
     const [loading, setLoading] = useState(true);
 
     const items = useMemo(

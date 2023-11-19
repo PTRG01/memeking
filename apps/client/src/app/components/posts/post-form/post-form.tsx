@@ -2,67 +2,93 @@ import {
   Container,
   TextInput,
   Button,
-  Group,
   Box,
-  Checkbox,
   Textarea,
   Flex,
+  Modal,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { usePostContext } from '../../../contexts/post-provider/post-provider';
+import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 /* eslint-disable-next-line */
-export interface PostFormProps {
-  currentTitle?: string;
-  currentText?: string;
+type THandleCloseFormFunction = (openState: boolean) => void;
+type TOnFormSubmitFuntion = (values: IPost) => void;
+export interface IPostFormProps {
+  post?: IPost;
+  isOpen: boolean;
+  onCloseForm: THandleCloseFormFunction;
+  isEditing?: boolean;
+  onFormSubmit: TOnFormSubmitFuntion;
 }
 
 export function PostForm({
-  currentTitle = '',
-  currentText = '',
-}: PostFormProps) {
-  const { createPost } = usePostContext();
+  post,
+  isEditing = false,
+  isOpen,
+  onCloseForm,
+  onFormSubmit,
+}: IPostFormProps) {
+  const formValues =
+    isEditing && post
+      ? { title: post.title, contentText: post.contentText }
+      : { title: '', contentText: '' };
+
   const form = useForm({
-    initialValues: {
-      title: '',
-      contentText: '',
-    },
+    initialValues: formValues,
 
     validate: {
       title: (value) =>
-        value.length < 5 ? 'Name must have at least 5 letters' : null,
+        value.length < 5 ? 'Title must have at least 5 letters' : null,
       contentText: (value) =>
-        value.length < 20 ? 'Name must have at least 20 letters' : null,
+        value.length < 20 ? 'Text must have at least 20 letters' : null,
     },
   });
-  return (
-    <Container>
-      <Box maw={340} mx="auto">
-        <form
-          onSubmit={form.onSubmit((values) =>
-            createPost(values.title, values.contentText)
-          )}
-        >
-          <TextInput
-            withAsterisk
-            label="Title"
-            placeholder="Current title"
-            {...form.getInputProps('title')}
-          />
 
-          <Textarea
-            autosize
-            withAsterisk
-            label="Text"
-            placeholder="Current text"
-            {...form.getInputProps('contentText')}
-          />
-          <Flex justify="flex-end" mt="md" gap={10}>
-            <Button type="submit">Submit</Button>
-            <Button color="gray">Cancel</Button>
-          </Flex>
-        </form>
-      </Box>
-    </Container>
+  const handleFormSubmit = (values: IPost) => {
+    onCloseForm(isOpen);
+    onFormSubmit(values);
+    form.setValues({ title: '', contentText: '' });
+  };
+  return (
+    <Modal opened={isOpen} onClose={() => onCloseForm(isOpen)} title="Post">
+      <Container>
+        <Box maw={340} mx="auto">
+          <form
+            onSubmit={form.onSubmit((values) =>
+              handleFormSubmit(values as IPost)
+            )}
+          >
+            <TextInput
+              withAsterisk
+              label="Title"
+              placeholder="Your post title"
+              {...form.getInputProps('title')}
+            />
+
+            <Textarea
+              autosize
+              withAsterisk
+              label="Text"
+              placeholder="Your post content"
+              minRows={2}
+              maxRows={10}
+              {...form.getInputProps('contentText')}
+            />
+            <Flex justify="flex-end" mt="md" gap={10}>
+              {isEditing ? (
+                <Button type="submit">Confirm</Button>
+              ) : (
+                <Button type="submit">Create</Button>
+              )}
+
+              <Button color="gray" onClick={() => onCloseForm(isOpen)}>
+                Cancel
+              </Button>
+            </Flex>
+          </form>
+        </Box>
+      </Container>
+    </Modal>
   );
 }
 

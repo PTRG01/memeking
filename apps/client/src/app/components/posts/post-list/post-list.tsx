@@ -1,17 +1,14 @@
 /* eslint-disable-next-line */
 
-import { Box } from '@mantine/core';
-import { IPost } from '../post/post';
+import { IPost } from '../../../contexts/post-provider/post-provider.interface';
+import Post from '../post/post';
 
 export interface IPostListProps {
-  listItem: (item: IPost) => JSX.Element;
-  postList: IPost[] | null;
+  postList: IPost[];
 }
 
-export function PostList({ listItem, postList }: IPostListProps) {
-  return postList?.map((post: IPost) => (
-    <Box key={post.id}>{listItem(post)}</Box>
-  ));
+export function PostList({ postList }: IPostListProps) {
+  return postList.map((post: IPost) => <Post key={post.id} post={post} />);
 }
 
 export default PostList;
