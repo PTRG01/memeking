@@ -1,15 +1,7 @@
-import {
-  Container,
-  TextInput,
-  Button,
-  Box,
-  Textarea,
-  Flex,
-  Modal,
-} from '@mantine/core';
+import { Container, TextInput, Button, Box, Flex, Modal } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { usePostContext } from '../../../contexts/post-provider/post-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
+import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
 /* eslint-disable-next-line */
 type THandleCloseFormFunction = (openState: boolean) => void;
 type TOnFormSubmitFuntion = (values: IPost) => void;
@@ -30,7 +22,7 @@ export function PostForm({
 }: IPostFormProps) {
   const formValues =
     isEditing && post
-      ? { title: post.title, contentText: post.contentText }
+      ? { title: post?.title, contentText: post?.contentText }
       : { title: '', contentText: '' };
 
   const form = useForm({
@@ -46,41 +38,40 @@ export function PostForm({
 
   const handleFormSubmit = (values: IPost) => {
     onCloseForm(isOpen);
+    console.log(values);
     onFormSubmit(values);
-    form.setValues({ title: '', contentText: '' });
+    form.reset();
   };
+
   return (
     <Modal opened={isOpen} onClose={() => onCloseForm(isOpen)} title="Post">
       <Container>
-        <Box maw={340} mx="auto">
+        <Box maw={800} mx="auto">
           <form
             onSubmit={form.onSubmit((values) =>
               handleFormSubmit(values as IPost)
             )}
           >
             <TextInput
+              mb={20}
               withAsterisk
               label="Title"
               placeholder="Your post title"
               {...form.getInputProps('title')}
             />
-
-            <Textarea
-              autosize
-              withAsterisk
-              label="Text"
-              placeholder="Your post content"
-              minRows={2}
-              maxRows={10}
+            <EmojiTextArea
+              radius="sm"
+              label="Content"
+              onSubmit={() => ''}
               {...form.getInputProps('contentText')}
             />
+
             <Flex justify="flex-end" mt="md" gap={10}>
               {isEditing ? (
                 <Button type="submit">Confirm</Button>
               ) : (
                 <Button type="submit">Create</Button>
               )}
-
               <Button color="gray" onClick={() => onCloseForm(isOpen)}>
                 Cancel
               </Button>

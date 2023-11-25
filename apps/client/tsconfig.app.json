@@ -12,8 +12,7 @@
     "src/app/contexts/chat-provider/chat-provider.interface.ts",
     "src/app/components/chat/chat-window-menu/chat-window-menu.tsx",
     "src/app/contexts/chat-window-provider/chat-window-reducer.ts",
-    "src/app/components/chat/chat-scroll-area/chat-scroll-area.tsx",
-    "./src/app/components/user-list-item/UserListItem.tsx"
+    "src/app/components/chat/chat-scroll-area/chat-scroll-area.tsx"
   ],
   "exclude": [
     "src/**/*.spec.ts",

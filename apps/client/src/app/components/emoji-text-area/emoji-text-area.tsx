@@ -1,24 +1,33 @@
-import { MoodSmile, Send } from 'tabler-icons-react';
-import { useForm } from '@mantine/form';
-import { ActionIcon, Group, Popover, Textarea } from '@mantine/core';
-import EmojiPicker, { Theme } from 'emoji-picker-react';
-import { useRef } from 'react';
-import { useChatWindowContext } from '../../contexts/chat-window-provider/chat-window-provider';
+import { MoodSmile } from 'tabler-icons-react';
+import { ActionIcon, Popover, Textarea } from '@mantine/core';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import { ChangeEvent, Dispatch, SetStateAction, useRef } from 'react';
 
 /* eslint-disable-next-line */
 
-export function EmojiTextArea() {
-  const { chatId, sendMessage } = useChatWindowContext();
+export type TOnTextSubmitFunction = (message: string, recordId: string) => void;
 
-  const form = useForm({
-    initialValues: {
-      chatInput: '',
-    },
-  });
+export interface IEmojiTextAreaProps {
+  value: string;
+  onChange: Dispatch<SetStateAction<string>>;
+  onSubmit: (value: string) => void;
+  radius?: 'sm' | 'md' | 'lg' | 'xl';
+  label?: string;
+}
+
+export function EmojiTextArea({
+  value,
+  onChange,
+  radius,
+  onSubmit,
+  label,
+}: IEmojiTextAreaProps) {
   const textarea = useRef<HTMLTextAreaElement | null>(null);
 
-  const insertAtCursor = (message: string, emoji: string) => {
+  const insertAtCursor = (emoji: string) => {
     const input = emoji.trim();
+    const message = value;
 
     if (!input) {
       return message;
@@ -29,73 +38,59 @@ export function EmojiTextArea() {
 
     const newMessage =
       message.slice(0, selectionStart) + input + message.slice(selectionEnd);
+    if (newMessage) onChange(newMessage);
+  };
 
-    return newMessage;
+  const handleChatInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.type === 'click') return;
+    else onChange(event.currentTarget.value);
   };
 
   return (
-    <>
-      <Popover
-        withArrow={true}
-        arrowPosition="center"
-        arrowSize={25}
-        arrowRadius={5}
-        withinPortal={true}
-        offset={25}
-      >
-        <Popover.Dropdown p={0}>
-          <EmojiPicker
-            lazyLoadEmojis={true}
-            theme={Theme.DARK}
-            onEmojiClick={(e) =>
-              form.setFieldValue(
-                'chatInput',
-                insertAtCursor(form.values.chatInput, e.emoji)
-              )
-            }
-          />
-        </Popover.Dropdown>
-        <Popover.Target>
-          <ActionIcon size="xl" type="submit" variant="filled" radius="xl">
-            <MoodSmile size={28} />
-          </ActionIcon>
-        </Popover.Target>
-      </Popover>
-      <form
-        key={chatId}
-        id={chatId}
-        onSubmit={form.onSubmit((message) => {
-          sendMessage({
-            message: message.chatInput,
-            chatId: chatId,
-          });
-          form.setValues({ chatInput: '' });
-        })}
-      >
-        <Group position="apart">
-          <Textarea
-            radius="xl"
-            size="md"
-            id="textarea"
-            ref={textarea}
-            key={chatId}
-            {...form.getInputProps('chatInput')}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                sendMessage({
-                  message: event.currentTarget.value,
-                  chatId: chatId,
-                });
-                form.setValues({ chatInput: '' });
-              }
-            }}
-          />
-          <ActionIcon size="xl" type="submit" variant="filled" radius="xl">
-            <Send />
-          </ActionIcon>
-        </Group>
-      </form>
-    </>
+    <Textarea
+      radius={radius}
+      size="md"
+      id="textarea"
+      autosize
+      minRows={2}
+      maxRows={5}
+      ref={textarea}
+      value={value}
+      label={label}
+      onChange={(event) => handleChatInput(event)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          onSubmit(event.currentTarget.value);
+        }
+      }}
+      rightSectionWidth={60}
+      rightSection={
+        <Popover
+          withArrow={true}
+          arrowPosition="center"
+          arrowSize={25}
+          arrowRadius={5}
+          withinPortal={true}
+          offset={25}
+          keepMounted={true}
+        >
+          {/* TODO FIX EMOJI EVENT TYPE */}
+          <Popover.Dropdown p={0}>
+            <Picker
+              data={data}
+              onEmojiSelect={(event) => insertAtCursor(event.native)}
+              locale="en"
+              theme="dark"
+            />
+          </Popover.Dropdown>
+          <Popover.Target>
+            <ActionIcon size="xl" variant="filled" radius="xl">
+              <MoodSmile size={28} />
+            </ActionIcon>
+          </Popover.Target>
+        </Popover>
+      }
+    />
   );
 }
 

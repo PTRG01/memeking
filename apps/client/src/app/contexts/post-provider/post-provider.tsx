@@ -26,8 +26,8 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     if (user) {
       getFullList({
         sort: 'created',
+        expand: 'comment_ids.author_id,upvote_ids',
         filter: `author_id~"${user?.id}"`,
-        expand: 'upvote_ids',
       });
     }
   }, [user, getFullList]);
@@ -35,6 +35,10 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   useEffect(() => {
     loadPosts();
   }, [loadPosts]);
+
+  useEffect(() => {
+    console.log(postListResult);
+  }, [postListResult]);
 
   useEffect(() => {
     pb.collection('posts').subscribe('*', async (e) => {
@@ -64,6 +68,8 @@ export function PostProvider({ children }: React.PropsWithChildren) {
       post.id
     );
   };
+
+  // TODO Fix post not reloading after delete
 
   const deletePost = (id: string) => {
     deleteOne(id);

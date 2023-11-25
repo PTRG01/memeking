@@ -26,7 +26,7 @@ const initialState: IChatWindowState = {
   messages: [],
   isSearchUsed: false,
   chatToAddList: null,
-  isLoading: true,
+  isLoading: false,
 };
 
 export const ChatWindowContext = React.createContext<IChatWindowContext | null>(
@@ -56,7 +56,11 @@ export function ChatWindowProvider({
 
   const chatId = currentChat.id;
 
-  const { getFullList, result: messageDataResult } = useMessageList();
+  const {
+    getFullList,
+    result: messageDataResult,
+    loading: isLoading,
+  } = useMessageList();
   const { updateOne } = useChat(chatId);
   const { user } = useAuthContext();
   const { createOne } = useMessage();
@@ -94,12 +98,12 @@ export function ChatWindowProvider({
     });
   }, [loadMessages, chatId]);
 
-  const sendMessage: TSendMessageFunction = (params) => {
-    if (!params.message) return;
+  const sendMessage: TSendMessageFunction = (message, recordId) => {
+    if (!message) return;
     createOne({
-      content: `${params.message}`,
+      content: `${message}`,
       author_id: `${user?.id}`,
-      chat_id: `${params.chatId}`,
+      chat_id: `${recordId}`,
     });
   };
 
@@ -138,12 +142,10 @@ export function ChatWindowProvider({
   );
 
   useEffect(() => {
-    console.log('UPDATE TO ADD LIST EFFECT');
     dispatch({
       type: 'UPDATE_TO_ADD_LIST',
       payload: searchToAddResult as IUser[],
     });
-    console.log(searchToAddResult);
   }, [searchToAddResult]);
 
   return (
@@ -160,6 +162,7 @@ export function ChatWindowProvider({
         chatToAddList,
         isSearchUsed,
         handleSearchToAdd,
+        isLoading,
       }}
     >
       {children}

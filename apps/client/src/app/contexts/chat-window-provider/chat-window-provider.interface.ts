@@ -2,10 +2,7 @@ import { IUser } from '../auth-provider/auth-provider.interface';
 import { IChat } from '../chat-provider/chat-provider.interface';
 import { Record } from 'pocketbase';
 
-export type TSendMessageFunction = (params: {
-  chatId: string;
-  message: string;
-}) => void;
+export type TSendMessageFunction = (message: string, recordId: string) => void;
 
 export type TLeaveChatFunction = (chatId: string, users: string[]) => void;
 
@@ -25,6 +22,7 @@ export interface IChatWindowContext {
   chatToAddList: IUser[] | null;
   isSearchUsed: boolean;
   handleSearchToAdd: THandleSearchToAddFunction;
+  isLoading: boolean;
 }
 
 export interface IMessage extends Record {

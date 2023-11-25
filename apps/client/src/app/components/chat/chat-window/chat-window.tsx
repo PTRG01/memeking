@@ -13,6 +13,7 @@ import ChatWindowMenu from '../chat-window-menu/chat-window-menu';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
 import ChatScrollArea from '../chat-scroll-area/chat-scroll-area';
+import ChatMessageBar from '../chat-message-bar/chat-message-bar';
 
 export type TAddUserFunction = (params: {
   chatId: string;
@@ -21,7 +22,7 @@ export type TAddUserFunction = (params: {
 
 export function ChatWindow() {
   const { handleOpenChatToggle } = useChatContext();
-  const { chatId } = useChatWindowContext();
+  const { chatId, sendMessage, isLoading } = useChatWindowContext();
 
   return (
     <Paper radius={10} pb={25} w={400} withBorder={true}>
@@ -45,7 +46,11 @@ export function ChatWindow() {
             </ActionIcon>
           </Popover.Target>
         </Popover>
-        <EmojiTextArea />
+        <ChatMessageBar
+          onTextSubmit={sendMessage}
+          recordId={chatId}
+          isLoading={isLoading}
+        />
       </Flex>
     </Paper>
   );
