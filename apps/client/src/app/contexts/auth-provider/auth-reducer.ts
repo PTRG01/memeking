@@ -7,17 +7,13 @@ export interface IAuthState {
   error?: string | null;
 }
 
-type TAuthActionsNoPayload =
+type TAuthActions =
   | { type: 'LOADING'; payload: null }
   | { type: 'LOADING_STOP'; payload: null }
   | { type: 'CLEAR_ERROR'; payload: null }
-  | { type: 'SIGNOUT'; payload: null };
-
-type TAuthActionsPayload =
-  | { type: 'AUTH_SUCCESS'; payload: IUser }
-  | { type: 'AUTH_FAILURE'; payload: string };
-
-export type TAuthActions = TAuthActionsNoPayload | TAuthActionsPayload;
+  | { type: 'SIGNOUT'; payload: null }
+  | { type: 'AUTH_SUCCESS'; payload: IUser | null }
+  | { type: 'AUTH_FAILURE'; payload: string | null };
 
 const Actions = {
   LOADING: 'LOADING',
@@ -28,7 +24,10 @@ const Actions = {
   SIGNOUT: 'SIGNOUT',
 };
 
-export const authReducer = (state: IAuthState, action: TAuthActions) => {
+export const authReducer = (
+  state: IAuthState,
+  action: TAuthActions
+): IAuthState => {
   switch (action.type) {
     case Actions.LOADING:
       return {
@@ -45,7 +44,7 @@ export const authReducer = (state: IAuthState, action: TAuthActions) => {
         ...state,
         isLoading: false,
         isLoggedIn: false,
-        error: action.payload,
+        error: action.payload as string,
       };
 
     case Actions.AUTH_SUCCESS:
@@ -53,7 +52,7 @@ export const authReducer = (state: IAuthState, action: TAuthActions) => {
         ...state,
         isLoading: false,
         isLoggedIn: true,
-        user: action.payload,
+        user: action.payload as IUser,
       };
 
     case Actions.CLEAR_ERROR:

@@ -74,11 +74,12 @@ export function EmojiTextArea({
           offset={25}
           keepMounted={true}
         >
-          {/* TODO FIX EMOJI EVENT TYPE */}
           <Popover.Dropdown p={0}>
             <Picker
               data={data}
-              onEmojiSelect={(event) => insertAtCursor(event.native)}
+              onEmojiSelect={(emoji: { native: string }) => {
+                insertAtCursor(emoji.native);
+              }}
               locale="en"
               theme="dark"
             />

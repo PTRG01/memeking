@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
 import { ListResult, Record, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
+import { IPost } from '../contexts/post-provider/post-provider.interface';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
@@ -13,12 +14,13 @@ const memeCollection = createPbCollection('meme');
 const chatCollection = createPbCollection('chats');
 const messageCollection = createPbCollection('messages');
 const postCollection = createPbCollection('posts');
+const commentCollection = createPbCollection('comments');
 
 export const createSearchHook = <T extends Record>(
   collection: RecordService
 ) => {
   return () => {
-    const [data, setData] = useState<ListResult | null>(null);
+    const [data, setData] = useState<ListResult<T> | T[] | null>(null);
     const [result, setResult] = useState<T[] | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,7 @@ export const createSearchHook = <T extends Record>(
     const getList = useCallback(
       async ({ page = 1, perPage = 10, queryParams = {} }) => {
         setLoading(true);
-        const result = await collection.getList(page, perPage, queryParams);
+        const result = await collection.getList<T>(page, perPage, queryParams);
         setData(result);
         setResult(result.items);
         setLoading(false);
@@ -40,7 +42,7 @@ export const createSearchHook = <T extends Record>(
 
     const getFullList = useCallback(async (queryParams = {}) => {
       setLoading(true);
-      const result = await collection.getFullList(queryParams);
+      const result = await collection.getFullList<T>(queryParams);
       setData(result);
       setResult(result);
       setLoading(false);
@@ -158,6 +160,7 @@ export const useMeme = createCRUDHook(memeCollection);
 export const useChat = createCRUDHook(chatCollection);
 export const useMessage = createCRUDHook(messageCollection);
 export const usePost = createCRUDHook(postCollection);
+export const useComment = createCRUDHook(commentCollection);
 
 export const useGameList = createSearchHook(gameCollection);
 export const useUserList = createSearchHook(userCollection);
@@ -165,7 +168,8 @@ export const useRoundList = createSearchHook(roundCollection);
 export const useMemeList = createSearchHook(memeCollection);
 export const useChatList = createSearchHook(chatCollection);
 export const useMessageList = createSearchHook(messageCollection);
-export const usePostList = createSearchHook(postCollection);
+export const usePostList = createSearchHook<IPost>(postCollection);
+export const useCommentList = createSearchHook(commentCollection);
 
 export const useGameSubscription = createSubscriptionHook(gameCollection);
 export const useUserSubscription = createSubscriptionHook(userCollection);
@@ -174,3 +178,4 @@ export const useMemeSubscription = createSubscriptionHook(memeCollection);
 export const useChatSubscription = createSubscriptionHook(chatCollection);
 export const useMessageSubscription = createSubscriptionHook(messageCollection);
 export const usePostSubscription = createSubscriptionHook(postCollection);
+export const useCommentSubscription = createSubscriptionHook(commentCollection);

@@ -8,7 +8,7 @@ import {
   TSignInFunction,
   TLogoutFunction,
 } from './auth-provider.interface';
-import { authReducer, IAuthState, TAuthActions } from './auth-reducer';
+import { authReducer, IAuthState } from './auth-reducer';
 /*eslint-disable*/
 
 const initialState: IAuthState = {
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
   useEffect(() => {
     const refreshAuth = async () => {
       try {
-        dispatch({ type: 'LOADING' });
+        dispatch({ type: 'LOADING', payload: null });
         await pb.collection('users').authRefresh();
       } catch (e) {
         console.error(e);
@@ -68,29 +68,29 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
 
   const signUp: TSignUpFunction = async (params) => {
     try {
-      dispatch({ type: 'LOADING' });
+      dispatch({ type: 'LOADING', payload: null });
       await pb.collection('users').create(params);
     } catch (e) {
       console.error(e);
       dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
     }
-    dispatch({ type: 'LOADING_STOP' });
+    dispatch({ type: 'LOADING_STOP', payload: null });
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {
     try {
-      dispatch({ type: 'LOADING' });
+      dispatch({ type: 'LOADING', payload: null });
 
       await pb.collection('users').authWithPassword(email, password);
     } catch (e) {
       dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
     }
-    dispatch({ type: 'LOADING_STOP' });
+    dispatch({ type: 'LOADING_STOP', payload: null });
   };
 
   const logout: TLogoutFunction = async () => {
     pb.authStore.clear();
-    dispatch({ type: 'SIGNOUT' });
+    dispatch({ type: 'SIGNOUT', payload: null });
   };
 
   return (

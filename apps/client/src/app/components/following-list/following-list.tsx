@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../loader/loader';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import UserList from '../user-list/user-list';
 import UserListItemInline from '../user-list-item-inline/user-list-item-inline';
@@ -22,26 +21,21 @@ export function FollowingList() {
     createChatWithUser,
     handleOpenChatToggle,
   } = useChatContext();
-  const { t, i18n } = useTranslation();
-
-  // TODO VERIFY HANDLE FUNCTION
+  const { t } = useTranslation();
 
   function handleItemClick(id: string) {
-    if (!id) return;
     const currentUsers = [user?.id, id];
     const matchingChat = userChatsList?.find(
       (chat) =>
         chat?.users?.length === currentUsers.length &&
         chat.users.every((userId) => currentUsers?.includes(userId))
     );
-    if (!matchingChat) return;
-
-    const chatExists = matchingChat?.users?.includes(id);
-    if (chatExists) {
-      handleOpenChatToggle(matchingChat?.id);
-    } else {
+    if (!matchingChat) {
       createChatWithUser(id);
+      return;
     }
+    const chatExists = matchingChat?.users?.includes(id);
+    if (chatExists) handleOpenChatToggle(matchingChat?.id);
   }
   return (
     <NavLink
@@ -67,7 +61,7 @@ export function FollowingList() {
                     values={values}
                     onAddUser={handleAddFollowing}
                     onRemoveUser={handleRemoveFollowing}
-                    handleItemClick={handleItemClick}
+                    onItemClick={handleItemClick}
                     itemActive={true}
                     isLoading={isLoading}
                   />

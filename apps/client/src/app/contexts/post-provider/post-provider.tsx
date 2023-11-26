@@ -12,14 +12,11 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   const { user } = useAuthContext();
   const {
     getFullList,
-    result: postListResult,
+    result: userPostsList,
     loading: isLoading,
   } = usePostList();
   const { createOne, deleteOne, updateOne } = usePost();
 
-  // TODO Fix result type in hook
-
-  const userPostsList = postListResult as IPost[];
   // CHAT
 
   const loadPosts = useCallback(() => {
@@ -37,14 +34,10 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   }, [loadPosts]);
 
   useEffect(() => {
-    console.log(postListResult);
-  }, [postListResult]);
-
-  useEffect(() => {
     pb.collection('posts').subscribe('*', async (e) => {
       loadPosts();
     });
-  }, [loadPosts, postListResult]);
+  }, [loadPosts, userPostsList]);
 
   const createPost = (title: string, contentText: string) => {
     if (title && contentText)
@@ -69,10 +62,9 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     );
   };
 
-  // TODO Fix post not reloading after delete
-
-  const deletePost = (id: string) => {
-    deleteOne(id);
+  const deletePost = async (id: string) => {
+    await deleteOne(id);
+    loadPosts();
   };
 
   const handleUpvote = (post: IPost) => {

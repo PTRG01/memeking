@@ -59,6 +59,7 @@ export function Post({ post }: IPostProps) {
         <Text lineClamp={6}>{post.contentText}</Text>
       </Group>
       <VoteBar onUpvote={handleUpvote} post={post} />
+
       <PostForm
         post={post}
         isOpen={editFormOpen}

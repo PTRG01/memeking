@@ -11,7 +11,7 @@ export interface IUserListItemInlineProps {
   onAddUser: THandleAddFollowingFunction | TUpdateChatFunction;
   onRemoveUser: (value: string) => void;
   isLoading: boolean;
-  handleItemClick: (value: string) => void;
+  onItemClick: (value: string) => void;
 }
 
 function UserListItemInline({
@@ -20,7 +20,7 @@ function UserListItemInline({
   onAddUser,
   onRemoveUser,
   isLoading,
-  handleItemClick,
+  onItemClick,
 }: IUserListItemInlineProps) {
   const handleValues = () => {
     if (values?.includes(user.id)) {
@@ -31,7 +31,7 @@ function UserListItemInline({
   };
   return (
     <Group spacing="md" mb={10}>
-      <UnstyledButton ml={5} onClick={() => handleItemClick(user.id)}>
+      <UnstyledButton ml={5} onClick={() => onItemClick(user.id)}>
         <Group>
           <Avatar size="lg" src={user.avatar} />
           <Text>{user.name}</Text>
