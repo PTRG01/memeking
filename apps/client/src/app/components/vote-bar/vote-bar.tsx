@@ -12,24 +12,42 @@ import { ThumbUp } from 'tabler-icons-react';
 import { IPost } from '../../contexts/post-provider/post-provider.interface';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
+import { IComment } from '../../contexts/comment-provider/comment-provider.interface';
 
 /* eslint-disable-next-line */
 export interface IVoteBarProps {
   onUpvote: (post: IPost) => void;
   post: IPost;
+  onCommentsOpen: () => void;
+  commentsList: IComment[] | null;
 }
 
-export function VoteBar({ onUpvote, post }: IVoteBarProps) {
+export function VoteBar({
+  onUpvote,
+  post,
+  onCommentsOpen,
+  commentsList,
+}: IVoteBarProps) {
   const { user } = useAuthContext();
-  const voteExists = post?.upvote_ids.length > 0;
-  const commentExists = post?.comment_ids.length > 0;
+  const voteExists = post?.upvote_ids?.length > 0;
+  const commentExists = commentsList !== null;
   const voteActive = user ? post?.upvote_ids?.includes(user?.id) : null;
   const upvoteUsers = post?.expand?.upvote_ids?.map((user: IUser) => user);
-  // TODO ADD INTERFACE FOR COMMENTS
-  const commentUsers = post?.expand?.comment_ids?.map(
-    (comment) => comment?.expand?.author_id
+
+  const commentUsers = commentsList?.map(
+    (comment: IComment) => comment?.expand?.author_id as IUser
   );
 
+  const filterDuplicateUsers = (users: IUser[]) => {
+    const uniqueRecords = users?.filter(
+      (record, index, self) =>
+        self.findIndex((r) => r.id === record.id) === index
+    );
+
+    return uniqueRecords;
+  };
+
+  const filteredUserList = filterDuplicateUsers(commentUsers as IUser[]);
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={15}>
@@ -54,23 +72,25 @@ export function VoteBar({ onUpvote, post }: IVoteBarProps) {
           </Group>
         )}
         {commentExists && (
-          <HoverCard>
-            <HoverCard.Target>
-              <UnstyledButton>
-                {post?.comment_ids?.length > 1
-                  ? `${post?.comment_ids?.length} comments`
-                  : `${post?.comment_ids?.length} comment`}
-              </UnstyledButton>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-              {commentUsers?.map((user: IUser) => (
-                <Text key={user.id}>{user.name}</Text>
-              ))}
-            </HoverCard.Dropdown>
-          </HoverCard>
+          <Group align="center">
+            <HoverCard>
+              <HoverCard.Target>
+                <UnstyledButton onClick={() => onCommentsOpen()}>
+                  {commentsList?.length > 1
+                    ? `${commentsList?.length} comments`
+                    : `${commentsList?.length} comment`}
+                </UnstyledButton>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                {filteredUserList?.map((user) => (
+                  <Text key={user.id}>{user.name}</Text>
+                ))}
+              </HoverCard.Dropdown>
+            </HoverCard>
+          </Group>
         )}
       </Flex>
-      <Divider mb={15} />
+      <Divider mb={10} />
       <Flex justify="space-between">
         <Button
           px={50}

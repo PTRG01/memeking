@@ -3,9 +3,11 @@ import { pb } from '../utils/pocketbase';
 import { ListResult, Record, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
+import { IComment } from '../contexts/comment-provider/comment-provider.interface';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
+pb.autoCancellation(false);
 
 const gameCollection = createPbCollection('game');
 const userCollection = createPbCollection('users');
@@ -169,7 +171,7 @@ export const useMemeList = createSearchHook(memeCollection);
 export const useChatList = createSearchHook(chatCollection);
 export const useMessageList = createSearchHook(messageCollection);
 export const usePostList = createSearchHook<IPost>(postCollection);
-export const useCommentList = createSearchHook(commentCollection);
+export const useCommentList = createSearchHook<IComment>(commentCollection);
 
 export const useGameSubscription = createSubscriptionHook(gameCollection);
 export const useUserSubscription = createSubscriptionHook(userCollection);

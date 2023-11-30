@@ -23,7 +23,6 @@ export function ChatMessageBar({
   });
 
   const handleChatInput = (values: string) => {
-    console.log(values);
     onTextSubmit(values, recordId);
     form.reset();
   };
@@ -37,6 +36,7 @@ export function ChatMessageBar({
     >
       <Group position="apart">
         <EmojiTextArea
+          withSendIcon={false}
           onSubmit={handleChatInput}
           radius="xl"
           {...form.getInputProps('chatInput')}

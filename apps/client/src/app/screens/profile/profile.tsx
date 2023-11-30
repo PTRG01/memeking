@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Container,
   Stack,
+  Box,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
@@ -36,7 +37,7 @@ export function Profile(props: ProfileProps) {
   };
 
   return (
-    <Flex direction="column" mx={100} mt={20}>
+    <Box mx={10} mt={10}>
       <Group position="left" mb="xl">
         <Avatar size="xl" />
         <Flex direction="column">
@@ -76,11 +77,7 @@ export function Profile(props: ProfileProps) {
           Gallery tab content
         </Tabs.Panel>
         <Tabs.Panel value="posts" pt="xs">
-          <Container>
-            <Stack>
-              <PostList postList={userPostsList} />
-            </Stack>
-          </Container>
+          <PostList postList={userPostsList} isLoading={isLoading} />
         </Tabs.Panel>
         <Tabs.Panel value="following" pt="xs">
           <SimpleGrid cols={3}>
@@ -110,7 +107,7 @@ export function Profile(props: ProfileProps) {
           <Button mt={20}>Edit</Button>
         </Tabs.Panel>
       </Tabs>
-    </Flex>
+    </Box>
   );
 }
 

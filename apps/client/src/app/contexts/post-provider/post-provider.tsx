@@ -23,7 +23,7 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     if (user) {
       getFullList({
         sort: 'created',
-        expand: 'comment_ids.author_id,upvote_ids',
+        expand: 'upvote_ids',
         filter: `author_id~"${user?.id}"`,
       });
     }

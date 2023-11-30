@@ -1,4 +1,4 @@
-import { MoodSmile } from 'tabler-icons-react';
+import { MoodSmile, Send } from 'tabler-icons-react';
 import { ActionIcon, Popover, Textarea } from '@mantine/core';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
@@ -14,6 +14,8 @@ export interface IEmojiTextAreaProps {
   onSubmit: (value: string) => void;
   radius?: 'sm' | 'md' | 'lg' | 'xl';
   label?: string;
+  withSendIcon: boolean;
+  isLoading?: boolean;
 }
 
 export function EmojiTextArea({
@@ -22,6 +24,8 @@ export function EmojiTextArea({
   radius,
   onSubmit,
   label,
+  withSendIcon,
+  isLoading,
 }: IEmojiTextAreaProps) {
   const textarea = useRef<HTMLTextAreaElement | null>(null);
 
@@ -65,31 +69,46 @@ export function EmojiTextArea({
       }}
       rightSectionWidth={60}
       rightSection={
-        <Popover
-          withArrow={true}
-          arrowPosition="center"
-          arrowSize={25}
-          arrowRadius={5}
-          withinPortal={true}
-          offset={25}
-          keepMounted={true}
-        >
-          <Popover.Dropdown p={0}>
-            <Picker
-              data={data}
-              onEmojiSelect={(emoji: { native: string }) => {
-                insertAtCursor(emoji.native);
-              }}
-              locale="en"
-              theme="dark"
-            />
-          </Popover.Dropdown>
-          <Popover.Target>
-            <ActionIcon size="xl" variant="filled" radius="xl">
-              <MoodSmile size={28} />
+        <>
+          {withSendIcon && (
+            <ActionIcon
+              loading={isLoading}
+              size="xl"
+              type="submit"
+              variant="filled"
+              radius="xl"
+              ml={-55}
+              mr={10}
+            >
+              <Send />
             </ActionIcon>
-          </Popover.Target>
-        </Popover>
+          )}
+          <Popover
+            withArrow={true}
+            arrowPosition="center"
+            arrowSize={25}
+            arrowRadius={5}
+            withinPortal={true}
+            offset={25}
+            keepMounted={true}
+          >
+            <Popover.Dropdown p={0}>
+              <Picker
+                data={data}
+                onEmojiSelect={(emoji: { native: string }) => {
+                  insertAtCursor(emoji.native);
+                }}
+                locale="en"
+                theme="dark"
+              />
+            </Popover.Dropdown>
+            <Popover.Target>
+              <ActionIcon size="xl" variant="filled" radius="xl">
+                <MoodSmile size={28} />
+              </ActionIcon>
+            </Popover.Target>
+          </Popover>
+        </>
       }
     />
   );

@@ -38,7 +38,6 @@ export function PostForm({
 
   const handleFormSubmit = (values: IPost) => {
     onCloseForm(isOpen);
-    console.log(values);
     onFormSubmit(values);
     form.reset();
   };
