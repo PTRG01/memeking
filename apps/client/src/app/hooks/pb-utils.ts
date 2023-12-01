@@ -4,6 +4,7 @@ import { ListResult, Record, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
 import { IComment } from '../contexts/comment-provider/comment-provider.interface';
+import { IGroup } from '../contexts/group-provider/group-provider.interface';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
@@ -17,6 +18,7 @@ const chatCollection = createPbCollection('chats');
 const messageCollection = createPbCollection('messages');
 const postCollection = createPbCollection('posts');
 const commentCollection = createPbCollection('comments');
+const groupCollection = createPbCollection('groups');
 
 export const createSearchHook = <T extends Record>(
   collection: RecordService
@@ -163,6 +165,7 @@ export const useChat = createCRUDHook(chatCollection);
 export const useMessage = createCRUDHook(messageCollection);
 export const usePost = createCRUDHook(postCollection);
 export const useComment = createCRUDHook(commentCollection);
+export const useGroup = createCRUDHook(groupCollection);
 
 export const useGameList = createSearchHook(gameCollection);
 export const useUserList = createSearchHook(userCollection);
@@ -172,6 +175,7 @@ export const useChatList = createSearchHook(chatCollection);
 export const useMessageList = createSearchHook(messageCollection);
 export const usePostList = createSearchHook<IPost>(postCollection);
 export const useCommentList = createSearchHook<IComment>(commentCollection);
+export const useGroupList = createSearchHook<IGroup>(groupCollection);
 
 export const useGameSubscription = createSubscriptionHook(gameCollection);
 export const useUserSubscription = createSubscriptionHook(userCollection);
@@ -181,3 +185,4 @@ export const useChatSubscription = createSubscriptionHook(chatCollection);
 export const useMessageSubscription = createSubscriptionHook(messageCollection);
 export const usePostSubscription = createSubscriptionHook(postCollection);
 export const useCommentSubscription = createSubscriptionHook(commentCollection);
+export const useGroupSubscription = createSubscriptionHook(groupCollection);
