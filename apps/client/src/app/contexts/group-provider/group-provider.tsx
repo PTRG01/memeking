@@ -7,51 +7,51 @@ import { IGroup, IGroupContext } from './group-provider.interface';
 /* eslint-disable-next-line */
 export interface IGroupProviderProps {
   children: React.ReactNode;
-  parentId: string;
 }
 
 export const GroupContext = React.createContext<IGroupContext | null>(null);
 
-export function CommentProvider({ children, parentId }: IGroupProviderProps) {
+export function GroupProvider({ children }: IGroupProviderProps) {
   const { user } = useAuthContext();
   const {
     getList,
-    result: commentListResult,
+    result: groupListResult,
     loading: isLoading,
   } = useGroupList();
 
   const [groups, setGroups] = useState<IGroup[] | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const { createOne } = useComment();
 
-  const loadComments = useCallback(() => {
+  const loadGroups = useCallback(() => {
     getList({
       queryParams: {
         sort: 'created',
         expand: 'author_id,upvote_ids',
-        filter: `post_id~"${parentId}"`,
+        filter: `users~"${user?.id}"`,
       },
     });
-  }, [parentId, getList]);
+  }, [getList]);
 
-  useEffect(() => {
-    loadComments();
-  }, [loadComments]);
+  // useEffect(() => {
+  //   loadComments();
+  // }, [loadComments]);
 
-  useEffect(() => {
-    pb.collection('comments').subscribe('*', async (e) => {
-      loadComments();
-    });
-  }, [loadComments, commentListResult]);
+  // useEffect(() => {
+  //   pb.collection('comments').subscribe('*', async (e) => {
+  //     loadComments();
+  //   });
+  // }, [loadComments, commentListResult]);
 
-  const createComment = (contentText: string) => {
-    if (parentId && contentText)
-      createOne({
-        author_id: user?.id,
-        post_id: parentId,
-        contentText: contentText,
-      });
-  };
+  // const createComment = (contentText: string) => {
+  //   if (parentId && contentText)
+  //     createOne({
+  //       author_id: user?.id,
+  //       post_id: parentId,
+  //       contentText: contentText,
+  //     });
+  // };
 
   //  TODO ADD UPDATE AND DELETE FUNCTIONALITY
 
@@ -59,7 +59,8 @@ export function CommentProvider({ children, parentId }: IGroupProviderProps) {
     <GroupContext.Provider
       value={{
         isLoading,
-        groups,
+        groupListResult,
+        isCreating,
       }}
     >
       {children}

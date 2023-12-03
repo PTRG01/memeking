@@ -42,7 +42,7 @@ export const ApplicationFrame = ({
       navbar={
         navbar && (
           <Navbar
-            p="md"
+            p="sm"
             hiddenBreakpoint="sm"
             hidden={!opened}
             width={{ sm: 200, lg: 300 }}

@@ -30,7 +30,7 @@ export function Header(props: HeaderProps) {
   };
   return (
     <>
-      <Group>
+      <Button variant="transparent" onClick={() => navigate('/')}>
         <Text>
           Meme
           <span role="img" aria-label="crown emoji">
@@ -38,7 +38,7 @@ export function Header(props: HeaderProps) {
           </span>
           King
         </Text>
-      </Group>
+      </Button>
 
       <Group position="right">
         {/* TODO add account menu when loggedIn */}

@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import MessageItem from './message-item';
+import GroupList from './group-list';
 
-describe('MessageItem', () => {
+describe('GroupList', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MessageItem />);
+    const { baseElement } = render(<GroupList />);
     expect(baseElement).toBeTruthy();
   });
 });

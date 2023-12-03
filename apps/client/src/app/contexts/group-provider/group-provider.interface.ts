@@ -7,6 +7,7 @@ export interface IGroup extends Record {
 }
 
 export interface IGroupContext {
-  groups: IGroup[] | null;
+  groupListResult: IGroup[] | null;
   isLoading: boolean;
+  isCreating: boolean;
 }
