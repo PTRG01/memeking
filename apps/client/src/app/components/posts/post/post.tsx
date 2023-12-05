@@ -39,8 +39,8 @@ export function Post({ post }: IPostProps) {
     setCommentsOpen(!commentsOpen);
   };
   return (
-    <Paper p={25} my={10} radius="lg">
-      <Stack align="stretch">
+    <Stack align="stretch" maw={900}>
+      <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
             <Avatar mr={20} size="lg" src={post.avatar} />
@@ -85,8 +85,8 @@ export function Post({ post }: IPostProps) {
           isEditing={true}
           onFormSubmit={handleEditPost}
         />
-      </Stack>
-    </Paper>
+      </Paper>
+    </Stack>
   );
 }
 

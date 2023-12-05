@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import FloatingLabelInput from '../../floating-label-input/floating-label-input';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 
 /* eslint-disable-next-line */
 export interface GroupFormProps {}
@@ -11,9 +12,11 @@ export interface GroupFormProps {}
 export function GroupForm(props: GroupFormProps) {
   const [value, setValue] = useState<string[]>([]);
   const { handleSearch, followersSearchList, followingList } = useChatContext();
+  const { createGroup } = useGroupContext();
+
   const form = useForm({
     initialValues: {
-      groupName: '',
+      title: '',
       groupUsers: [],
     },
   });
@@ -26,12 +29,16 @@ export function GroupForm(props: GroupFormProps) {
     : [];
   return (
     <Box>
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <form
+        onSubmit={form.onSubmit((values) =>
+          createGroup(values.title, values.groupUsers)
+        )}
+      >
         <Stack spacing={2}>
           <FloatingLabelInput
             label="Group name"
             placeholder=""
-            {...form.getInputProps('groupName')}
+            {...form.getInputProps('title')}
           />
           <MultiSelect
             my={5}

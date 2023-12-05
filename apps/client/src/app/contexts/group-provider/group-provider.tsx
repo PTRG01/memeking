@@ -1,5 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useComment, useGroupList } from '../../hooks/pb-utils';
+import {
+  useComment,
+  useGroup,
+  useGroupList,
+  usePostList,
+} from '../../hooks/pb-utils';
 import { useAuthContext } from '../auth-provider/auth-provider';
 import { pb } from '../../utils/pocketbase';
 import { IGroup, IGroupContext } from './group-provider.interface';
@@ -7,51 +12,75 @@ import { IGroup, IGroupContext } from './group-provider.interface';
 /* eslint-disable-next-line */
 export interface IGroupProviderProps {
   children: React.ReactNode;
+  parentId: string;
 }
 
 export const GroupContext = React.createContext<IGroupContext | null>(null);
 
-export function GroupProvider({ children }: IGroupProviderProps) {
+export function GroupProvider({ children, parentId }: IGroupProviderProps) {
   const { user } = useAuthContext();
   const {
     getList,
     result: groupListResult,
     loading: isLoading,
   } = useGroupList();
+  const {
+    getList: getPostList,
+    result: groupPostsListResult,
+    loading: isPostsLoading,
+  } = usePostList();
+  const { createOne } = useGroup();
 
-  const [groups, setGroups] = useState<IGroup[] | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-
-  const { createOne } = useComment();
 
   const loadGroups = useCallback(() => {
     getList({
       queryParams: {
         sort: 'created',
         expand: 'author_id,upvote_ids',
-        filter: `users~"${user?.id}"`,
+        filter: `author_id~"${user?.id}"`,
       },
     });
-  }, [getList]);
+  }, [getList, user]);
 
-  // useEffect(() => {
-  //   loadComments();
-  // }, [loadComments]);
+  useEffect(() => {
+    loadGroups();
+  }, [loadGroups]);
 
-  // useEffect(() => {
-  //   pb.collection('comments').subscribe('*', async (e) => {
-  //     loadComments();
-  //   });
-  // }, [loadComments, commentListResult]);
+  useEffect(() => {
+    pb.collection('groups').subscribe('*', async (e) => {
+      loadGroups();
+    });
+  }, [loadGroups, groupListResult]);
 
-  // const createComment = (contentText: string) => {
-  //   if (parentId && contentText)
-  //     createOne({
-  //       author_id: user?.id,
-  //       post_id: parentId,
-  //       contentText: contentText,
-  //     });
-  // };
+  const loadGroupPosts = useCallback(() => {
+    getPostList({
+      queryParams: {
+        sort: 'created',
+        expand: 'author_id,users',
+        filter: `group_id~"${parentId}"`,
+      },
+    });
+  }, [getPostList, parentId]);
+
+  useEffect(() => {
+    loadGroupPosts();
+  }, [loadGroupPosts]);
+
+  useEffect(() => {
+    pb.collection('posts').subscribe('*', async (e) => {
+      loadGroupPosts();
+    });
+  }, [loadGroupPosts, groupPostsListResult]);
+
+  const createGroup = (title: string, users: string[]) => {
+    if (title && users)
+      createOne({
+        author_id: user?.id,
+        users: users,
+        title: title,
+      });
+  };
 
   //  TODO ADD UPDATE AND DELETE FUNCTIONALITY
 
@@ -61,6 +90,9 @@ export function GroupProvider({ children }: IGroupProviderProps) {
         isLoading,
         groupListResult,
         isCreating,
+        createGroup,
+        groupPostsListResult,
+        isPostsLoading,
       }}
     >
       {children}

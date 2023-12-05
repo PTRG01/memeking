@@ -23,7 +23,7 @@ export function Navbar(props: NavbarProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [formOpen, setFormOpen] = useState(false);
-  // const { isLoading, isCreating } = useGroupContext();
+  const { isLoading, groupListResult } = useGroupContext();
   return (
     <Stack>
       <Routes>
@@ -71,7 +71,7 @@ export function Navbar(props: NavbarProps) {
               >
                 Create new group
               </Button>
-              <GroupList />
+              <GroupList groupList={groupListResult} />
             </Stack>
           }
         />

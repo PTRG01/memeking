@@ -30,7 +30,7 @@ export function VoteBar({
 }: IVoteBarProps) {
   const { user } = useAuthContext();
   const voteExists = post?.upvote_ids?.length > 0;
-  const commentExists = commentsList !== null;
+  const commentExists = commentsList ? commentsList?.length > 0 : null;
   const voteActive = user ? post?.upvote_ids?.includes(user?.id) : null;
   const upvoteUsers = post?.expand?.upvote_ids?.map((user: IUser) => user);
 
@@ -51,8 +51,8 @@ export function VoteBar({
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={15}>
-        {voteExists && (
-          <Group>
+        {voteExists ? (
+          <Group align="left">
             <Divider />
             <HoverCard>
               <HoverCard.Target>
@@ -70,15 +70,19 @@ export function VoteBar({
               </HoverCard.Dropdown>
             </HoverCard>
           </Group>
+        ) : (
+          <span />
         )}
         {commentExists && (
-          <Group align="center">
+          <Group align="right">
             <HoverCard>
               <HoverCard.Target>
                 <UnstyledButton onClick={() => onCommentsOpen()}>
-                  {commentsList?.length > 1
-                    ? `${commentsList?.length} comments`
-                    : `${commentsList?.length} comment`}
+                  {commentsList
+                    ? commentsList?.length > 1
+                      ? `${commentsList?.length} comments`
+                      : `${commentsList?.length} comment`
+                    : ''}
                 </UnstyledButton>
               </HoverCard.Target>
               <HoverCard.Dropdown>
