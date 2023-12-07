@@ -3,6 +3,7 @@ import {
   useComment,
   useGroup,
   useGroupList,
+  usePost,
   usePostList,
 } from '../../hooks/pb-utils';
 import { useAuthContext } from '../auth-provider/auth-provider';
@@ -12,7 +13,7 @@ import { IGroup, IGroupContext } from './group-provider.interface';
 /* eslint-disable-next-line */
 export interface IGroupProviderProps {
   children: React.ReactNode;
-  parentId: string;
+  parentId?: string;
 }
 
 export const GroupContext = React.createContext<IGroupContext | null>(null);
@@ -30,7 +31,7 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     loading: isPostsLoading,
   } = usePostList();
   const { createOne } = useGroup();
-
+  const { createOne: createOnePost } = usePost();
   const [isCreating, setIsCreating] = useState(false);
 
   const loadGroups = useCallback(() => {
@@ -80,6 +81,12 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
         users: users,
         title: title,
       });
+  };
+
+  const createFirstPost = () => {
+    createOnePost({
+      author_id: user?.id,
+    });
   };
 
   //  TODO ADD UPDATE AND DELETE FUNCTIONALITY

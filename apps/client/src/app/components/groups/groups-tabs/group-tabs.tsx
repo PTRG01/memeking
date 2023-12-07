@@ -11,13 +11,11 @@ export function GroupTabs(props: GroupsTabsProps) {
   const [active, setActive] = useState(0);
 
   const handleFeedTab = () => {
-    if (active === 0) return;
     navigate('/groups/:feed');
     setActive(0);
   };
   const handleJoinsTab = () => {
-    if (active === 1) return;
-    navigate('/groups/:joins');
+    navigate('/groups/joins');
     setActive(1);
   };
   return (

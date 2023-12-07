@@ -1,5 +1,5 @@
 import { ScrollArea, Stack } from '@mantine/core';
-import GroupItem from '../group-item/group-item';
+import GroupListItem from '../group-list-item/group-list-item';
 import LoaderComponent from '../../loader/loader';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { GroupProvider } from '../../../contexts/group-provider/group-provider';
@@ -16,11 +16,7 @@ export function GroupList({ groupList }: GroupListProps) {
         <ScrollArea mih={800}>
           {groupList?.map((group) => (
             <GroupProvider key={group.id} parentId={group.id}>
-              <GroupItem
-                id={group.id}
-                title={group.title}
-                posts={group.posts}
-              />
+              <GroupListItem id={group.id} title={group.title} />
             </GroupProvider>
           ))}
         </ScrollArea>

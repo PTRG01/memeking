@@ -22,6 +22,7 @@ import Settings from './screens/settings/settings';
 import ChatsContainer from './components/chat/chats-container/chats-container';
 import { PostProvider } from './contexts/post-provider/post-provider';
 import { GroupProvider } from './contexts/group-provider/group-provider';
+import GroupJoinedList from './components/groups/group-joined-list/group-joined-list';
 
 /* eslint-disable-next-line */
 export function App() {
@@ -55,6 +56,11 @@ export function App() {
                     >
                       <Route path="/groups" element={<Groups />} />
                       <Route path="/groups/:groupId" element={<Group />} />
+                      <Route
+                        path="/groups/joins"
+                        element={<GroupJoinedList />}
+                      />
+
                       <Route path="/create" element={<Create />} />
                       <Route path="/create/:createId" element={<Create />} />
                       <Route path="/games" element={<Games />} />
