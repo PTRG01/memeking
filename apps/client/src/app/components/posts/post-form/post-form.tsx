@@ -1,4 +1,4 @@
-import { Container, TextInput, Button, Box, Flex, Modal } from '@mantine/core';
+import { Container, Button, Box, Flex, Modal } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
@@ -22,17 +22,15 @@ export function PostForm({
 }: IPostFormProps) {
   const formValues =
     isEditing && post
-      ? { title: post?.title, contentText: post?.contentText }
-      : { title: '', contentText: '' };
+      ? { contentText: post?.contentText }
+      : { contentText: '' };
 
   const form = useForm({
     initialValues: formValues,
 
     validate: {
-      title: (value) =>
-        value.length < 5 ? 'Title must have at least 5 letters' : null,
       contentText: (value) =>
-        value.length < 20 ? 'Text must have at least 20 letters' : null,
+        value.length < 10 ? 'Text must have at least 10 letters' : null,
     },
   });
 
@@ -43,7 +41,15 @@ export function PostForm({
   };
 
   return (
-    <Modal opened={isOpen} onClose={() => onCloseForm(isOpen)} title="Post">
+    <Modal
+      opened={isOpen}
+      onClose={() => onCloseForm(isOpen)}
+      closeButtonProps={{
+        size: 'lg',
+        radius: 100,
+        display: 'flex',
+      }}
+    >
       <Container>
         <Box maw={800} mx="auto">
           <form
@@ -51,16 +57,10 @@ export function PostForm({
               handleFormSubmit(values as IPost)
             )}
           >
-            <TextInput
-              mb={20}
-              withAsterisk
-              label="Title"
-              placeholder="Your post title"
-              {...form.getInputProps('title')}
-            />
             <EmojiTextArea
               radius="sm"
-              label="Content"
+              withSendIcon={false}
+              minRows={6}
               onSubmit={() => ''}
               {...form.getInputProps('contentText')}
             />

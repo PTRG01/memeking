@@ -1,6 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import {
-  useComment,
   useGroup,
   useGroupList,
   usePost,
@@ -8,7 +7,7 @@ import {
 } from '../../hooks/pb-utils';
 import { useAuthContext } from '../auth-provider/auth-provider';
 import { pb } from '../../utils/pocketbase';
-import { IGroup, IGroupContext } from './group-provider.interface';
+import { IGroupContext } from './group-provider.interface';
 
 /* eslint-disable-next-line */
 export interface IGroupProviderProps {
@@ -30,16 +29,15 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     result: groupPostsListResult,
     loading: isPostsLoading,
   } = usePostList();
-  const { createOne } = useGroup();
+  const { createOne, deleteOne, updateOne } = useGroup();
   const { createOne: createOnePost } = usePost();
-  const [isCreating, setIsCreating] = useState(false);
 
   const loadGroups = useCallback(() => {
     getList({
       queryParams: {
         sort: 'created',
         expand: 'author_id,upvote_ids',
-        filter: `author_id~"${user?.id}"`,
+        filter: `users~"${user?.id}"`,
       },
     });
   }, [getList, user]);
@@ -75,17 +73,30 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
   }, [loadGroupPosts, groupPostsListResult]);
 
   const createGroup = (title: string, users: string[]) => {
-    if (title && users)
+    if (title && users && user)
       createOne({
         author_id: user?.id,
-        users: users,
+        users: [...users, user?.id],
         title: title,
       });
   };
-
-  const createFirstPost = () => {
+  const leaveGroup = (groupId: string, users: string[]) => {
+    updateOne(
+      {
+        users: users.filter((groupUser: string) => groupUser !== user?.id),
+      },
+      groupId
+    );
+  };
+  const deleteGroup = (id: string) => {
+    deleteOne(id);
+    loadGroups();
+  };
+  const createGroupPost = (contentText: string, groupId: string) => {
     createOnePost({
       author_id: user?.id,
+      contentText: contentText,
+      group_id: groupId,
     });
   };
 
@@ -96,10 +107,12 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
       value={{
         isLoading,
         groupListResult,
-        isCreating,
         createGroup,
+        leaveGroup,
+        deleteGroup,
         groupPostsListResult,
         isPostsLoading,
+        createGroupPost,
       }}
     >
       {children}

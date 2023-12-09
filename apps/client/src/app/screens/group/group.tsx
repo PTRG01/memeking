@@ -1,22 +1,43 @@
 import { Stack } from '@mantine/core';
 import { useParams } from 'react-router-dom';
-import { GroupProvider } from '../../contexts/group-provider/group-provider';
+import {
+  GroupProvider,
+  useGroupContext,
+} from '../../contexts/group-provider/group-provider';
 import GroupItem from '../../components/groups/group-item/group-item';
 import ContentFormBar from '../../components/content-form-bar/content-form-bar';
+import { useState } from 'react';
+import PostForm from '../../components/posts/post-form/post-form';
+import { IPost } from '../../contexts/post-provider/post-provider.interface';
 
 /* eslint-disable-next-line */
 export interface IGroupProps {}
 
 export function Group(props: IGroupProps) {
   const { groupId } = useParams();
+  const { createGroupPost } = useGroupContext();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggleForm = () => {
+    setIsOpen(!isOpen);
+  };
 
   if (groupId === undefined) return null;
+
+  const handleCreatePost = (values: IPost) => {
+    createGroupPost(values.contentText, groupId);
+  };
 
   return (
     <GroupProvider parentId={groupId}>
       <Stack align="stretch">
-        <ContentFormBar onPostClick={() => ''} onPollClick={() => ''} />
+        <ContentFormBar onPostClick={handleToggleForm} />
         <GroupItem />
+        <PostForm
+          isOpen={isOpen}
+          onCloseForm={handleToggleForm}
+          onFormSubmit={handleCreatePost}
+        />
       </Stack>
     </GroupProvider>
   );

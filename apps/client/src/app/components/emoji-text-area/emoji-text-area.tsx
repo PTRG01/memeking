@@ -13,6 +13,9 @@ export interface IEmojiTextAreaProps {
   onChange: Dispatch<SetStateAction<string>>;
   onSubmit: (value: string) => void;
   radius?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'default' | 'unstyled' | 'filled';
+  minRows?: number;
+  maxRows?: number;
   label?: string;
   withSendIcon: boolean;
   isLoading?: boolean;
@@ -22,6 +25,9 @@ export function EmojiTextArea({
   value,
   onChange,
   radius,
+  variant = 'default',
+  minRows = 2,
+  maxRows = 5,
   onSubmit,
   label,
   withSendIcon,
@@ -56,8 +62,9 @@ export function EmojiTextArea({
       size="md"
       id="textarea"
       autosize
-      minRows={2}
-      maxRows={5}
+      variant={variant}
+      minRows={minRows}
+      maxRows={maxRows}
       ref={textarea}
       value={value}
       label={label}

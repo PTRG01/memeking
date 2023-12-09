@@ -1,4 +1,4 @@
-import { Avatar, Button, Title, rem } from '@mantine/core';
+import { Avatar, Button, Title } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */

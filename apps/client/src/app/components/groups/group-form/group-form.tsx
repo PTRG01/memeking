@@ -1,19 +1,18 @@
 import { Box, Button, Divider, MultiSelect, Stack } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useState } from 'react';
+import { UseFormReturnType, useForm } from '@mantine/form';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import FloatingLabelInput from '../../floating-label-input/floating-label-input';
-import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
+import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface GroupFormProps {}
 
 export function GroupForm(props: GroupFormProps) {
-  const [value, setValue] = useState<string[]>([]);
-  const { handleSearch, followersSearchList, followingList } = useChatContext();
+  const { followingList } = useChatContext();
   const { createGroup } = useGroupContext();
-
+  const navigate = useNavigate();
   const form = useForm({
     initialValues: {
       title: '',
@@ -27,11 +26,16 @@ export function GroupForm(props: GroupFormProps) {
         value,
       }))
     : [];
+
+  const handleCreateGroup = (title: string, groupUsers: string[]) => {
+    createGroup(title, groupUsers);
+    navigate('/groups');
+  };
   return (
     <Box>
       <form
         onSubmit={form.onSubmit((values) =>
-          createGroup(values.title, values.groupUsers)
+          handleCreateGroup(values.title, values.groupUsers)
         )}
       >
         <Stack spacing={2}>
