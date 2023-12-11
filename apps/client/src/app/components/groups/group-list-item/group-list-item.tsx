@@ -1,14 +1,13 @@
 import { Avatar, Button, Title } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface IGroupItemProps {
   id: string;
   title: string;
+  onItemClick: (id: string) => void;
 }
 
-export function GroupListItem({ id, title }: IGroupItemProps) {
-  const navigate = useNavigate();
+export function GroupListItem({ id, title, onItemClick }: IGroupItemProps) {
   return (
     <Button
       fullWidth
@@ -17,7 +16,7 @@ export function GroupListItem({ id, title }: IGroupItemProps) {
       size="md"
       mb={5}
       leftIcon={<Avatar size="md" radius={100} />}
-      onClick={() => navigate(`${id}`)}
+      onClick={() => onItemClick(id)}
       styles={(theme) => ({
         root: { display: 'flex' },
       })}

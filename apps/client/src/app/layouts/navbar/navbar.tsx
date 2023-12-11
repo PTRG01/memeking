@@ -6,15 +6,17 @@ import {
   UnstyledButton,
   Stack,
   CloseButton,
+  Title,
+  Divider,
 } from '@mantine/core';
-import { Cards, GoGame, Plus, Social } from 'tabler-icons-react';
+import { Cards, Plus, Social } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import GroupForm from '../../components/groups/group-form/group-form';
 import GroupList from '../../components/groups/group-list/group-list';
 import { useGroupContext } from '../../contexts/group-provider/group-provider';
-import { useState } from 'react';
 import GroupTabs from '../../components/groups/groups-tabs/group-tabs';
+import GroupSearch from '../../components/groups/group-search/group-search';
 /* eslint-disable-next-line */
 export interface NavbarProps {}
 
@@ -22,8 +24,12 @@ export function Navbar(props: NavbarProps) {
   // TODO add hover effects, improve ui of navbar, add routing
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [formOpen, setFormOpen] = useState(false);
-  const { isLoading, groupListResult } = useGroupContext();
+
+  const { groupListResult } = useGroupContext();
+
+  const handleGroupItemClick = (groupId: string) => {
+    navigate(`/groups/${groupId}`);
+  };
   return (
     <Stack>
       <Routes>
@@ -39,14 +45,6 @@ export function Navbar(props: NavbarProps) {
                   <Box>Feed</Box>
                 </Group>
               </UnstyledButton>
-              {/* <UnstyledButton>
-          <Group>
-            <ThemeIcon color="indigo" size={30}>
-              <GoGame size="1.1rem" />
-            </ThemeIcon>
-            <Box onClick={() => navigate('/games')}>{t('nav.games')}</Box>
-          </Group>
-        </UnstyledButton> */}
               <UnstyledButton>
                 <Group>
                   <ThemeIcon color="grape" size={30}>
@@ -64,6 +62,8 @@ export function Navbar(props: NavbarProps) {
           path="/groups/*"
           element={
             <Stack align="stretch">
+              <Title size="h2">Groups</Title>
+              <GroupSearch />
               <GroupTabs />
               <Button
                 onClick={() => navigate('/groups/create')}
@@ -71,7 +71,11 @@ export function Navbar(props: NavbarProps) {
               >
                 Create new group
               </Button>
-              <GroupList groupList={groupListResult} />
+              <Divider />
+              <GroupList
+                groupList={groupListResult}
+                onItemClick={handleGroupItemClick}
+              />
             </Stack>
           }
         />
@@ -82,7 +86,7 @@ export function Navbar(props: NavbarProps) {
               <CloseButton
                 size="md"
                 radius={50}
-                onClick={() => navigate('/groups/:feed')}
+                onClick={() => navigate('/groups/feed')}
               />
               <GroupForm />
             </Stack>

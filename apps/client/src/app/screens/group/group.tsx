@@ -4,7 +4,7 @@ import {
   GroupProvider,
   useGroupContext,
 } from '../../contexts/group-provider/group-provider';
-import GroupItem from '../../components/groups/group-item/group-item';
+import GroupContent from '../../components/groups/group-feed/group-content';
 import ContentFormBar from '../../components/content-form-bar/content-form-bar';
 import { useState } from 'react';
 import PostForm from '../../components/posts/post-form/post-form';
@@ -32,7 +32,7 @@ export function Group(props: IGroupProps) {
     <GroupProvider parentId={groupId}>
       <Stack align="stretch">
         <ContentFormBar onPostClick={handleToggleForm} />
-        <GroupItem />
+        <GroupContent />
         <PostForm
           isOpen={isOpen}
           onCloseForm={handleToggleForm}

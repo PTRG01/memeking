@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import GroupItem from './group-item';
+import GroupSearch from './group-search';
 
-describe('GroupItem', () => {
+describe('GroupSearch', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<GroupItem />);
+    const { baseElement } = render(<GroupSearch />);
     expect(baseElement).toBeTruthy();
   });
 });

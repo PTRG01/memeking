@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   useGroup,
   useGroupList,
@@ -25,13 +25,18 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     loading: isLoading,
   } = useGroupList();
   const {
+    getList: getGroupSearchList,
+    result: groupSearchListResult,
+    loading: isGroupSearchLoading,
+  } = useGroupList();
+  const {
     getList: getPostList,
     result: groupPostsListResult,
     loading: isPostsLoading,
   } = usePostList();
   const { createOne, deleteOne, updateOne } = useGroup();
   const { createOne: createOnePost } = usePost();
-
+  const [isSearching, setIsSearching] = useState(false);
   const loadGroups = useCallback(() => {
     getList({
       queryParams: {
@@ -80,6 +85,26 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
         title: title,
       });
   };
+  const searchGroup = useCallback(
+    (value: string) => {
+      if (value.length >= 3) {
+        setIsSearching(true);
+        getGroupSearchList({
+          queryParams: { filter: `title~"${value}"` },
+        });
+      } else setIsSearching(false);
+    },
+    [getGroupSearchList]
+  );
+  const joinGroup = (users: string[], groupId: string) => {
+    updateOne(
+      {
+        users: [...users, user?.id],
+      },
+      groupId
+    );
+  };
+
   const leaveGroup = (groupId: string, users: string[]) => {
     updateOne(
       {
@@ -107,11 +132,16 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
       value={{
         isLoading,
         groupListResult,
+        groupSearchListResult,
         createGroup,
+        searchGroup,
+        joinGroup,
         leaveGroup,
         deleteGroup,
         groupPostsListResult,
         isPostsLoading,
+        isGroupSearchLoading,
+        isSearching,
         createGroupPost,
       }}
     >

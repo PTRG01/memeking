@@ -23,6 +23,7 @@ import ChatsContainer from './components/chat/chats-container/chats-container';
 import { PostProvider } from './contexts/post-provider/post-provider';
 import { GroupProvider } from './contexts/group-provider/group-provider';
 import GroupJoinedList from './components/groups/group-joined-list/group-joined-list';
+import GroupSearchList from './components/groups/group-search-list/group-search-list';
 
 /* eslint-disable-next-line */
 export function App() {
@@ -55,6 +56,10 @@ export function App() {
                       }
                     >
                       <Route path="/groups" element={<Groups />} />
+                      <Route
+                        path="/groups/search/:groupId"
+                        element={<GroupSearchList />}
+                      />
                       <Route path="/groups/:groupId" element={<Group />} />
                       <Route
                         path="/groups/joins"

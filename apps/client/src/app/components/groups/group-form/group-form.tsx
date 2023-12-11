@@ -1,9 +1,8 @@
 import { Box, Button, Divider, MultiSelect, Stack } from '@mantine/core';
-import { UseFormReturnType, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import FloatingLabelInput from '../../floating-label-input/floating-label-input';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
-import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */

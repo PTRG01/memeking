@@ -7,16 +7,21 @@ import { GroupProvider } from '../../../contexts/group-provider/group-provider';
 /* eslint-disable-next-line */
 export interface GroupListProps {
   groupList: IGroup[] | null;
+  onItemClick: (id: string) => void;
 }
 
-export function GroupList({ groupList }: GroupListProps) {
+export function GroupList({ groupList, onItemClick }: GroupListProps) {
   return (
     <Stack align="stretch">
       <LoaderComponent isLoading={false}>
-        <ScrollArea mih={500} type="hover">
+        <ScrollArea type="hover">
           {groupList?.map((group) => (
             <GroupProvider key={group.id} parentId={group.id}>
-              <GroupListItem id={group.id} title={group.title} />
+              <GroupListItem
+                id={group.id}
+                title={group.title}
+                onItemClick={onItemClick}
+              />
             </GroupProvider>
           ))}
         </ScrollArea>
