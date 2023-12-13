@@ -9,6 +9,7 @@ import ContentFormBar from '../../components/content-form-bar/content-form-bar';
 import { useState } from 'react';
 import PostForm from '../../components/posts/post-form/post-form';
 import { IPost } from '../../contexts/post-provider/post-provider.interface';
+import GroupHeader from '../../components/groups/group-header/group-header';
 
 /* eslint-disable-next-line */
 export interface IGroupProps {}
@@ -31,6 +32,7 @@ export function Group(props: IGroupProps) {
   return (
     <GroupProvider parentId={groupId}>
       <Stack align="stretch">
+        <GroupHeader />
         <ContentFormBar onPostClick={handleToggleForm} />
         <GroupContent />
         <PostForm
