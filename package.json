@@ -58,6 +58,7 @@
     "@emoji-mart/react": "^1.1.1",
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.0",
+    "@mantine/dropzone": "^6.0.21",
     "@mantine/form": "^6.0.0",
     "@mantine/hooks": "^6.0.0",
     "emoji-mart": "^5.5.2",

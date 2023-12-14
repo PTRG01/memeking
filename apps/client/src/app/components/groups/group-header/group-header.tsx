@@ -4,6 +4,7 @@ import {
   Group,
   Image,
   Menu,
+  Modal,
   Paper,
   Stack,
   Tabs,
@@ -22,6 +23,8 @@ import {
   UserCheck,
   Users,
 } from 'tabler-icons-react';
+import GroupEditForm from '../group-edit-form/group-edit-form';
+import { useState } from 'react';
 
 /* eslint-disable-next-line */
 export interface IGroupHeaderProps {}
@@ -29,6 +32,7 @@ export interface IGroupHeaderProps {}
 export function GroupHeader(props: IGroupHeaderProps) {
   const { groupListResult } = useGroupContext();
   const { groupId } = useParams();
+  const [isOpened, setIsOpened] = useState(false);
   const currentGroup = groupListResult
     ?.filter((group) => group?.id === groupId)
     .at(0);
@@ -69,12 +73,20 @@ export function GroupHeader(props: IGroupHeaderProps) {
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item icon={<Edit size={15} />}>Edit group</Menu.Item>
+              <Menu.Item
+                onClick={() => setIsOpened(!isOpened)}
+                icon={<Edit size={15} />}
+              >
+                Edit group
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>
 
         <Divider mb={20} />
+        <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>
+          <GroupEditForm />
+        </Modal>
         {/* <Tabs>
           <Tabs.List>
             <Tabs.Tab value="discussion">Discussion</Tabs.Tab>
