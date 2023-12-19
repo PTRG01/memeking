@@ -1,47 +1,24 @@
 import { Stack } from '@mantine/core';
 import { useParams } from 'react-router-dom';
-import {
-  GroupProvider,
-  useGroupContext,
-} from '../../contexts/group-provider/group-provider';
-import GroupContent from '../../components/groups/group-feed/group-content';
-import ContentFormBar from '../../components/content-form-bar/content-form-bar';
-import { useState } from 'react';
-import PostForm from '../../components/posts/post-form/post-form';
-import { IPost } from '../../contexts/post-provider/post-provider.interface';
+import GroupContent from '../../components/groups/group-content/group-content';
 import GroupHeader from '../../components/groups/group-header/group-header';
+import { GroupWindowProvider } from '../../contexts/group-window-provider/group-window-provider';
 
 /* eslint-disable-next-line */
 export interface IGroupProps {}
 
 export function Group(props: IGroupProps) {
   const { groupId } = useParams();
-  const { createGroupPost } = useGroupContext();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleToggleForm = () => {
-    setIsOpen(!isOpen);
-  };
 
   if (groupId === undefined) return null;
-
-  const handleCreatePost = (values: IPost) => {
-    createGroupPost(values.contentText, groupId);
-  };
-
+  console.log(groupId);
   return (
-    <GroupProvider parentId={groupId}>
+    <GroupWindowProvider groupId={groupId}>
       <Stack align="stretch">
-        <GroupHeader />
-        <ContentFormBar onPostClick={handleToggleForm} />
+        <GroupHeader groupId={groupId} />
         <GroupContent />
-        <PostForm
-          isOpen={isOpen}
-          onCloseForm={handleToggleForm}
-          onFormSubmit={handleCreatePost}
-        />
       </Stack>
-    </GroupProvider>
+    </GroupWindowProvider>
   );
 }
 

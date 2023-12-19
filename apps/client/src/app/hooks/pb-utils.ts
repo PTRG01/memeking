@@ -165,7 +165,7 @@ export const useChat = createCRUDHook(chatCollection);
 export const useMessage = createCRUDHook(messageCollection);
 export const usePost = createCRUDHook(postCollection);
 export const useComment = createCRUDHook(commentCollection);
-export const useGroup = createCRUDHook(groupCollection);
+export const useGroup = createCRUDHook<IGroup>(groupCollection);
 
 export const useGameList = createSearchHook(gameCollection);
 export const useUserList = createSearchHook(userCollection);

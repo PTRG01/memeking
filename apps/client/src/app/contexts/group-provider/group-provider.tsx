@@ -1,10 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import {
-  useGroup,
-  useGroupList,
-  usePost,
-  usePostList,
-} from '../../hooks/pb-utils';
+import { useGroup, useGroupList } from '../../hooks/pb-utils';
 import { useAuthContext } from '../auth-provider/auth-provider';
 import { pb } from '../../utils/pocketbase';
 import { IGroupContext } from './group-provider.interface';
@@ -29,13 +24,8 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     result: groupSearchListResult,
     loading: isGroupSearchLoading,
   } = useGroupList();
-  const {
-    getList: getPostList,
-    result: groupPostsListResult,
-    loading: isPostsLoading,
-  } = usePostList();
+
   const { createOne, deleteOne, updateOne } = useGroup();
-  const { createOne: createOnePost } = usePost();
   const [isSearching, setIsSearching] = useState(false);
   const loadGroups = useCallback(() => {
     getList({
@@ -57,26 +47,6 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     });
   }, [loadGroups, groupListResult]);
 
-  const loadGroupPosts = useCallback(() => {
-    getPostList({
-      queryParams: {
-        sort: 'created',
-        expand: 'author_id,users',
-        filter: `group_id~"${parentId}"`,
-      },
-    });
-  }, [getPostList, parentId]);
-
-  useEffect(() => {
-    loadGroupPosts();
-  }, [loadGroupPosts]);
-
-  useEffect(() => {
-    pb.collection('posts').subscribe('*', async (e) => {
-      loadGroupPosts();
-    });
-  }, [loadGroupPosts, groupPostsListResult]);
-
   const createGroup = (title: string, users: string[]) => {
     if (title && users && user)
       createOne({
@@ -97,6 +67,7 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     [getGroupSearchList]
   );
   const joinGroup = (users: string[], groupId: string) => {
+    if (!users || !user) return;
     updateOne(
       {
         users: [...users, user?.id],
@@ -117,15 +88,6 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     deleteOne(id);
     loadGroups();
   };
-  const createGroupPost = (contentText: string, groupId: string) => {
-    createOnePost({
-      author_id: user?.id,
-      contentText: contentText,
-      group_id: groupId,
-    });
-  };
-
-  //  TODO ADD UPDATE AND DELETE FUNCTIONALITY
 
   return (
     <GroupContext.Provider
@@ -138,11 +100,8 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
         joinGroup,
         leaveGroup,
         deleteGroup,
-        groupPostsListResult,
-        isPostsLoading,
         isGroupSearchLoading,
         isSearching,
-        createGroupPost,
       }}
     >
       {children}

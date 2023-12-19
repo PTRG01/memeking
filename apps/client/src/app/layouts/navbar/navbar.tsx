@@ -50,7 +50,7 @@ export function Navbar(props: NavbarProps) {
                   <ThemeIcon color="grape" size={30}>
                     <Social size="1.1rem" />
                   </ThemeIcon>
-                  <Box onClick={() => navigate('/groups/:feed')}>
+                  <Box onClick={() => navigate('/groups/feed')}>
                     {t('nav.groups')}
                   </Box>
                 </Group>

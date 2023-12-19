@@ -1,11 +1,11 @@
 import PostList from '../../posts/post-list/post-list';
-import { useGroupContext } from '../../../contexts/group-provider/group-provider';
+import { useGroupWindowContext } from '../../../contexts/group-window-provider/group-window-provider';
 
 /* eslint-disable-next-line */
 export interface IGroupContentProps {}
 
 export function GroupContent(props: IGroupContentProps) {
-  const { groupPostsListResult, isPostsLoading } = useGroupContext();
+  const { groupPostsListResult, isPostsLoading } = useGroupWindowContext();
   return (
     <PostList postList={groupPostsListResult} isLoading={isPostsLoading} />
   );

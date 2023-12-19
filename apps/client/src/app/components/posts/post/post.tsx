@@ -16,6 +16,7 @@ import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import PostForm from '../post-form/post-form';
 import CommentBar from '../../comments/comment-bar/comment-bar';
 import { useCommentContext } from '../../../contexts/comment-provider/comment-provider';
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 
 export interface IPostProps {
   post: IPost;
@@ -38,13 +39,15 @@ export function Post({ post }: IPostProps) {
   const handleOpenComments = () => {
     setCommentsOpen(!commentsOpen);
   };
+
+  const authorData = post.expand.author_id as IUser;
   return (
     <Stack align="stretch" maw={900}>
       <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
-            <Avatar mr={20} size="lg" src={post.avatar} />
-            <Title size="h3">{post.title}</Title>
+            <Avatar mr={20} size="lg" src={authorData.avatar} />
+            <Title size="h3">{authorData.name}</Title>
           </Group>
           <Menu opened={menuOpen} onChange={setMenuOpen}>
             <Menu.Target>

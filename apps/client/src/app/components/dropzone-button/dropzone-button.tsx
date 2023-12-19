@@ -1,11 +1,15 @@
-import { useRef } from 'react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 import { Text, Group, Button, rem, useMantineTheme } from '@mantine/core';
-import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
+import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 
 import classes from './dropzone-button.module.css';
 import { Download, X, CloudUpload } from 'tabler-icons-react';
 
-export function DropzoneButton() {
+export interface IDopzoneButtonProps {
+  onSubmit: Dispatch<SetStateAction<FileWithPath[] | null>>;
+}
+
+export function DropzoneButton({ onSubmit }: IDopzoneButtonProps) {
   const theme = useMantineTheme();
   const openRef = useRef<() => void>(null);
 
@@ -13,7 +17,7 @@ export function DropzoneButton() {
     <div className={classes.wrapper}>
       <Dropzone
         openRef={openRef}
-        onDrop={() => ''}
+        onDrop={(e) => onSubmit(e)}
         className={classes.dropzone}
         radius="md"
         mb={10}
@@ -62,7 +66,7 @@ export function DropzoneButton() {
           radius="xl"
           onClick={() => openRef.current?.()}
         >
-          Select files
+          Select file
         </Button>
       </Group>
     </div>

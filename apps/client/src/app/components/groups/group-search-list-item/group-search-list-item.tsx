@@ -6,6 +6,7 @@ import {
   Stack,
   Text,
   Title,
+  UnstyledButton,
 } from '@mantine/core';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
@@ -31,7 +32,9 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
           <Avatar size="lg" radius={10} />
 
           <Stack spacing={0}>
-            <Title size="h2">{group?.title}</Title>
+            <UnstyledButton onClick={() => navigate(`/groups/${group?.id}`)}>
+              <Title size="h2">{group?.title}</Title>
+            </UnstyledButton>
             <Group spacing={0}>
               <Text>members</Text>
             </Group>

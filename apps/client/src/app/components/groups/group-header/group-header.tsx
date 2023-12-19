@@ -7,105 +7,156 @@ import {
   Modal,
   Paper,
   Stack,
-  Tabs,
   Text,
   Title,
 } from '@mantine/core';
-import { useGroupContext } from '../../../contexts/group-provider/group-provider';
-import { Route, Routes, useParams } from 'react-router-dom';
 import {
-  ArrowDown,
   DoorExit,
   Dots,
   Edit,
-  Triangle,
+  Plus,
   TriangleInverted,
   UserCheck,
-  Users,
 } from 'tabler-icons-react';
 import GroupEditForm from '../group-edit-form/group-edit-form';
 import { useState } from 'react';
+import { useGroupWindowContext } from '../../../contexts/group-window-provider/group-window-provider';
+import LoaderComponent from '../../loader/loader';
+import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { IPost } from '../../../contexts/post-provider/post-provider.interface';
+import ContentFormBar from '../../content-form-bar/content-form-bar';
+import PostForm from '../../posts/post-form/post-form';
 
 /* eslint-disable-next-line */
-export interface IGroupHeaderProps {}
+export interface IGroupHeaderProps {
+  groupId: string;
+}
 
-export function GroupHeader(props: IGroupHeaderProps) {
-  const { groupListResult } = useGroupContext();
-  const { groupId } = useParams();
+export function GroupHeader({ groupId }: IGroupHeaderProps) {
+  const { user } = useAuthContext();
+  const {
+    groupResult,
+    updateGroupImage,
+    updateGroupDescription,
+    joinGroup,
+    leaveGroup,
+    createGroupPost,
+    isLoading,
+  } = useGroupWindowContext();
   const [isOpened, setIsOpened] = useState(false);
-  const currentGroup = groupListResult
-    ?.filter((group) => group?.id === groupId)
-    .at(0);
+  const [isOpen, setIsOpen] = useState(false);
 
+  const handleToggleForm = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleCreatePost = (values: IPost) => {
+    createGroupPost(values.contentText, groupId);
+  };
+
+  const handleUpdateDescription = (aboutText: string | null) => {
+    if (!aboutText) return;
+    updateGroupDescription(aboutText);
+    setIsOpened(!isOpened);
+  };
+
+  // const handleUpdateGroup = (groupId: string, image: FileWithPath[] | null) => {
+  //   console.log(image);
+  //   if (image) updateGroupImage(groupId, image);
+  // };
+
+  const currentUserJoined = user ? groupResult?.users.includes(user.id) : null;
+  const isAdmin = groupResult?.author_id === user?.id;
+
+  if (!groupResult) return null;
   return (
-    <Paper radius={15} mb={10}>
-      <Image
-        height={200}
-        radius={15}
-        mb={15}
-        withPlaceholder
-        src={`http://127.0.0.1:8090/api/files/groups/${groupId}/${currentGroup?.avatar}`}
-      />
-      <Stack mah={500} px={15}>
-        <Title>{currentGroup?.title}</Title>
-        <Text>{currentGroup?.users.length} members</Text>
-        <Text>{currentGroup?.aboutText}</Text>
-        <Group position="right">
-          <Menu>
-            <Menu.Target>
-              <Button
-                color="gray"
-                variant="light"
-                leftIcon={<UserCheck />}
-                rightIcon={<TriangleInverted fill="white" size={10} />}
-              >
-                Joined
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item icon={<DoorExit size={15} />}>Leave group</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-          <Menu>
-            <Menu.Target>
-              <Button>
-                <Dots />
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                onClick={() => setIsOpened(!isOpened)}
-                icon={<Edit size={15} />}
-              >
-                Edit group
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
+    <LoaderComponent isLoading={isLoading}>
+      <>
+        <Paper radius={15} mb={10}>
+          <Image
+            height={200}
+            radius={15}
+            mb={15}
+            withPlaceholder
+            // src={`http://127.0.0.1:8090/api/files/groups/${groupId}/${groupResult?.avatar}`}
+          />
+          <Stack mah={500} px={15}>
+            <Title>{groupResult?.title}</Title>
+            <Text>{groupResult?.users.length} members</Text>
+            <Text>{groupResult?.aboutText}</Text>
+            <Group position="right">
+              {currentUserJoined ? (
+                <Menu>
+                  <Menu.Target>
+                    <Button
+                      color="gray"
+                      variant="light"
+                      leftIcon={<UserCheck />}
+                      rightIcon={<TriangleInverted fill="white" size={10} />}
+                    >
+                      Joined
+                    </Button>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      icon={<DoorExit size={15} />}
+                      onClick={() => leaveGroup()}
+                    >
+                      Leave group
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              ) : (
+                <Button
+                  leftIcon={<Plus />}
+                  onClick={() => joinGroup(groupResult?.users)}
+                >
+                  Join
+                </Button>
+              )}
 
-        <Divider mb={20} />
-        <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>
-          <GroupEditForm />
-        </Modal>
-        {/* <Tabs>
-          <Tabs.List>
-            <Tabs.Tab value="discussion">Discussion</Tabs.Tab>
-            <Tabs.Tab value="members">Members</Tabs.Tab>
-          </Tabs.List>
+              {currentUserJoined ? (
+                <Menu>
+                  <Menu.Target>
+                    <Button>
+                      <Dots />
+                    </Button>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {isAdmin ? (
+                      <Menu.Item
+                        onClick={() => setIsOpened(!isOpened)}
+                        icon={<Edit size={15} />}
+                      >
+                        Edit group
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item>Editing not allowed</Menu.Item>
+                    )}
+                  </Menu.Dropdown>
+                </Menu>
+              ) : null}
+            </Group>
 
-          <Tabs.Panel value="discussion">
-            <Routes>
-              <Route />
-            </Routes>
-          </Tabs.Panel>
-          <Tabs.Panel value="members">
-            <Routes>
-              <Route />
-            </Routes>
-          </Tabs.Panel>
-        </Tabs> */}
-      </Stack>
-    </Paper>
+            <Divider mb={20} />
+            <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>
+              <GroupEditForm
+                group={groupResult}
+                onSubmitAbout={handleUpdateDescription}
+                onSubmitImage={() => ''}
+              />
+            </Modal>
+          </Stack>
+        </Paper>
+        {currentUserJoined ? (
+          <ContentFormBar onPostClick={handleToggleForm} />
+        ) : null}
+        <PostForm
+          isOpen={isOpen}
+          onCloseForm={handleToggleForm}
+          onFormSubmit={handleCreatePost}
+        />
+      </>
+    </LoaderComponent>
   );
 }
 
