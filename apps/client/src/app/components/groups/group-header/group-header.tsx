@@ -59,7 +59,7 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
     setIsOpened(!isOpened);
   };
 
-  // const handleUpdateGroup = (groupId: string, image: FileWithPath[] | null) => {
+  // const handleUpdateGroupImage = (groupId: string, image: FileWithPath[] | null) => {
   //   console.log(image);
   //   if (image) updateGroupImage(groupId, image);
   // };

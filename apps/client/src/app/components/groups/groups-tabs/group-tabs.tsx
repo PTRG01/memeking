@@ -11,7 +11,7 @@ export function GroupTabs(props: GroupsTabsProps) {
   const [active, setActive] = useState(0);
 
   const handleFeedTab = () => {
-    navigate('/groups/:feed');
+    navigate('/groups/feed');
     setActive(0);
   };
   const handleJoinsTab = () => {

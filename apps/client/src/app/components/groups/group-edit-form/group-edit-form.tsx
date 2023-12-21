@@ -35,7 +35,9 @@ export function GroupEditForm({
         </Button>
       </Stack>
       <form
-        onSubmit={form.onSubmit((values) => onSubmitAbout(values.aboutText))}
+        onSubmit={form.onSubmit((values) =>
+          onSubmitAbout(values.aboutText as string)
+        )}
       >
         <Stack align="stretch">
           <Textarea

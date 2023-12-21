@@ -106,12 +106,13 @@ export function GroupWindowProvider({
     });
   };
 
+  //  TODO ADD IMAGE UPLOAD
+
   const updateGroupImage = (groupId: string, image: FileWithPath[]) => {
     updateOne({
       avatar: image,
     });
   };
-  //  TODO ADD UPDATE AND DELETE FUNCTIONALITY
 
   return (
     <GroupWindowContext.Provider

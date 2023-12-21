@@ -24,6 +24,8 @@ import { PostProvider } from './contexts/post-provider/post-provider';
 import { GroupProvider } from './contexts/group-provider/group-provider';
 import GroupJoinedList from './components/groups/group-joined-list/group-joined-list';
 import GroupSearchList from './components/groups/group-search-list/group-search-list';
+import { FeedProvider } from './contexts/feed-provider/feed-provider';
+import Feed from './screens/feed/feed';
 
 /* eslint-disable-next-line */
 export function App() {
@@ -55,7 +57,14 @@ export function App() {
                         <PrivateRoute hasToBeAuth={true} redirectPath="/" />
                       }
                     >
-                      <Route path="/groups" element={<Groups />} />
+                      <Route
+                        path="/groups/feed"
+                        element={
+                          <FeedProvider>
+                            <Feed groupFeed={true} />
+                          </FeedProvider>
+                        }
+                      />
                       <Route
                         path="/groups/search/:groupId"
                         element={<GroupSearchList />}

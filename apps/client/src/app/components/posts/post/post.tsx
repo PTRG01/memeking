@@ -17,12 +17,14 @@ import PostForm from '../post-form/post-form';
 import CommentBar from '../../comments/comment-bar/comment-bar';
 import { useCommentContext } from '../../../contexts/comment-provider/comment-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 
 export interface IPostProps {
   post: IPost;
+  groupsData?: IGroup[] | null;
 }
 
-export function Post({ post }: IPostProps) {
+export function Post({ post, groupsData }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
   const { deletePost, updatePost, handleUpvote } = usePostContext();
@@ -40,14 +42,19 @@ export function Post({ post }: IPostProps) {
     setCommentsOpen(!commentsOpen);
   };
 
+  const currentGroup = groupsData?.find((group) => group?.id === post.group_id);
   const authorData = post.expand.author_id as IUser;
+
   return (
     <Stack align="stretch" maw={900}>
       <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
-            <Avatar mr={20} size="lg" src={authorData.avatar} />
-            <Title size="h3">{authorData.name}</Title>
+            <Avatar mr={20} size="lg" src={authorData?.avatar} />
+            <Stack spacing={1}>
+              <Title size="h4">{currentGroup?.title}</Title>
+              <Title size="h4">{authorData?.name}</Title>
+            </Stack>
           </Group>
           <Menu opened={menuOpen} onChange={setMenuOpen}>
             <Menu.Target>
@@ -68,7 +75,7 @@ export function Post({ post }: IPostProps) {
           </Menu>
         </Flex>
         <Group my={15}>
-          <Text lineClamp={6}>{post.contentText}</Text>
+          <Text lineClamp={6}>{post?.contentText}</Text>
         </Group>
         <VoteBar
           onUpvote={handleUpvote}

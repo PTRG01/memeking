@@ -20,7 +20,7 @@ export function PostList({ postList, isLoading }: IPostListProps) {
         <ScrollArea mih={720} type="hover">
           {postList?.map((post: IPost) => (
             <CommentProvider key={post.id} parentId={post.id}>
-              <Post post={post} />
+              <Post post={post} groupsData={null} />
             </CommentProvider>
           ))}
         </ScrollArea>
