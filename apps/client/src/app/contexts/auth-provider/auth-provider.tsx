@@ -75,6 +75,8 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
       dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
     }
     dispatch({ type: 'LOADING_STOP', payload: null });
+    const loginData = { email: params.email, password: params.password };
+    signIn(loginData);
   };
 
   const signIn: TSignInFunction = async ({ email, password }) => {

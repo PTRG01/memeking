@@ -11,7 +11,6 @@ export type TSignUpFunction = (params: {
   passwordConfirm: string;
   name: string;
   username: string;
-  emailVisibility?: boolean;
 }) => Promise<void>;
 
 export type TLogoutFunction = () => void;
