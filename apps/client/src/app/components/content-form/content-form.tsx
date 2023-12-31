@@ -13,6 +13,7 @@ export function ContentForm(props: ContentFormProps) {
         </Title>
       </Group>
       <Divider mb={5} />
+      {/* TODO Check if there is missing functionality required */}
       <EmojiTextArea minRows={6} maxRows={10} radius="md" variant="unstyled" />
       <Button fullWidth color="gray" variant="light" size="md" mt={10}>
         Post

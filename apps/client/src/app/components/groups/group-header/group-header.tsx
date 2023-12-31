@@ -19,7 +19,7 @@ import {
   UserCheck,
 } from 'tabler-icons-react';
 import GroupEditForm from '../group-edit-form/group-edit-form';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useGroupWindowContext } from '../../../contexts/group-window-provider/group-window-provider';
 import LoaderComponent from '../../loader/loader';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
@@ -46,25 +46,35 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleToggleForm = () => {
+  const handleToggleForm = useCallback(() => {
     setIsOpen(!isOpen);
-  };
-  const handleCreatePost = (values: IPost) => {
-    createGroupPost(values.contentText, groupId);
-  };
+  }, [isOpen]);
 
-  const handleUpdateDescription = (aboutText: string | null) => {
-    if (!aboutText) return;
-    updateGroupDescription(aboutText);
-    setIsOpened(!isOpened);
-  };
+  const handleCreatePost = useCallback(
+    (values: IPost) => {
+      createGroupPost(values.contentText, groupId);
+    },
+    [createGroupPost, groupId]
+  );
+
+  const handleUpdateDescription = useCallback(
+    (aboutText: string | null) => {
+      if (!aboutText) return;
+      updateGroupDescription(aboutText);
+      setIsOpened(!isOpened);
+    },
+    [isOpened, updateGroupDescription]
+  );
 
   // const handleUpdateGroupImage = (groupId: string, image: FileWithPath[] | null) => {
   //   console.log(image);
   //   if (image) updateGroupImage(groupId, image);
   // };
 
-  const currentUserJoined = user ? groupResult?.users.includes(user.id) : null;
+  const currentUserJoined = useMemo(
+    () => (user ? groupResult?.users.includes(user.id) : null),
+    [groupResult, user]
+  );
   const isAdmin = groupResult?.author_id === user?.id;
 
   if (!groupResult) return null;

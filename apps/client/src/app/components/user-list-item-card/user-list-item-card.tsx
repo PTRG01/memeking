@@ -3,6 +3,7 @@ import { CircleMinus, CirclePlus } from 'tabler-icons-react';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-provider.interface';
 import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-window-provider.interface';
+import { useCallback } from 'react';
 
 export interface IUserListItemCardProps {
   user: IUser;
@@ -11,7 +12,7 @@ export interface IUserListItemCardProps {
   onAddUser: THandleAddFollowingFunction | TUpdateChatFunction;
   onRemoveUser: (value: string) => void;
   isLoading: boolean;
-  handleItemClick: (value: string) => void;
+  handleItemClick?: (value: string) => void;
 }
 
 function UserListItemCard({
@@ -22,13 +23,13 @@ function UserListItemCard({
   isLoading,
   handleItemClick,
 }: IUserListItemCardProps) {
-  const handleValues = () => {
+  const handleValues = useCallback(() => {
     if (values?.includes(user.id)) {
       onRemoveUser(user.id);
     } else {
       onAddUser(user.id);
     }
-  };
+  }, [onAddUser, onRemoveUser, user, values]);
 
   return (
     <Flex direction="column" align="start" m={5} maw={35}>

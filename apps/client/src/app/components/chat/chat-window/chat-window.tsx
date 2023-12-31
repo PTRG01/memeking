@@ -11,14 +11,8 @@ import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import ChatAddList from '../chat-add-list/chat-add-list';
 import ChatWindowMenu from '../chat-window-menu/chat-window-menu';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
-import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
 import ChatScrollArea from '../chat-scroll-area/chat-scroll-area';
 import ChatMessageBar from '../chat-message-bar/chat-message-bar';
-
-export type TAddUserFunction = (params: {
-  chatId: string;
-  userId: string;
-}) => void;
 
 export function ChatWindow() {
   const { handleOpenChatToggle } = useChatContext();
@@ -48,7 +42,7 @@ export function ChatWindow() {
         </Popover>
         <ChatMessageBar
           onTextSubmit={sendMessage}
-          recordId={chatId}
+          chatId={chatId}
           isLoading={isLoading}
         />
       </Flex>

@@ -1,37 +1,43 @@
-import { NavLink, Stack } from '@mantine/core';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink as MantineNavLink, Stack } from '@mantine/core';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { Cardboards, Users } from 'tabler-icons-react';
+import { navigateData } from '../../../utils/navigate';
 
-/* eslint-disable-next-line */
-export interface GroupsTabsProps {}
-
-export function GroupTabs(props: GroupsTabsProps) {
+export function GroupTabs() {
   const navigate = useNavigate();
-  const [active, setActive] = useState(0);
 
-  const handleFeedTab = () => {
-    navigate('/groups/feed');
-    setActive(0);
-  };
-  const handleJoinsTab = () => {
-    navigate('/groups/joins');
-    setActive(1);
-  };
   return (
     <Stack align="stretch">
       <NavLink
-        label="Your feed"
-        icon={<Cardboards />}
-        active={active === 0}
-        onClick={() => handleFeedTab()}
-      />
+        to="/groups/feed"
+        style={({ isActive, isPending }) => {
+          return { textDecoration: 'none' };
+        }}
+      >
+        {({ isActive }) => (
+          <MantineNavLink
+            label="Your feed"
+            icon={<Cardboards />}
+            active={isActive}
+            onClick={() => navigate(navigateData.groupsFeed)}
+          />
+        )}
+      </NavLink>
       <NavLink
-        label="Your groups"
-        icon={<Users />}
-        active={active === 1}
-        onClick={() => handleJoinsTab()}
-      />
+        to="/groups/joins"
+        style={({ isActive, isPending }) => {
+          return { textDecoration: 'none' };
+        }}
+      >
+        {({ isActive }) => (
+          <MantineNavLink
+            label="Your groups"
+            icon={<Users />}
+            active={isActive}
+            onClick={() => navigate(navigateData.groupsJoins)}
+          />
+        )}
+      </NavLink>
     </Stack>
   );
 }

@@ -1,17 +1,15 @@
 import { Paper, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search } from 'tabler-icons-react';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import GroupList from '../group-list/group-list';
+import { navigateData } from '../../../utils/navigate';
 
-/* eslint-disable-next-line */
-export interface IGroupSearchProps {}
-
-export function GroupSearch(props: IGroupSearchProps) {
+export function GroupSearch() {
   const { user } = useAuthContext();
   const { t, i18n } = useTranslation();
   const { searchGroup, groupSearchListResult } = useGroupContext();
@@ -21,18 +19,26 @@ export function GroupSearch(props: IGroupSearchProps) {
       search: '',
     },
   });
-  const notJoinedGroups = user
-    ? groupSearchListResult?.filter((group) => !group.users.includes(user?.id))
-    : null;
+  const notJoinedGroups = useMemo(
+    () =>
+      user
+        ? groupSearchListResult?.filter(
+            (group) => !group.users.includes(user?.id)
+          )
+        : null,
+    [groupSearchListResult, user]
+  );
 
   useEffect(() => {
     searchGroup(form.values.search);
   }, [form.values.search, searchGroup]);
 
-  const handleGroupItemClick = (groupId: string) => {
-    console.log('click');
-    navigate(`/groups/search/${groupId}`);
-  };
+  const handleGroupItemClick = useCallback(
+    (groupId: string) => {
+      navigate(`${navigateData.groupsSearch}${groupId}`);
+    },
+    [navigate]
+  );
 
   return (
     <Stack spacing={0}>
@@ -45,14 +51,14 @@ export function GroupSearch(props: IGroupSearchProps) {
           <TextInput icon={<Search />} {...form.getInputProps('search')} />
         </form>
       </Stack>
-      {notJoinedGroups ? (
+      {notJoinedGroups && (
         <Paper withBorder>
           <GroupList
             groupList={notJoinedGroups}
             onItemClick={handleGroupItemClick}
           />
         </Paper>
-      ) : null}
+      )}
     </Stack>
   );
 }

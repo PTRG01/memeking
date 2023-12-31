@@ -9,7 +9,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import VoteBar from '../../vote-bar/vote-bar';
 import { usePostContext } from '../../../contexts/post-provider/post-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
@@ -21,10 +21,10 @@ import { IGroup } from '../../../contexts/group-provider/group-provider.interfac
 
 export interface IPostProps {
   post: IPost;
-  groupsData?: IGroup[] | null;
+  groups?: IGroup[] | null;
 }
 
-export function Post({ post, groupsData }: IPostProps) {
+export function Post({ post, groups }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
   const { deletePost, updatePost, handleUpvote } = usePostContext();
@@ -42,8 +42,11 @@ export function Post({ post, groupsData }: IPostProps) {
     setCommentsOpen(!commentsOpen);
   };
 
-  const currentGroup = groupsData?.find((group) => group?.id === post.group_id);
-  const authorData = post.expand.author_id as IUser;
+  const currentGroup = useMemo(
+    () => groups?.find((group) => group?.id === post.group_id),
+    [groups, post]
+  );
+  const authorData = useMemo(() => post.expand.author_id as IUser, [post]);
 
   return (
     <Stack align="stretch" maw={900}>

@@ -1,6 +1,5 @@
 import { Avatar, Button, Title } from '@mantine/core';
 
-/* eslint-disable-next-line */
 export interface IGroupItemProps {
   id: string;
   title: string;

@@ -2,7 +2,8 @@ import { Container, Button, Box, Flex, Modal } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
-/* eslint-disable-next-line */
+import { useCallback } from 'react';
+
 type THandleCloseFormFunction = (openState: boolean) => void;
 type TOnFormSubmitFuntion = (values: IPost) => void;
 export interface IPostFormProps {
@@ -34,11 +35,14 @@ export function PostForm({
     },
   });
 
-  const handleFormSubmit = (values: IPost) => {
-    onCloseForm(isOpen);
-    onFormSubmit(values);
-    form.reset();
-  };
+  const handleFormSubmit = useCallback(
+    (values: IPost) => {
+      onCloseForm(isOpen);
+      onFormSubmit(values);
+      form.reset();
+    },
+    [form, isOpen, onCloseForm, onFormSubmit]
+  );
 
   return (
     <Modal

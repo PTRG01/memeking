@@ -6,14 +6,11 @@ import {
 import LoaderComponent from '../../loader/loader';
 import GroupCard from '../group-card/group-card';
 
-/* eslint-disable-next-line */
-export interface IGroupJoinedListProps {}
-
-export function GroupJoinedList(props: IGroupJoinedListProps) {
-  const { groupListResult, isPostsLoading } = useGroupContext();
+export function UserGroupList() {
+  const { groupListResult, isLoading } = useGroupContext();
 
   return (
-    <LoaderComponent isLoading={isPostsLoading}>
+    <LoaderComponent isLoading={isLoading}>
       <ScrollArea mah={800} type="hover">
         <SimpleGrid
           px={20}
@@ -35,4 +32,4 @@ export function GroupJoinedList(props: IGroupJoinedListProps) {
   );
 }
 
-export default GroupJoinedList;
+export default UserGroupList;

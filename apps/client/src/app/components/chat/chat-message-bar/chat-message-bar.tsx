@@ -4,15 +4,15 @@ import { Send } from 'tabler-icons-react';
 import EmojiTextArea, {
   TOnTextSubmitFunction,
 } from '../../emoji-text-area/emoji-text-area';
-/* eslint-disable-next-line */
+
 export interface IChatMessageBarProps {
-  recordId: string;
+  chatId: string;
   onTextSubmit: TOnTextSubmitFunction;
   isLoading: boolean;
 }
 
 export function ChatMessageBar({
-  recordId,
+  chatId,
   onTextSubmit,
   isLoading,
 }: IChatMessageBarProps) {
@@ -23,13 +23,13 @@ export function ChatMessageBar({
   });
 
   const handleChatInput = (values: string) => {
-    onTextSubmit(values, recordId);
+    onTextSubmit(values, chatId);
     form.reset();
   };
   return (
     <form
-      key={recordId}
-      id={recordId}
+      key={chatId}
+      id={chatId}
       onSubmit={form.onSubmit((values) => {
         handleChatInput(values.chatInput);
       })}

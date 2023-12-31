@@ -1,5 +1,5 @@
 import { Badge, Group, List, NavLink } from '@mantine/core';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../loader/loader';
@@ -23,20 +23,24 @@ export function FollowingList() {
   } = useChatContext();
   const { t } = useTranslation();
 
-  function handleItemClick(id: string) {
-    const currentUsers = [user?.id, id];
-    const matchingChat = userChatsList?.find(
-      (chat) =>
-        chat?.users?.length === currentUsers.length &&
-        chat.users.every((userId) => currentUsers?.includes(userId))
-    );
-    if (!matchingChat) {
-      createChatWithUser(id);
-      return;
-    }
-    const chatExists = matchingChat?.users?.includes(id);
-    if (chatExists) handleOpenChatToggle(matchingChat?.id);
-  }
+  const handleItemClick = useCallback(
+    (id: string) => {
+      //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
+      const currentUsers = [user?.id, id];
+      const matchingChat = userChatsList?.find(
+        (chat) =>
+          chat?.users?.length === currentUsers.length &&
+          chat.users.every((userId) => currentUsers?.includes(userId))
+      );
+      if (!matchingChat) {
+        createChatWithUser(id);
+        return;
+      }
+      const chatExists = matchingChat?.users?.includes(id);
+      if (chatExists) handleOpenChatToggle(matchingChat?.id);
+    },
+    [createChatWithUser, handleOpenChatToggle, user, userChatsList]
+  );
   return (
     <NavLink
       label={t('following.following')}
@@ -62,7 +66,7 @@ export function FollowingList() {
                     onAddUser={handleAddFollowing}
                     onRemoveUser={handleRemoveFollowing}
                     onItemClick={handleItemClick}
-                    itemActive={true}
+                    itemActive
                     isLoading={isLoading}
                   />
                 )}

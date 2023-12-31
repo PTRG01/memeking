@@ -1,6 +1,5 @@
 import { TextInput, Flex, Button, List, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useUserList } from '../../hooks/pb-utils';
 import UserListItem from '../user-list-item/UserListItem';
 import { Search } from 'tabler-icons-react';
 import { useCallback, useEffect } from 'react';
@@ -11,7 +10,6 @@ import {
   useAuthContext,
 } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 /* eslint-disable-next-line */
 

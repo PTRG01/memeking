@@ -4,11 +4,10 @@ import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import FloatingLabelInput from '../../floating-label-input/floating-label-input';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
+import { useCallback, useMemo } from 'react';
+import { navigateData } from '../../../utils/navigate';
 
-/* eslint-disable-next-line */
-export interface GroupFormProps {}
-
-export function GroupForm(props: GroupFormProps) {
+export function GroupForm() {
   const { followingList } = useChatContext();
   const { createGroup } = useGroupContext();
   const navigate = useNavigate();
@@ -19,17 +18,24 @@ export function GroupForm(props: GroupFormProps) {
     },
   });
 
-  const searchListdata = followingList
-    ? followingList?.map(({ name: label, id: value }) => ({
-        label,
-        value,
-      }))
-    : [];
+  const searchListdata = useMemo(
+    () =>
+      followingList
+        ? followingList?.map(({ name: label, id: value }) => ({
+            label,
+            value,
+          }))
+        : [],
+    [followingList]
+  );
 
-  const handleCreateGroup = (title: string, groupUsers: string[]) => {
-    createGroup(title, groupUsers);
-    navigate('/groups');
-  };
+  const handleCreateGroup = useCallback(
+    (title: string, groupUsers: string[]) => {
+      createGroup(title, groupUsers);
+      navigate(navigateData.groups);
+    },
+    [createGroup, navigate]
+  );
   return (
     <Box>
       <form

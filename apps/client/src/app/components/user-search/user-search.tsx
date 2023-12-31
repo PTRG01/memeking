@@ -2,17 +2,14 @@ import { TextInput, Flex, Button, List, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Search } from 'tabler-icons-react';
 import { useEffect } from 'react';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
-/* eslint-disable-next-line */
 
 export interface IUserSearch {
   handleSearch: (value: string) => void;
-  loading: boolean;
   children: React.ReactElement;
 }
 
-export function UserSearch({ handleSearch, loading, children }: IUserSearch) {
+export function UserSearch({ handleSearch, children }: IUserSearch) {
   const { t, i18n } = useTranslation();
 
   const form = useForm({

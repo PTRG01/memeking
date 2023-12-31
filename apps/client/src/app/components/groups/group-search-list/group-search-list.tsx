@@ -4,18 +4,21 @@ import GroupSearchListItem from '../group-search-list-item/group-search-list-ite
 import LoaderComponent from '../../loader/loader';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useParams } from 'react-router-dom';
+import { useMemo } from 'react';
 
-/* eslint-disable-next-line */
-export interface IGroupSearchListProps {}
-
-export function GroupSearchList(props: IGroupSearchListProps) {
+export function GroupSearchList() {
   const { user } = useAuthContext();
   const { groupSearchListResult, isGroupSearchLoading, isSearching } =
     useGroupContext();
   const { groupId } = useParams();
-  const notJoinedGroups = user
-    ? groupSearchListResult?.filter((group) => group?.id === groupId)
-    : null;
+
+  const notJoinedGroups = useMemo(
+    () =>
+      user
+        ? groupSearchListResult?.filter((group) => group?.id === groupId)
+        : null,
+    [groupId, groupSearchListResult, user]
+  );
 
   return (
     <LoaderComponent isLoading={isGroupSearchLoading}>

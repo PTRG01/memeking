@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { IChat } from '../../contexts/chat-provider/chat-provider.interface';
 
@@ -15,9 +16,13 @@ function UserList({
   currentList,
   hideExisting,
 }: IUserListProps) {
-  const currentListIds = currentList?.map((user) => user?.id);
-  const filteredList = userList?.filter(
-    (user) => !currentListIds?.includes(user.id)
+  const currentListIds = useMemo(
+    () => currentList?.map((user) => user?.id),
+    [currentList]
+  );
+  const filteredList = useMemo(
+    () => userList?.filter((user) => !currentListIds?.includes(user.id)),
+    [currentListIds, userList]
   );
 
   return (

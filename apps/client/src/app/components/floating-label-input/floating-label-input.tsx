@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { TextInput } from '@mantine/core';
 import styles from './floating-label-input.module.css';
 
 export interface IFloatingLabelInputProps {
   label: string;
   placeholder: string;
-  value: any;
-  onChange: any;
+  value: string;
+  onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
 function FloatingLabelInput({
@@ -26,6 +26,7 @@ function FloatingLabelInput({
       required
       classNames={styles}
       value={value}
+      // TODO Fix type
       onChange={(event) => onChange(event.currentTarget.value)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}

@@ -33,16 +33,16 @@ export function ChatAddList() {
               values={values}
               onAddUser={updateChat}
               onRemoveUser={() => ''}
+              // TODO Fix unnecessary function
               handleItemClick={() => ''}
               itemActive={false}
               isLoading={isLoading}
             />
           )}
-          key={'toAddSearchListKey'}
           userList={chatToAddList}
           currentList={currentChatUsers}
           isLoading={isLoading}
-          hideExisting={true}
+          hideExisting
         />
       </UserSearch>
 
@@ -61,11 +61,10 @@ export function ChatAddList() {
                 isLoading={isLoading}
               />
             )}
-            key={'toAddFollowingListKey'}
             userList={followingList}
             currentList={currentChatUsers}
             isLoading={isLoading}
-            hideExisting={true}
+            hideExisting
           />
         </Group>
       ) : null}
