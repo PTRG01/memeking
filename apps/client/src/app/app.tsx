@@ -77,6 +77,11 @@ export function App() {
                       <Route path="/games" element={<Games />} />
                       <Route path="/games/:gameId" element={<Game />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route
+                        path="/profile/:profileTab"
+                        element={<Profile />}
+                      />
+
                       <Route path="/settings" element={<Settings />} />
                     </Route>
                   </Routes>

@@ -8,8 +8,6 @@ import {
   TextInput,
   Button,
   SimpleGrid,
-  Container,
-  Stack,
   Box,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
@@ -19,6 +17,8 @@ import UserList from '../../components/user-list/user-list';
 import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
 import PostList from '../../components/posts/post-list/post-list';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
+import { useNavigate, useParams } from 'react-router-dom';
+import { navigateData } from '../../utils/navigate';
 
 /* eslint-disable-next-line */
 export interface ProfileProps {}
@@ -32,10 +32,12 @@ export function Profile(props: ProfileProps) {
     isLoading,
   } = useChatContext();
   const { userPostsList } = usePostContext();
+  const { profileTab } = useParams();
+  const navigate = useNavigate();
+
   const handleItemClick = () => {
     return '';
   };
-
   return (
     <Box mx={10} mt={10}>
       <Group position="left" mb="xl">
@@ -57,19 +59,37 @@ export function Profile(props: ProfileProps) {
           </Group>
         </Flex>
       </Group>
-      <Tabs defaultValue="memes">
+      <Tabs defaultValue="memes" value={profileTab}>
         <Tabs.List>
-          <Tabs.Tab value="memes" icon={<Photo size="0.8rem" />}>
+          <Tabs.Tab
+            value="memes"
+            icon={<Photo size="0.8rem" />}
+            onClick={() => navigate(navigateData.profileMemes)}
+          >
             Memes
           </Tabs.Tab>
-          <Tabs.Tab value="posts" icon={<MessageCircle size="0.8rem" />}>
+
+          <Tabs.Tab
+            value="posts"
+            icon={<MessageCircle size="0.8rem" />}
+            onClick={() => navigate(navigateData.profilePosts)}
+          >
             Posts
           </Tabs.Tab>
-          <Tabs.Tab value="following" icon={<Friends size="0.8rem" />}>
+
+          <Tabs.Tab
+            value="following"
+            icon={<Friends size="0.8rem" />}
+            onClick={() => navigate(navigateData.profileFollowing)}
+          >
             Following
           </Tabs.Tab>
 
-          <Tabs.Tab value="settings" icon={<Settings size="0.8rem" />}>
+          <Tabs.Tab
+            value="settings"
+            icon={<Settings size="0.8rem" />}
+            onClick={() => navigate(navigateData.profileSettings)}
+          >
             Settings
           </Tabs.Tab>
         </Tabs.List>
