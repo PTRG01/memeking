@@ -9,7 +9,6 @@ import LoaderComponent from '../../components/loader/loader';
 import { IPost } from '../../contexts/post-provider/post-provider.interface';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
 
-/* eslint-disable-next-line */
 export interface IFeedProps {
   groupFeed?: boolean;
 }

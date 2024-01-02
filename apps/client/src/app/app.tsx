@@ -58,10 +58,18 @@ export function App() {
                       }
                     >
                       <Route
+                        path="/feed"
+                        element={
+                          <FeedProvider>
+                            <Feed groupFeed={false} />
+                          </FeedProvider>
+                        }
+                      />
+                      <Route
                         path="/groups/feed"
                         element={
                           <FeedProvider>
-                            <Feed groupFeed={true} />
+                            <Feed groupFeed />
                           </FeedProvider>
                         }
                       />
