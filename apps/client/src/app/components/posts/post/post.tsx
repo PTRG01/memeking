@@ -18,6 +18,7 @@ import CommentBar from '../../comments/comment-bar/comment-bar';
 import { useCommentContext } from '../../../contexts/comment-provider/comment-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
+import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 
 export interface IPostProps {
   post: IPost;
@@ -27,9 +28,18 @@ export interface IPostProps {
 export function Post({ post, groups }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
+  const { user } = useAuthContext();
   const { deletePost, updatePost, handleUpvote } = usePostContext();
   const { commentListResult, isLoading } = useCommentContext();
   const [commentsOpen, setCommentsOpen] = useState(false);
+
+  const isAdmin = useMemo(() => post?.author_id === user?.id, [post, user]);
+
+  const currentGroup = useMemo(
+    () => groups?.find((group) => group?.id === post.group_id),
+    [groups, post]
+  );
+  const authorData = useMemo(() => post.expand.author_id as IUser, [post]);
 
   const handleOpenPostForm = (openState: boolean) => {
     setEditFormOpen(!openState);
@@ -41,12 +51,6 @@ export function Post({ post, groups }: IPostProps) {
   const handleOpenComments = () => {
     setCommentsOpen(!commentsOpen);
   };
-
-  const currentGroup = useMemo(
-    () => groups?.find((group) => group?.id === post.group_id),
-    [groups, post]
-  );
-  const authorData = useMemo(() => post.expand.author_id as IUser, [post]);
 
   return (
     <Stack align="stretch" maw={900}>
@@ -68,12 +72,19 @@ export function Post({ post, groups }: IPostProps) {
               />
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
-                Edit post
-              </Menu.Item>
-              <Menu.Item onClick={() => deletePost(post?.id)}>
-                Delete post
-              </Menu.Item>
+              {isAdmin ? (
+                <>
+                  {' '}
+                  <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
+                    Edit post
+                  </Menu.Item>
+                  <Menu.Item onClick={() => deletePost(post?.id)}>
+                    Delete post
+                  </Menu.Item>{' '}
+                </>
+              ) : (
+                <Menu.Item>Editing not allowed</Menu.Item>
+              )}
             </Menu.Dropdown>
           </Menu>
         </Flex>
