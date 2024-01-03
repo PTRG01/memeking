@@ -8,7 +8,8 @@ import {
   TextInput,
   Button,
   SimpleGrid,
-  Box,
+  Stack,
+  Center,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
@@ -19,115 +20,137 @@ import PostList from '../../components/posts/post-list/post-list';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
 import { useNavigate, useParams } from 'react-router-dom';
 import { navigateData } from '../../utils/navigate';
+import { useCallback } from 'react';
 
-/* eslint-disable-next-line */
-export interface ProfileProps {}
-
-export function Profile(props: ProfileProps) {
+export function Profile() {
   const { user } = useAuthContext();
   const {
     followingList,
     handleAddFollowing,
     handleRemoveFollowing,
+    userChatsList,
+    createChatWithUser,
+    handleOpenChatToggle,
     isLoading,
   } = useChatContext();
   const { userPostsList } = usePostContext();
   const { profileTab } = useParams();
   const navigate = useNavigate();
 
-  const handleItemClick = () => {
-    return '';
-  };
+  const handleItemClick = useCallback(
+    (id: string) => {
+      //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
+      const currentUsers = [user?.id, id];
+      const matchingChat = userChatsList?.find(
+        (chat) =>
+          chat?.users?.length === currentUsers.length &&
+          chat.users.every((userId) => currentUsers?.includes(userId))
+      );
+      if (!matchingChat) {
+        createChatWithUser(id);
+        return;
+      }
+      const chatExists = matchingChat?.users?.includes(id);
+      if (chatExists) handleOpenChatToggle(matchingChat?.id);
+    },
+    [createChatWithUser, handleOpenChatToggle, user, userChatsList]
+  );
+
   return (
-    <Box mx={10} mt={10}>
-      <Group position="left" mb="xl">
-        <Avatar size="xl" />
-        <Flex direction="column">
-          <Title>{user?.name}</Title>
-          <Group>
-            <Group>
-              <Text>Memes:</Text>
-              <Text>25</Text>
-            </Group>
-            <Group>
-              <Text>Posts:</Text>
-              <Text>{userPostsList?.length}</Text>
-            </Group>
-            <Group>
-              <Text>Following:</Text> <Text>{user?.followers.length}</Text>
-            </Group>
+    <Center mx={5} mt={5}>
+      <Stack align="stretch" maw={1000}>
+        <div>
+          <Group position="left" mb="xl">
+            <Avatar size="xl" />
+            <Flex direction="column">
+              <Title>{user?.name}</Title>
+              <Group>
+                <Group>
+                  <Text>Memes:</Text>
+                  <Text>25</Text>
+                </Group>
+                <Group>
+                  <Text>Posts:</Text>
+                  <Text>{userPostsList?.length}</Text>
+                </Group>
+                <Group>
+                  <Text>Following:</Text> <Text>{user?.followers.length}</Text>
+                </Group>
+              </Group>
+            </Flex>
           </Group>
-        </Flex>
-      </Group>
-      <Tabs defaultValue="memes" value={profileTab}>
-        <Tabs.List>
-          <Tabs.Tab
-            value="memes"
-            icon={<Photo size="0.8rem" />}
-            onClick={() => navigate(navigateData.profileMemes)}
-          >
-            Memes
-          </Tabs.Tab>
+        </div>
 
-          <Tabs.Tab
-            value="posts"
-            icon={<MessageCircle size="0.8rem" />}
-            onClick={() => navigate(navigateData.profilePosts)}
-          >
-            Posts
-          </Tabs.Tab>
+        <Tabs defaultValue="memes" value={profileTab}>
+          <Tabs.List>
+            <Tabs.Tab
+              value="memes"
+              icon={<Photo size="0.8rem" />}
+              onClick={() => navigate(navigateData.profileMemes)}
+            >
+              Memes
+            </Tabs.Tab>
 
-          <Tabs.Tab
-            value="following"
-            icon={<Friends size="0.8rem" />}
-            onClick={() => navigate(navigateData.profileFollowing)}
-          >
-            Following
-          </Tabs.Tab>
+            <Tabs.Tab
+              value="posts"
+              icon={<MessageCircle size="0.8rem" />}
+              onClick={() => navigate(navigateData.profilePosts)}
+            >
+              Posts
+            </Tabs.Tab>
 
-          <Tabs.Tab
-            value="settings"
-            icon={<Settings size="0.8rem" />}
-            onClick={() => navigate(navigateData.profileSettings)}
-          >
-            Settings
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="memes" pt="xs">
-          Gallery tab content
-        </Tabs.Panel>
-        <Tabs.Panel value="posts" pt="xs">
-          <PostList postList={userPostsList} isLoading={isLoading} />
-        </Tabs.Panel>
-        <Tabs.Panel value="following" pt="xs">
-          <SimpleGrid cols={3}>
-            <UserList
-              listItem={(item, values) => (
-                <UserListItemCard
-                  user={item}
-                  values={values}
-                  onAddUser={handleAddFollowing}
-                  onRemoveUser={handleRemoveFollowing}
-                  handleItemClick={handleItemClick}
-                  itemActive={false}
-                  isLoading={isLoading}
-                />
-              )}
-              userList={followingList}
-              currentList={followingList}
-              isLoading={isLoading}
-              hideExisting={false}
-            />
-          </SimpleGrid>
-        </Tabs.Panel>
-        <Tabs.Panel value="settings" pt="xs">
-          <TextInput placeholder={user?.name} label="Full name" />
-          <TextInput placeholder="********" label="Password" />
-          <TextInput placeholder={user?.email} label="Email" />
-          <Button mt={20}>Edit</Button>
-        </Tabs.Panel>
-      </Tabs>
-    </Box>
+            <Tabs.Tab
+              value="following"
+              icon={<Friends size="0.8rem" />}
+              onClick={() => navigate(navigateData.profileFollowing)}
+            >
+              Following
+            </Tabs.Tab>
+
+            <Tabs.Tab
+              value="settings"
+              icon={<Settings size="0.8rem" />}
+              onClick={() => navigate(navigateData.profileSettings)}
+            >
+              Settings
+            </Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="memes" pt="xs">
+            Gallery tab content
+          </Tabs.Panel>
+          <Tabs.Panel value="posts" pt="xs">
+            <PostList postList={userPostsList} isLoading={isLoading} />
+          </Tabs.Panel>
+          <Tabs.Panel value="following" pt="xs">
+            <SimpleGrid cols={3}>
+              <UserList
+                listItem={(item, values) => (
+                  <UserListItemCard
+                    user={item}
+                    values={values}
+                    onAddUser={handleAddFollowing}
+                    onRemoveUser={handleRemoveFollowing}
+                    handleItemClick={handleItemClick}
+                    itemActive={false}
+                    isLoading={isLoading}
+                  />
+                )}
+                userList={followingList}
+                currentList={followingList}
+                isLoading={isLoading}
+                hideExisting={false}
+              />
+            </SimpleGrid>
+          </Tabs.Panel>
+          <Tabs.Panel value="settings" pt="xs">
+            <TextInput placeholder={user?.name} label="Full name" />
+            <TextInput placeholder="********" label="Password" />
+            <TextInput placeholder={user?.email} label="Email" />
+            <Button mt={20}>Edit</Button>
+          </Tabs.Panel>
+        </Tabs>
+      </Stack>
+    </Center>
   );
 }
 

@@ -76,7 +76,7 @@ export function LanguageMenu() {
             {selected.image}
             <span className={styles.label}>{selected.label}</span>
           </Group>
-          <ChevronDown size={20} className={styles.icon} />
+          <ChevronDown size={15} className={styles.icon} />
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>{items}</Menu.Dropdown>
