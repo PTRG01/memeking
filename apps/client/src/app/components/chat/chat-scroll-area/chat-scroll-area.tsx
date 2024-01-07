@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 function ChatScrollArea() {
   const { messages } = useChatWindowContext();
   const listRef = useRef<HTMLDivElement>(null);
+  const viewport = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (listRef.current) {
@@ -17,7 +18,7 @@ function ChatScrollArea() {
 
   return (
     <LoaderComponent isLoading={false}>
-      <ScrollArea px={20} mb={20} mt={20} h={300} viewportRef={listRef}>
+      <ScrollArea px={20} mb={20} mt={20} h={300} viewportRef={viewport}>
         {messages?.map((message) => (
           <Message
             content={message?.content}

@@ -37,8 +37,8 @@ export function PostForm({
 
   const handleFormSubmit = useCallback(
     (values: IPost) => {
-      onCloseForm(isOpen);
       onFormSubmit(values);
+      onCloseForm(isOpen);
       form.reset();
     },
     [form, isOpen, onCloseForm, onFormSubmit]

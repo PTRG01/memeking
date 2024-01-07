@@ -5,31 +5,45 @@ import {
   Flex,
   Popover,
   ActionIcon,
+  Avatar,
 } from '@mantine/core';
-import { Plus, X } from 'tabler-icons-react';
+import { Minus, Plus, X } from 'tabler-icons-react';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import ChatAddList from '../chat-add-list/chat-add-list';
 import ChatWindowMenu from '../chat-window-menu/chat-window-menu';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import ChatScrollArea from '../chat-scroll-area/chat-scroll-area';
 import ChatMessageBar from '../chat-message-bar/chat-message-bar';
+import { useState } from 'react';
 
 export function ChatWindow() {
   const { handleOpenChatToggle } = useChatContext();
   const { chatId, sendMessage, isLoading } = useChatWindowContext();
-
-  return (
-    <Paper radius={10} pb={25} w={400} withBorder={true}>
-      <Group position="apart" px={20} py={10} mb={30} bg={'blue'}>
+  const [isOpened, setIsOpened] = useState(false);
+  return isOpened ? (
+    <Flex align="flex-end">
+      <UnstyledButton onClick={() => setIsOpened(!isOpened)}>
+        <Avatar radius={100} size="lg" />
+      </UnstyledButton>
+    </Flex>
+  ) : (
+    <Paper radius={10} w={375} pb={10} withBorder={true}>
+      <Group position="apart" px={15} py={5} bg={'blue'}>
         <Group>
           <ChatWindowMenu />
         </Group>
-        <UnstyledButton onClick={() => handleOpenChatToggle(chatId)}>
-          <X />
-        </UnstyledButton>
+        <Group>
+          <UnstyledButton onClick={() => setIsOpened(!isOpened)}>
+            <Minus />
+          </UnstyledButton>
+          <UnstyledButton onClick={() => handleOpenChatToggle(chatId)}>
+            <X />
+          </UnstyledButton>
+        </Group>
       </Group>
+
       <ChatScrollArea />
-      <Flex align="center" justify="space-evenly" mx={10}>
+      <Flex align="center" justify="space-evenly" gap={1}>
         <Popover position="top" offset={25}>
           <Popover.Dropdown maw={300}>
             <ChatAddList />

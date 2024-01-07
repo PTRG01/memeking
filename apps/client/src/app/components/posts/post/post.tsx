@@ -53,7 +53,7 @@ export function Post({ post, groups }: IPostProps) {
   };
 
   return (
-    <Stack align="stretch" maw={900}>
+    <Stack align="stretch" maw={1000}>
       <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
@@ -74,7 +74,6 @@ export function Post({ post, groups }: IPostProps) {
             <Menu.Dropdown>
               {isAdmin ? (
                 <>
-                  {' '}
                   <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
                     Edit post
                   </Menu.Item>

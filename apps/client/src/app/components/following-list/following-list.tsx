@@ -55,29 +55,27 @@ export function FollowingList() {
       onClick={() => setActive(!active)}
     >
       <Group>
-        <List mt="lg" size="sm" w="100%">
-          <LoaderComponent isLoading={isLoading}>
-            <Group>
-              <UserList
-                listItem={(item, values) => (
-                  <UserListItemInline
-                    user={item}
-                    values={values}
-                    onAddUser={handleAddFollowing}
-                    onRemoveUser={handleRemoveFollowing}
-                    onItemClick={handleItemClick}
-                    itemActive
-                    isLoading={isLoading}
-                  />
-                )}
-                userList={followingList}
-                currentList={followingList}
-                isLoading={isLoading}
-                hideExisting={false}
-              />
-            </Group>
-          </LoaderComponent>
-        </List>
+        <LoaderComponent isLoading={isLoading}>
+          <Group spacing={1}>
+            <UserList
+              listItem={(item, values) => (
+                <UserListItemInline
+                  user={item}
+                  values={values}
+                  onAddUser={handleAddFollowing}
+                  onRemoveUser={handleRemoveFollowing}
+                  onItemClick={handleItemClick}
+                  itemActive
+                  isLoading={isLoading}
+                />
+              )}
+              userList={followingList}
+              currentList={followingList}
+              isLoading={isLoading}
+              hideExisting={false}
+            />
+          </Group>
+        </LoaderComponent>
       </Group>
     </NavLink>
   );

@@ -7,7 +7,7 @@ import { FileWithPath } from '@mantine/dropzone';
 
 /* eslint-disable-next-line */
 export interface IGroupEditFormProps {
-  group: IGroup | null;
+  group: IGroup;
   onSubmitAbout: (aboutText: string | null) => void;
   onSubmitImage: () => void;
 }
@@ -25,7 +25,6 @@ export function GroupEditForm({
     },
   });
 
-  if (!group) return null;
   return (
     <Paper>
       <Stack mb={15}>

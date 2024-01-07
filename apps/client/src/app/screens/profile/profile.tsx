@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Stack,
   Center,
+  Container,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
@@ -57,7 +58,7 @@ export function Profile() {
   );
 
   return (
-    <Center mx={5} mt={5}>
+    <Container>
       <Stack align="stretch" maw={1000}>
         <div>
           <Group position="left" mb="xl">
@@ -80,7 +81,6 @@ export function Profile() {
             </Flex>
           </Group>
         </div>
-
         <Tabs defaultValue="memes" value={profileTab}>
           <Tabs.List>
             <Tabs.Tab
@@ -98,7 +98,6 @@ export function Profile() {
             >
               Posts
             </Tabs.Tab>
-
             <Tabs.Tab
               value="following"
               icon={<Friends size="0.8rem" />}
@@ -106,7 +105,6 @@ export function Profile() {
             >
               Following
             </Tabs.Tab>
-
             <Tabs.Tab
               value="settings"
               icon={<Settings size="0.8rem" />}
@@ -150,7 +148,7 @@ export function Profile() {
           </Tabs.Panel>
         </Tabs>
       </Stack>
-    </Center>
+    </Container>
   );
 }
 

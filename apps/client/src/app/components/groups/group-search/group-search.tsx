@@ -5,14 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Search } from 'tabler-icons-react';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import GroupList from '../group-list/group-list';
 import { navigateData } from '../../../utils/navigate';
-
-export function GroupSearch() {
-  const { user } = useAuthContext();
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+export interface ISearchGroupProps {
+  user: IUser;
+}
+export function GroupSearch({ user }: ISearchGroupProps) {
   const { t, i18n } = useTranslation();
-  const { searchGroup, groupSearchListResult } = useGroupContext();
+  const { searchGroup, groupSearchListResult, isLoading } = useGroupContext();
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -21,11 +22,7 @@ export function GroupSearch() {
   });
   const notJoinedGroups = useMemo(
     () =>
-      user
-        ? groupSearchListResult?.filter(
-            (group) => !group.users.includes(user?.id)
-          )
-        : null,
+      groupSearchListResult?.filter((group) => !group.users.includes(user?.id)),
     [groupSearchListResult, user]
   );
 
@@ -54,6 +51,7 @@ export function GroupSearch() {
       {notJoinedGroups && (
         <Paper withBorder>
           <GroupList
+            isLoading={isLoading}
             groupList={notJoinedGroups}
             onItemClick={handleGroupItemClick}
           />

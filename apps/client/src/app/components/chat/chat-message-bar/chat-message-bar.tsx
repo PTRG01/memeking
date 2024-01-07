@@ -1,5 +1,5 @@
 import { ActionIcon, Group } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { isNotEmpty, useForm } from '@mantine/form';
 import { Send } from 'tabler-icons-react';
 import EmojiTextArea, {
   TOnTextSubmitFunction,
@@ -20,9 +20,14 @@ export function ChatMessageBar({
     initialValues: {
       chatInput: '',
     },
+    validate: {
+      chatInput: isNotEmpty(''),
+    },
   });
 
   const handleChatInput = (values: string) => {
+    console.log(values);
+    if (values.length === 0) return;
     onTextSubmit(values, chatId);
     form.reset();
   };

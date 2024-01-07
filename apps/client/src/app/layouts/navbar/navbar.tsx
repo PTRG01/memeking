@@ -8,6 +8,7 @@ import {
   CloseButton,
   Title,
   Divider,
+  Text,
 } from '@mantine/core';
 import { Cards, Plus, Social } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
@@ -18,20 +19,21 @@ import { useGroupContext } from '../../contexts/group-provider/group-provider';
 import GroupTabs from '../../components/groups/groups-tabs/group-tabs';
 import GroupSearch from '../../components/groups/group-search/group-search';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-/* eslint-disable-next-line */
-export interface NavbarProps {}
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 
-export function Navbar(props: NavbarProps) {
-  // TODO add hover effects, improve ui of navbar, add routing
+export function Navbar() {
   const { isLoggedIn } = useAuthContext();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { followingList } = useChatContext();
+  const { user } = useAuthContext();
 
-  const { groupListResult } = useGroupContext();
+  const { groupListResult, isLoading } = useGroupContext();
 
   const handleGroupItemClick = (groupId: string) => {
     navigate(`/groups/${groupId}`);
   };
+  if (!user) return;
   return (
     isLoggedIn && (
       <Stack>
@@ -64,7 +66,7 @@ export function Navbar(props: NavbarProps) {
             element={
               <Stack align="stretch">
                 <Title size="h2">Groups</Title>
-                <GroupSearch />
+                <GroupSearch user={user} />
                 <GroupTabs />
                 <Button
                   onClick={() => navigate('/groups/create')}
@@ -74,6 +76,7 @@ export function Navbar(props: NavbarProps) {
                 </Button>
                 <Divider />
                 <GroupList
+                  isLoading={isLoading}
                   groupList={groupListResult}
                   onItemClick={handleGroupItemClick}
                 />
@@ -89,7 +92,11 @@ export function Navbar(props: NavbarProps) {
                   radius={50}
                   onClick={() => navigate('/groups/feed')}
                 />
-                <GroupForm />
+                {followingList ? (
+                  <GroupForm followingList={followingList} />
+                ) : (
+                  <Text>Follow someone first</Text>
+                )}
               </Stack>
             }
           ></Route>

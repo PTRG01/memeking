@@ -40,7 +40,7 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   }, [loadPosts, userPostsList]);
 
   const createPost = (title: string, contentText: string) => {
-    if (title && contentText)
+    if (contentText)
       createOne({
         author_id: user?.id,
         avatar: user?.avatar,
@@ -50,16 +50,16 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   };
 
   const updatePost = (values: IPost, post: IPost) => {
-    console.log(values, post);
-    updateOne(
-      {
-        author_id: user?.id,
-        avatar: post.avatar,
-        title: values.title,
-        contentText: values.contentText,
-      },
-      post.id
-    );
+    if (values && post)
+      updateOne(
+        {
+          author_id: user?.id,
+          avatar: post.avatar,
+          title: values.title,
+          contentText: values.contentText,
+        },
+        post.id
+      );
   };
 
   const deletePost = async (id: string) => {

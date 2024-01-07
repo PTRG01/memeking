@@ -1,14 +1,17 @@
 import { Box, Button, Divider, MultiSelect, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import FloatingLabelInput from '../../floating-label-input/floating-label-input';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
 import { navigateData } from '../../../utils/navigate';
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 
-export function GroupForm() {
-  const { followingList } = useChatContext();
+export interface IGroupFormProps {
+  followingList: IUser[];
+}
+
+export function GroupForm({ followingList }: IGroupFormProps) {
   const { createGroup } = useGroupContext();
   const navigate = useNavigate();
   const form = useForm({
@@ -20,12 +23,10 @@ export function GroupForm() {
 
   const searchListdata = useMemo(
     () =>
-      followingList
-        ? followingList?.map(({ name: label, id: value }) => ({
-            label,
-            value,
-          }))
-        : [],
+      followingList.map(({ name: label, id: value }) => ({
+        label,
+        value,
+      })),
     [followingList]
   );
 

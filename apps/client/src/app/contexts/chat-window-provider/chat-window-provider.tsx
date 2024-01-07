@@ -99,7 +99,7 @@ export function ChatWindowProvider({
   }, [loadMessages, chatId]);
 
   const sendMessage: TSendMessageFunction = (message, recordId) => {
-    if (!message) return;
+    if (!message || message.length === 0) return;
     createOne({
       content: `${message}`,
       author_id: `${user?.id}`,

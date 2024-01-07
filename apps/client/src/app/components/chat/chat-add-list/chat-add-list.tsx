@@ -6,8 +6,6 @@ import { useChatWindowContext } from '../../../contexts/chat-window-provider/cha
 import UserList from '../../user-list/user-list';
 import UserListItemInline from '../../user-list-item-inline/user-list-item-inline';
 
-/* eslint-disable-next-line */
-
 export interface IAddToChatListProps {
   id: string;
   users: string[];
@@ -25,7 +23,7 @@ export function ChatAddList() {
   } = useChatWindowContext();
   return (
     <Group>
-      <UserSearch handleSearch={handleSearchToAdd} loading={isLoading}>
+      <UserSearch handleSearch={handleSearchToAdd}>
         <UserList
           listItem={(item, values) => (
             <UserListItemInline
@@ -34,7 +32,6 @@ export function ChatAddList() {
               onAddUser={updateChat}
               onRemoveUser={() => ''}
               // TODO Fix unnecessary function
-              handleItemClick={() => ''}
               itemActive={false}
               isLoading={isLoading}
             />
@@ -56,7 +53,6 @@ export function ChatAddList() {
                 values={values}
                 onAddUser={updateChat}
                 onRemoveUser={() => ''}
-                handleItemClick={() => ''}
                 itemActive={false}
                 isLoading={isLoading}
               />

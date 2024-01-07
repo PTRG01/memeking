@@ -1,4 +1,4 @@
-import { ScrollArea } from '@mantine/core';
+import { Container, ScrollArea } from '@mantine/core';
 import { useFeedContext } from '../../contexts/feed-provider/feed-provider';
 import Post from '../../components/posts/post/post';
 import { CommentProvider } from '../../contexts/comment-provider/comment-provider';
@@ -27,19 +27,21 @@ export function Feed({ groupFeed = false }: IFeedProps) {
   };
   return (
     <LoaderComponent isLoading={isLoading}>
-      <ScrollArea>
-        {!groupFeed ? <ContentFormBar onPostClick={handleToggleForm} /> : null}
-        {postsListResult?.map((post) => (
-          <CommentProvider key={post?.id} parentId={post?.id}>
-            <Post post={post} groupsData={groupListResult} />
-          </CommentProvider>
-        ))}
-        <PostForm
-          isOpen={isOpen}
-          onCloseForm={handleToggleForm}
-          onFormSubmit={handleCreatePost}
-        />
-      </ScrollArea>
+      <Container>
+        <ScrollArea>
+          {!groupFeed && <ContentFormBar onFormClick={handleToggleForm} />}
+          {postsListResult?.map((post) => (
+            <CommentProvider key={post?.id} parentId={post?.id}>
+              <Post post={post} groups={groupListResult} />
+            </CommentProvider>
+          ))}
+          <PostForm
+            isOpen={isOpen}
+            onCloseForm={handleToggleForm}
+            onFormSubmit={handleCreatePost}
+          />
+        </ScrollArea>
+      </Container>
     </LoaderComponent>
   );
 }

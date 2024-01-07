@@ -22,18 +22,17 @@ import GroupEditForm from '../group-edit-form/group-edit-form';
 import { useCallback, useMemo, useState } from 'react';
 import { useGroupWindowContext } from '../../../contexts/group-window-provider/group-window-provider';
 import LoaderComponent from '../../loader/loader';
-import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 
-/* eslint-disable-next-line */
 export interface IGroupHeaderProps {
   groupId: string;
+  user: IUser;
 }
 
-export function GroupHeader({ groupId }: IGroupHeaderProps) {
-  const { user } = useAuthContext();
+export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
   const {
     groupResult,
     updateGroupImage,
@@ -72,7 +71,7 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
   // };
 
   const currentUserJoined = useMemo(
-    () => (user ? groupResult?.users.includes(user.id) : null),
+    () => groupResult?.users.includes(user.id),
     [groupResult, user]
   );
   const isAdmin = groupResult?.author_id === user?.id;

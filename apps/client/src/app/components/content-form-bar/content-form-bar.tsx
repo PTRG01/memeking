@@ -10,10 +10,10 @@ import {
 
 /* eslint-disable-next-line */
 export interface IContentFormBarProps {
-  onPostClick: () => void;
+  onFormClick: () => void;
 }
 
-export function ContentFormBar({ onPostClick }: IContentFormBarProps) {
+export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
   return (
     <Stack align="stretch">
       <Paper radius={15} p={20}>
@@ -27,7 +27,7 @@ export function ContentFormBar({ onPostClick }: IContentFormBarProps) {
             color="gray"
             fullWidth
             size="md"
-            onClick={() => onPostClick()}
+            onClick={() => onFormClick()}
           >
             Write something...
           </Button>

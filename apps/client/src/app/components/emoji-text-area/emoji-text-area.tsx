@@ -70,6 +70,7 @@ export function EmojiTextArea({
   const handleOnKeydown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Enter') {
+        event.preventDefault();
         onSubmit(event.currentTarget.value);
       }
     },

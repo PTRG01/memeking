@@ -6,7 +6,7 @@ export interface MessageProps {
   avatar?: string;
   id: string;
   content: string;
-  timestamp?: string | number;
+  timestamp: string | number;
 }
 
 export function Message(props: MessageProps) {
@@ -29,7 +29,7 @@ export function Message(props: MessageProps) {
           <Paper
             shadow="xs"
             radius="lg"
-            m="sm"
+            my={2}
             p="md"
             bg={props.id === user?.id ? 'blue' : 'gray'}
             maw={280}

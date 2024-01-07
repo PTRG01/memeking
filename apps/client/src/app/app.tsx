@@ -61,7 +61,7 @@ export function App() {
                         path="/feed"
                         element={
                           <FeedProvider>
-                            <Feed groupFeed={false} />
+                            <Feed />
                           </FeedProvider>
                         }
                       />
