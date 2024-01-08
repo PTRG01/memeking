@@ -13,6 +13,7 @@ import { useGroupContext } from '../../../contexts/group-provider/group-provider
 import { useNavigate } from 'react-router-dom';
 import { navigateData } from '../../../utils/navigate';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface IGroupSearchListItemProps {
   group: IGroup;
@@ -21,6 +22,7 @@ export interface IGroupSearchListItemProps {
 export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
   const { joinGroup } = useGroupContext();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleJoinGroup = useCallback(() => {
     joinGroup(group?.users, group?.id);
@@ -39,12 +41,14 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
               <Title size="h2">{group?.title}</Title>
             </UnstyledButton>
             <Group spacing={0}>
-              <Text>members</Text>
+              <Text>
+                {group.users.length} {t('groups.members')}
+              </Text>
             </Group>
             <Text>{group?.aboutText}</Text>
           </Stack>
         </Group>
-        <Button onClick={() => handleJoinGroup()}>Join</Button>
+        <Button onClick={() => handleJoinGroup()}>{t('groups.join')}</Button>
       </Group>
     </Paper>
   );

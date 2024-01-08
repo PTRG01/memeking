@@ -4,6 +4,7 @@ import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 
 import classes from './dropzone-button.module.css';
 import { Download, X, CloudUpload } from 'tabler-icons-react';
+import { useTranslation } from 'react-i18next';
 
 export interface IDopzoneButtonProps {
   onSubmit: Dispatch<SetStateAction<FileWithPath[] | null>>;
@@ -12,6 +13,7 @@ export interface IDopzoneButtonProps {
 export function DropzoneButton({ onSubmit }: IDopzoneButtonProps) {
   const theme = useMantineTheme();
   const openRef = useRef<() => void>(null);
+  const { t, i18n } = useTranslation();
 
   return (
     <div className={classes.wrapper}>
@@ -49,13 +51,13 @@ export function DropzoneButton({ onSubmit }: IDopzoneButtonProps) {
           </Group>
 
           <Text ta="center" fw={700} fz="lg" mt="xl">
-            <Dropzone.Accept>Drop images here</Dropzone.Accept>
-            <Dropzone.Reject>Jpg/Png file less than 5mb</Dropzone.Reject>
-            <Dropzone.Idle>Upload image</Dropzone.Idle>
+            <Dropzone.Accept> {t('dropzone.drop')}</Dropzone.Accept>
+            <Dropzone.Reject>{t('dropzone.files')}</Dropzone.Reject>
+            <Dropzone.Idle>{t('dropzone.upload')}</Dropzone.Idle>
           </Text>
           <Text ta="center" fz="sm" mt="xs" c="dimmed">
-            Drag&apos;n&apos;drop files here to upload. We can accept only{' '}
-            <i>.jpg/.png</i> files that are less than 5mb in size.
+            {t('dropzone.drag1')}&apos;n&apos;{t('dropzone.drag2')}
+            <i>.jpg/.png</i> {t('dropzone.drag3')}
           </Text>
         </div>
       </Dropzone>
@@ -66,7 +68,7 @@ export function DropzoneButton({ onSubmit }: IDopzoneButtonProps) {
           radius="xl"
           onClick={() => openRef.current?.()}
         >
-          Select file
+          {t('dropzone.select')}
         </Button>
       </Group>
     </div>

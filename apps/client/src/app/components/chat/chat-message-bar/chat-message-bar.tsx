@@ -26,8 +26,7 @@ export function ChatMessageBar({
   });
 
   const handleChatInput = (values: string) => {
-    console.log(values);
-    if (values.length === 0) return;
+    if (!values) return;
     onTextSubmit(values, chatId);
     form.reset();
   };

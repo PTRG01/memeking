@@ -5,10 +5,12 @@ import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../../loader/loader';
 import ChatItem from '../chat-item/chat-item';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useTranslation } from 'react-i18next';
 
 export function ChatList() {
   const [active, setActive] = useState(false);
   const { userChatsList, isLoading } = useChatContext();
+  const { t, i18n } = useTranslation();
 
   return (
     <LoaderComponent isLoading={isLoading}>
@@ -30,11 +32,11 @@ export function ChatList() {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Label>Messages</Menu.Label>
+          <Menu.Label>{t('chat.messages')} </Menu.Label>
           <ScrollArea>
             {userChatsList?.length === 0 ? (
               <Container p={10}>
-                <Text>'No chats, start a new one.' </Text>
+                <Text> {t('chat.noChats')} </Text>
               </Container>
             ) : (
               userChatsList?.map((chat) => (

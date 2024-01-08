@@ -23,10 +23,10 @@ import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 
 export function Navbar() {
   const { isLoggedIn } = useAuthContext();
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { followingList } = useChatContext();
   const { user } = useAuthContext();
+  const { t } = useTranslation();
 
   const { groupListResult, isLoading } = useGroupContext();
 
@@ -65,14 +65,14 @@ export function Navbar() {
             path="/groups/*"
             element={
               <Stack align="stretch">
-                <Title size="h2">Groups</Title>
+                <Title size="h2">{t('nav.groups')}</Title>
                 <GroupSearch user={user} />
                 <GroupTabs />
                 <Button
                   onClick={() => navigate('/groups/create')}
                   leftIcon={<Plus />}
                 >
-                  Create new group
+                  {t('groups.createNewGroup')}
                 </Button>
                 <Divider />
                 <GroupList
@@ -95,7 +95,7 @@ export function Navbar() {
                 {followingList ? (
                   <GroupForm followingList={followingList} />
                 ) : (
-                  <Text>Follow someone first</Text>
+                  <Text>{t('groups.followFirst')}</Text>
                 )}
               </Stack>
             }

@@ -41,7 +41,7 @@ const data = [
 export function LanguageMenu() {
   const [opened, setOpened] = useState(false);
   const [selected, setSelected] = useState(data[0]);
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const handleItemClick = (item: IData) => {
     setSelected(item);

@@ -3,6 +3,7 @@ import { useForm } from '@mantine/form';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type THandleCloseFormFunction = (openState: boolean) => void;
 type TOnFormSubmitFuntion = (values: IPost) => void;
@@ -21,6 +22,8 @@ export function PostForm({
   onCloseForm,
   onFormSubmit,
 }: IPostFormProps) {
+  const { t } = useTranslation();
+
   const formValues =
     isEditing && post
       ? { contentText: post?.contentText }
@@ -37,6 +40,7 @@ export function PostForm({
 
   const handleFormSubmit = useCallback(
     (values: IPost) => {
+      if (!values) return;
       onFormSubmit(values);
       onCloseForm(isOpen);
       form.reset();
@@ -71,12 +75,12 @@ export function PostForm({
 
             <Flex justify="flex-end" mt="md" gap={10}>
               {isEditing ? (
-                <Button type="submit">Confirm</Button>
+                <Button type="submit">{t('posts.confirm')}</Button>
               ) : (
-                <Button type="submit">Create</Button>
+                <Button type="submit"> {t('posts.create')}</Button>
               )}
               <Button color="gray" onClick={() => onCloseForm(isOpen)}>
-                Cancel
+                {t('posts.cancel')}
               </Button>
             </Flex>
           </form>

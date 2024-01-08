@@ -13,6 +13,8 @@ import { DoorExit, Dots, SquareLetterX } from 'tabler-icons-react';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 
 /* eslint-disable-next-line */
 export interface IGroupCardProps {
@@ -23,8 +25,9 @@ export function GroupCard({ group }: IGroupCardProps) {
   const { user } = useAuthContext();
   const { leaveGroup, deleteGroup } = useGroupContext();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
-  const currentUsersGroup = group?.author_id === user?.id;
+  const currentUsersGroup = useMemo(() => group?.author_id === user?.id, []);
 
   return (
     <Paper p={15} radius={10}>
@@ -51,14 +54,14 @@ export function GroupCard({ group }: IGroupCardProps) {
               icon={<DoorExit />}
               onClick={() => leaveGroup(group?.id, group?.users)}
             >
-              Leave group
+              {t('groups.leave')}
             </Menu.Item>
             {currentUsersGroup && (
               <Menu.Item
                 icon={<SquareLetterX />}
                 onClick={() => deleteGroup(group?.id)}
               >
-                Delete group
+                {t('groups.delete')}
               </Menu.Item>
             )}
           </Menu.Dropdown>

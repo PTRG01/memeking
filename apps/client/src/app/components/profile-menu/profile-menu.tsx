@@ -26,7 +26,7 @@ export function ProfileMenu() {
   const { logout } = useAuthContext();
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
@@ -70,7 +70,7 @@ export function ProfileMenu() {
           }
           onClick={() => navigate('/profile/memes')}
         >
-          Your memes
+          {t('profileMenu.yourMemes')}
         </Menu.Item>
         <Menu.Item
           icon={
@@ -81,22 +81,22 @@ export function ProfileMenu() {
           }
           onClick={() => navigate('/profile/posts')}
         >
-          Your posts
+          {t('profileMenu.yourPosts')}
         </Menu.Item>
 
-        <Menu.Label>Settings</Menu.Label>
+        <Menu.Label> {t('profileMenu.settings')}</Menu.Label>
         <Menu.Item
           icon={<Settings style={{ width: rem(16), height: rem(16) }} />}
           onClick={() => navigate('/profile/settings')}
         >
-          Account settings
+          {t('profileMenu.accSettings')}
         </Menu.Item>
 
         <Menu.Item
           icon={<Logout style={{ width: rem(16), height: rem(16) }} />}
           onClick={() => logout()}
         >
-          Logout
+          {t('profileMenu.logout')}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

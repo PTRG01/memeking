@@ -8,10 +8,9 @@ import LanguageMenu from '../../components/language-menu/language-menu';
 import ProfileMenu from '../../components/profile-menu/profile-menu';
 
 export function Header() {
-  const { isLoggedIn, user } = useAuthContext();
-  const { logout } = useAuthContext();
+  const { isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -26,7 +25,6 @@ export function Header() {
       </Button>
 
       <Group position="right">
-        {/* TODO add account menu when loggedIn */}
         <AuthLoader>
           <Group>
             {isLoggedIn && <ChatList />}

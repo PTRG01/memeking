@@ -2,9 +2,11 @@ import { NavLink as MantineNavLink, Stack } from '@mantine/core';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { Cardboards, Users } from 'tabler-icons-react';
 import { navigateData } from '../../../utils/navigate';
+import { useTranslation } from 'react-i18next';
 
 export function GroupTabs() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Stack align="stretch">
@@ -16,7 +18,7 @@ export function GroupTabs() {
       >
         {({ isActive }) => (
           <MantineNavLink
-            label="Your feed"
+            label={t('groups.yourFeed')}
             icon={<Cardboards />}
             active={isActive}
             onClick={() => navigate(navigateData.groupsFeed)}
@@ -31,7 +33,7 @@ export function GroupTabs() {
       >
         {({ isActive }) => (
           <MantineNavLink
-            label="Your groups"
+            label={t('groups.yourGroups')}
             icon={<Users />}
             active={isActive}
             onClick={() => navigate(navigateData.groupsJoins)}

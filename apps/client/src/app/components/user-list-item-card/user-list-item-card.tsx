@@ -15,6 +15,7 @@ import { ChevronDown, X } from 'tabler-icons-react';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-provider.interface';
 import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-window-provider.interface';
+import { useTranslation } from 'react-i18next';
 
 export interface IUserListItemCardProps {
   user: IUser;
@@ -35,6 +36,7 @@ function UserListItemCard({
   handleItemClick,
 }: IUserListItemCardProps) {
   const theme = useMantineTheme();
+  const { t } = useTranslation();
 
   return (
     <Card withBorder padding="xl" radius="md">
@@ -55,7 +57,7 @@ function UserListItemCard({
       <Flex mt="md" align="center" wrap="nowrap" justify="center" gap={15}>
         <div>
           <Text ta="center" fz="md" fw={500}>
-            Followers:
+            {t('profile.followers')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
             25
@@ -63,7 +65,7 @@ function UserListItemCard({
         </div>
         <div>
           <Text ta="center" fz="md" fw={500}>
-            Memes:
+            {t('profile.memes')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
             10
@@ -71,7 +73,7 @@ function UserListItemCard({
         </div>
         <div>
           <Text ta="center" fz="md" fw={500}>
-            Posts:
+            {t('profile.posts')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
             10
@@ -86,7 +88,7 @@ function UserListItemCard({
           color="gray"
           onClick={() => (handleItemClick ? handleItemClick(user?.id) : null)}
         >
-          Send message
+          {t('profile.sendMessage')}
         </Button>
         <Menu
           transitionProps={{ transition: 'pop' }}
@@ -113,7 +115,7 @@ function UserListItemCard({
               }
               onClick={() => onRemoveUser(user?.id)}
             >
-              Unfollow
+              {t('profile.unfollow')}
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

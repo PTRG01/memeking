@@ -3,11 +3,13 @@ import { DoorExit } from 'tabler-icons-react';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function ChatWindowMenu() {
   const { user } = useAuthContext();
   const { chatId, avatar, currentChatUsers, currentChatUsersIds, leaveChat } =
     useChatWindowContext();
+  const { t, i18n } = useTranslation();
 
   const chatUserNames = useMemo(
     () =>
@@ -35,7 +37,7 @@ function ChatWindowMenu() {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item onClick={handleLeaveChat} icon={<DoorExit />}>
-          Leave chat
+          {t('chat.leave')}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

@@ -1,7 +1,6 @@
 import { Paper, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Search } from 'tabler-icons-react';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ export interface ISearchGroupProps {
   user: IUser;
 }
 export function GroupSearch({ user }: ISearchGroupProps) {
-  const { t, i18n } = useTranslation();
   const { searchGroup, groupSearchListResult, isLoading } = useGroupContext();
   const navigate = useNavigate();
   const form = useForm({

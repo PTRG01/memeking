@@ -26,6 +26,7 @@ import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useTranslation } from 'react-i18next';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -44,6 +45,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
   } = useGroupWindowContext();
   const [isOpened, setIsOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleToggleForm = useCallback(() => {
     setIsOpen(!isOpen);
@@ -74,7 +76,10 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     () => groupResult?.users.includes(user.id),
     [groupResult, user]
   );
-  const isAdmin = groupResult?.author_id === user?.id;
+  const isAdmin = useMemo(
+    () => groupResult?.author_id === user?.id,
+    [groupResult, user]
+  );
 
   if (!groupResult) return null;
   return (
@@ -90,7 +95,9 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           />
           <Stack mah={500} px={15}>
             <Title>{groupResult?.title}</Title>
-            <Text>{groupResult?.users.length} members</Text>
+            <Text>
+              {groupResult?.users.length} {t('groups.members')}
+            </Text>
             <Text>{groupResult?.aboutText}</Text>
             <Group position="right">
               {currentUserJoined ? (
@@ -102,7 +109,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                       leftIcon={<UserCheck />}
                       rightIcon={<TriangleInverted fill="white" size={10} />}
                     >
-                      Joined
+                      {t('groups.joined')}
                     </Button>
                   </Menu.Target>
                   <Menu.Dropdown>
@@ -110,7 +117,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                       icon={<DoorExit size={15} />}
                       onClick={() => leaveGroup()}
                     >
-                      Leave group
+                      {t('groups.leave')}
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
@@ -119,7 +126,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                   leftIcon={<Plus />}
                   onClick={() => joinGroup(groupResult?.users)}
                 >
-                  Join
+                  {t('groups.join')}
                 </Button>
               )}
 
@@ -136,10 +143,10 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                         onClick={() => setIsOpened(!isOpened)}
                         icon={<Edit size={15} />}
                       >
-                        Edit group
+                        {t('groups.editGroup')}
                       </Menu.Item>
                     ) : (
-                      <Menu.Item>Editing not allowed</Menu.Item>
+                      <Menu.Item> {t('groups.editingNot')}</Menu.Item>
                     )}
                   </Menu.Dropdown>
                 </Menu>
@@ -157,7 +164,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           </Stack>
         </Paper>
         {currentUserJoined ? (
-          <ContentFormBar onPostClick={handleToggleForm} />
+          <ContentFormBar onFormClick={handleToggleForm} />
         ) : null}
         <PostForm
           isOpen={isOpen}

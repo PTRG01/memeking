@@ -7,47 +7,9 @@ import {
   Center,
 } from '@mantine/core';
 import { ChangeEventHandler } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check, X } from 'tabler-icons-react';
 
-function PasswordRequirement({
-  meets,
-  label,
-}: {
-  meets: boolean;
-  label: string;
-}) {
-  return (
-    <Text component="div" c={meets ? 'teal' : 'red'} mt={5} size="sm">
-      <Center inline>
-        {meets ? (
-          <Check size="0.9rem" stroke="sm" />
-        ) : (
-          <X size="0.9rem" stroke="sm" />
-        )}
-        <Box ml={7}>{label}</Box>
-      </Center>
-    </Text>
-  );
-}
-
-const requirements = [
-  { re: /[0-9]/, label: 'Includes number' },
-  { re: /[a-z]/, label: 'Includes lowercase letter' },
-  { re: /[A-Z]/, label: 'Includes uppercase letter' },
-  { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes special symbol' },
-];
-
-function getStrength(password: string) {
-  let multiplier = password.length > 5 ? 0 : 1;
-
-  requirements.forEach((requirement) => {
-    if (!requirement.re.test(password)) {
-      multiplier += 1;
-    }
-  });
-
-  return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
-}
 export interface IPasswordStrenghtInputProps {
   value: string;
   onChange: ChangeEventHandler;
@@ -57,6 +19,47 @@ export function PasswordStrenghtInput({
   value,
   onChange,
 }: IPasswordStrenghtInputProps) {
+  const { t } = useTranslation();
+
+  function PasswordRequirement({
+    meets,
+    label,
+  }: {
+    meets: boolean;
+    label: string;
+  }) {
+    return (
+      <Text component="div" c={meets ? 'teal' : 'red'} mt={5} size="sm">
+        <Center inline>
+          {meets ? (
+            <Check size="0.9rem" stroke="sm" />
+          ) : (
+            <X size="0.9rem" stroke="sm" />
+          )}
+          <Box ml={7}>{label}</Box>
+        </Center>
+      </Text>
+    );
+  }
+
+  const requirements = [
+    { re: /[0-9]/, label: t('signup.reqNum') },
+    { re: /[a-z]/, label: t('signup.reqLower') },
+    { re: /[A-Z]/, label: t('signup.reqUpper') },
+    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: t('signup.reqSymbol') },
+  ];
+  function getStrength(password: string) {
+    let multiplier = password.length > 5 ? 0 : 1;
+
+    requirements.forEach((requirement) => {
+      if (!requirement.re.test(password)) {
+        multiplier += 1;
+      }
+    });
+
+    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
+  }
+
   const strength = getStrength(value);
   const checks = requirements.map((requirement, index) => (
     <PasswordRequirement
@@ -88,8 +91,8 @@ export function PasswordStrenghtInput({
       <PasswordInput
         value={value}
         onChange={onChange}
-        placeholder="Your password"
-        label="Password"
+        placeholder={t('signup.password')}
+        label={t('signup.password')}
         required
       />
 
@@ -98,7 +101,7 @@ export function PasswordStrenghtInput({
       </Group>
 
       <PasswordRequirement
-        label="Has at least 6 characters"
+        label={t('signup.reqChar')}
         meets={value.length > 5}
       />
       {checks}

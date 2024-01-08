@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
 import { navigateData } from '../../../utils/navigate';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useTranslation } from 'react-i18next';
 
 export interface IGroupFormProps {
   followingList: IUser[];
@@ -14,6 +15,8 @@ export interface IGroupFormProps {
 export function GroupForm({ followingList }: IGroupFormProps) {
   const { createGroup } = useGroupContext();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       title: '',
@@ -46,19 +49,19 @@ export function GroupForm({ followingList }: IGroupFormProps) {
       >
         <Stack spacing={2}>
           <FloatingLabelInput
-            label="Group name"
+            label={t('groups.groupName')}
             placeholder=""
             {...form.getInputProps('title')}
           />
           <MultiSelect
             my={5}
             data={searchListdata}
-            placeholder="Invite followers"
+            placeholder={t('groups.inviteFollowers')}
             searchable
             {...form.getInputProps('groupUsers')}
           />
           <Button type="submit" fullWidth>
-            Create group
+            {t('groups.createGroup')}
           </Button>
         </Stack>
       </form>

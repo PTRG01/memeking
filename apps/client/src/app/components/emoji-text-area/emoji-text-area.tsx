@@ -81,7 +81,6 @@ export function EmojiTextArea({
     <Textarea
       radius={radius}
       size="md"
-      id="textarea"
       autosize
       variant={variant}
       minRows={minRows}

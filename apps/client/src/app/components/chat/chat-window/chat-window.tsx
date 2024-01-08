@@ -41,7 +41,6 @@ export function ChatWindow() {
           </UnstyledButton>
         </Group>
       </Group>
-
       <ChatScrollArea />
       <Flex align="center" justify="space-evenly" gap={1}>
         <Popover position="top" offset={25}>

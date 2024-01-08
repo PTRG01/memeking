@@ -31,14 +31,14 @@ export function Signin(props: ISigninProps) {
         <form onSubmit={form.onSubmit(() => handleSignin())}>
           <TextInput
             withAsterisk
-            label={t('form.email')}
-            placeholder={t('form.placeholderEmail')}
+            label={t('signup.email')}
+            placeholder={t('signup.placeholderEmail')}
             {...form.getInputProps('email')}
           />
 
           <PasswordInput
             withAsterisk
-            label={t('form.password')}
+            label={t('signup.password')}
             {...form.getInputProps('password')}
           />
 

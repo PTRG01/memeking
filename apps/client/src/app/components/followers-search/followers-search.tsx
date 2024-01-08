@@ -42,8 +42,6 @@ export function FollowersSearch() {
                 values={values}
                 onAddUser={handleAddFollowing}
                 onRemoveUser={handleRemoveFollowing}
-                // TODO Fix requirement for this prop
-                handleItemClick={() => ''}
                 itemActive={false}
                 isLoading={isLoading}
               />

@@ -9,8 +9,8 @@ import {
   Button,
   SimpleGrid,
   Stack,
-  Center,
   Container,
+  PasswordInput,
 } from '@mantine/core';
 import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
@@ -22,6 +22,7 @@ import { usePostContext } from '../../contexts/post-provider/post-provider';
 import { useNavigate, useParams } from 'react-router-dom';
 import { navigateData } from '../../utils/navigate';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function Profile() {
   const { user } = useAuthContext();
@@ -37,6 +38,7 @@ export function Profile() {
   const { userPostsList } = usePostContext();
   const { profileTab } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleItemClick = useCallback(
     (id: string) => {
@@ -67,15 +69,16 @@ export function Profile() {
               <Title>{user?.name}</Title>
               <Group>
                 <Group>
-                  <Text>Memes:</Text>
+                  <Text> {t('profile.memes')}:</Text>
                   <Text>25</Text>
                 </Group>
                 <Group>
-                  <Text>Posts:</Text>
+                  <Text> {t('profile.posts')}:</Text>
                   <Text>{userPostsList?.length}</Text>
                 </Group>
                 <Group>
-                  <Text>Following:</Text> <Text>{user?.followers.length}</Text>
+                  <Text> {t('profile.followers')}:</Text>
+                  <Text>{user?.followers.length}</Text>
                 </Group>
               </Group>
             </Flex>
@@ -88,7 +91,7 @@ export function Profile() {
               icon={<Photo size="0.8rem" />}
               onClick={() => navigate(navigateData.profileMemes)}
             >
-              Memes
+              {t('profile.memes')}
             </Tabs.Tab>
 
             <Tabs.Tab
@@ -96,21 +99,21 @@ export function Profile() {
               icon={<MessageCircle size="0.8rem" />}
               onClick={() => navigate(navigateData.profilePosts)}
             >
-              Posts
+              {t('profile.posts')}
             </Tabs.Tab>
             <Tabs.Tab
               value="following"
               icon={<Friends size="0.8rem" />}
               onClick={() => navigate(navigateData.profileFollowing)}
             >
-              Following
+              {t('profile.following')}
             </Tabs.Tab>
             <Tabs.Tab
               value="settings"
               icon={<Settings size="0.8rem" />}
               onClick={() => navigate(navigateData.profileSettings)}
             >
-              Settings
+              {t('profile.settings')}
             </Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="memes" pt="xs">
@@ -141,9 +144,9 @@ export function Profile() {
             </SimpleGrid>
           </Tabs.Panel>
           <Tabs.Panel value="settings" pt="xs">
-            <TextInput placeholder={user?.name} label="Full name" />
-            <TextInput placeholder="********" label="Password" />
-            <TextInput placeholder={user?.email} label="Email" />
+            <TextInput disabled placeholder={user?.name} label="Full name" />
+            <PasswordInput disabled label="Password" />
+            <TextInput disabled placeholder={user?.email} label="Email" />
             <Button mt={20}>Edit</Button>
           </Tabs.Panel>
         </Tabs>

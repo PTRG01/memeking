@@ -33,6 +33,8 @@ export function VoteBar({
   const commentExists = commentsList ? commentsList?.length > 0 : null;
   const voteActive = user ? post?.upvote_ids?.includes(user?.id) : null;
   const upvoteUsers = post?.expand?.upvote_ids?.map((user: IUser) => user);
+  console.log(post);
+  console.log(upvoteUsers);
 
   const commentUsers = useMemo(
     () =>
@@ -58,7 +60,7 @@ export function VoteBar({
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={15}>
-        {voteExists ? (
+        {voteExists && (
           <Group align="left">
             <Divider />
             <HoverCard>
@@ -77,8 +79,6 @@ export function VoteBar({
               </HoverCard.Dropdown>
             </HoverCard>
           </Group>
-        ) : (
-          <span />
         )}
         {commentExists && (
           <Group align="right">

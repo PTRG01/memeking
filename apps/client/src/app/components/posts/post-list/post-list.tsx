@@ -9,7 +9,6 @@ export interface IPostListProps {
 
   isLoading: boolean;
 }
-// TODO FIX LIST NOT EXTENDING TO FRAME WIDTH
 
 export function PostList({ postList, isLoading }: IPostListProps) {
   return (

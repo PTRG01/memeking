@@ -5,6 +5,7 @@ import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import UserList from '../../user-list/user-list';
 import UserListItemInline from '../../user-list-item-inline/user-list-item-inline';
+import { useTranslation } from 'react-i18next';
 
 export interface IAddToChatListProps {
   id: string;
@@ -21,6 +22,7 @@ export function ChatAddList() {
     handleSearchToAdd,
     isSearchUsed,
   } = useChatWindowContext();
+  const { t } = useTranslation();
   return (
     <Group>
       <UserSearch handleSearch={handleSearchToAdd}>
@@ -43,9 +45,9 @@ export function ChatAddList() {
         />
       </UserSearch>
 
-      {!isSearchUsed ? (
+      {!isSearchUsed && (
         <Group>
-          <Title size={15}>Following:</Title>
+          <Title size={15}> {t('chat.following')}:</Title>
           <UserList
             listItem={(item, values) => (
               <UserListItemInline
@@ -63,7 +65,7 @@ export function ChatAddList() {
             hideExisting
           />
         </Group>
-      ) : null}
+      )}
     </Group>
   );
 }

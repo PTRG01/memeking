@@ -19,6 +19,7 @@ import { useCommentContext } from '../../../contexts/comment-provider/comment-pr
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
 
 export interface IPostProps {
   post: IPost;
@@ -32,6 +33,7 @@ export function Post({ post, groups }: IPostProps) {
   const { deletePost, updatePost, handleUpvote } = usePostContext();
   const { commentListResult, isLoading } = useCommentContext();
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const isAdmin = useMemo(() => post?.author_id === user?.id, [post, user]);
 
@@ -75,14 +77,14 @@ export function Post({ post, groups }: IPostProps) {
               {isAdmin ? (
                 <>
                   <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
-                    Edit post
+                    {t('posts.editPost')}
                   </Menu.Item>
                   <Menu.Item onClick={() => deletePost(post?.id)}>
-                    Delete post
-                  </Menu.Item>{' '}
+                    {t('posts.deletePost')}
+                  </Menu.Item>
                 </>
               ) : (
-                <Menu.Item>Editing not allowed</Menu.Item>
+                <Menu.Item> {t('posts.editingNot')}</Menu.Item>
               )}
             </Menu.Dropdown>
           </Menu>

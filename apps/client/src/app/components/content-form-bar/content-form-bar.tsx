@@ -7,6 +7,7 @@ import {
   Stack,
   UnstyledButton,
 } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 export interface IContentFormBarProps {
@@ -14,6 +15,8 @@ export interface IContentFormBarProps {
 }
 
 export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
+  const { t, i18n } = useTranslation();
+
   return (
     <Stack align="stretch">
       <Paper radius={15} p={20}>
@@ -29,7 +32,7 @@ export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
             size="md"
             onClick={() => onFormClick()}
           >
-            Write something...
+            {t('contentFormBar.writeSomething')}
           </Button>
         </Group>
         <Divider mb={15} />
