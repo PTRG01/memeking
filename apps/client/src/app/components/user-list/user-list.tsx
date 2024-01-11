@@ -21,12 +21,12 @@ function UserList({
     [currentList]
   );
   const filteredList = useMemo(
-    () => userList?.filter((user) => !currentListIds?.includes(user.id)),
+    () => userList?.filter((user) => !currentListIds?.includes(user?.id)),
     [currentListIds, userList]
   );
-
+  if (!userList) return null;
   return (
-    <>
+    <div>
       {hideExisting
         ? filteredList?.map((user: IUser) => (
             <div key={user.id}>{listItem(user, currentListIds)}</div>
@@ -34,7 +34,7 @@ function UserList({
         : userList?.map((user: IUser) => (
             <div key={user.id}>{listItem(user, currentListIds)}</div>
           ))}
-    </>
+    </div>
   );
 }
 

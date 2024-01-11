@@ -33,8 +33,6 @@ export function VoteBar({
   const commentExists = commentsList ? commentsList?.length > 0 : null;
   const voteActive = user ? post?.upvote_ids?.includes(user?.id) : null;
   const upvoteUsers = post?.expand?.upvote_ids?.map((user: IUser) => user);
-  console.log(post);
-  console.log(upvoteUsers);
 
   const commentUsers = useMemo(
     () =>

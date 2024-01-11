@@ -10,7 +10,7 @@ export interface IUserSearch {
 }
 
 export function UserSearch({ handleSearch, children }: IUserSearch) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -36,7 +36,7 @@ export function UserSearch({ handleSearch, children }: IUserSearch) {
           </Flex>
         </form>
       </Group>
-      <List mt="lg" size="sm" w="100%">
+      <List size="sm" w="100%">
         {children}
       </List>
     </Group>

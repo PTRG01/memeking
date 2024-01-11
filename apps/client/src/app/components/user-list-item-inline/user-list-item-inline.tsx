@@ -1,9 +1,17 @@
-import { Avatar, Loader, Text, UnstyledButton, Group } from '@mantine/core';
-import { CircleMinus, CirclePlus } from 'tabler-icons-react';
+import {
+  Avatar,
+  Button,
+  Title,
+  Menu,
+  useMantineTheme,
+  rem,
+} from '@mantine/core';
 import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-window-provider.interface';
 import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-provider.interface';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { useCallback } from 'react';
+import { CirclePlus, Dots, Loader, X } from 'tabler-icons-react';
+import { useTranslation } from 'react-i18next';
 
 export interface IUserListItemInlineProps {
   user: IUser;
@@ -23,6 +31,8 @@ function UserListItemInline({
   isLoading,
   onItemClick,
 }: IUserListItemInlineProps) {
+  const theme = useMantineTheme();
+  const { t } = useTranslation();
   const handleValues = useCallback(() => {
     if (values?.includes(user.id)) {
       onRemoveUser(user.id);
@@ -31,26 +41,52 @@ function UserListItemInline({
     }
   }, [onAddUser, onRemoveUser, user, values]);
   return (
-    <Group spacing="md" mb={10}>
-      <UnstyledButton
-        ml={5}
+    <Button.Group mb={5}>
+      <Button
+        styles={(theme) => ({
+          root: {
+            display: 'flex',
+          },
+        })}
+        fullWidth
+        leftIcon={<Avatar radius={100} size="md" src={user.avatar} />}
+        size="md"
+        variant="subtle"
         onClick={() => (onItemClick ? onItemClick(user.id) : null)}
       >
-        <Group>
-          <Avatar size="lg" src={user.avatar} />
-          <Text>{user.name}</Text>
-        </Group>
-      </UnstyledButton>
-      <UnstyledButton ml={90} onClick={handleValues}>
-        {isLoading ? (
-          <Loader size={'sm'} />
-        ) : values?.includes(user.id) ? (
-          <CircleMinus stroke="red" />
-        ) : (
+        <Title size={14} weight={500}>
+          {user.name}
+        </Title>
+      </Button>
+      {isLoading ? (
+        <Loader size={'sm'} />
+      ) : values?.includes(user.id) ? (
+        <Menu variant="subtle">
+          <Menu.Target>
+            <Button size="md" variant="subtle">
+              <Dots />
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item
+              icon={
+                <X
+                  style={{ width: rem(16), height: rem(16) }}
+                  color={theme.colors.blue[5]}
+                />
+              }
+              onClick={() => onRemoveUser(user?.id)}
+            >
+              {t('profile.unfollow')}
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      ) : (
+        <Button variant="subtle" size="md" onClick={handleValues}>
           <CirclePlus stroke="green" />
-        )}
-      </UnstyledButton>
-    </Group>
+        </Button>
+      )}
+    </Button.Group>
   );
 }
 

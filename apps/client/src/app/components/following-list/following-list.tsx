@@ -1,4 +1,12 @@
-import { Badge, Group, List, NavLink } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Collapse,
+  Group,
+  ScrollArea,
+  Stack,
+  Title,
+} from '@mantine/core';
 import { useCallback, useState } from 'react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
@@ -6,11 +14,10 @@ import LoaderComponent from '../loader/loader';
 import { useTranslation } from 'react-i18next';
 import UserList from '../user-list/user-list';
 import UserListItemInline from '../user-list-item-inline/user-list-item-inline';
-
-/* eslint-disable-next-line */
+import { Search } from 'tabler-icons-react';
+import FollowersSearch from '../followers-search/followers-search';
 
 export function FollowingList() {
-  const [active, setActive] = useState(false);
   const { user } = useAuthContext();
   const {
     isLoading,
@@ -19,10 +26,11 @@ export function FollowingList() {
     handleRemoveFollowing,
     userChatsList,
     createChatWithUser,
+    followersSearchList,
     handleOpenChatToggle,
   } = useChatContext();
   const { t } = useTranslation();
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleItemClick = useCallback(
     (id: string) => {
       //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
@@ -41,43 +49,52 @@ export function FollowingList() {
     },
     [createChatWithUser, handleOpenChatToggle, user, userChatsList]
   );
+
   return (
-    <NavLink
-      label={t('following.following')}
-      childrenOffset={0}
-      active={active}
-      variant="filled"
-      icon={
-        <Badge size="xs" variant="filled" color="blue" w={16} h={16} p={0}>
-          {user?.followers.length}
-        </Badge>
-      }
-      onClick={() => setActive(!active)}
-    >
-      <Group>
-        <LoaderComponent isLoading={isLoading}>
-          <Group spacing={1}>
-            <UserList
-              listItem={(item, values) => (
-                <UserListItemInline
-                  user={item}
-                  values={values}
-                  onAddUser={handleAddFollowing}
-                  onRemoveUser={handleRemoveFollowing}
-                  onItemClick={handleItemClick}
-                  itemActive
-                  isLoading={isLoading}
-                />
-              )}
-              userList={followingList}
-              currentList={followingList}
-              isLoading={isLoading}
-              hideExisting={false}
-            />
-          </Group>
-        </LoaderComponent>
+    <>
+      <Group position="apart">
+        <Group>
+          <Badge size="xs" variant="filled" color="blue" w={16} h={16} p={1}>
+            {user?.followers.length}
+          </Badge>
+          <Title order={4}>{t('following.following')}</Title>
+        </Group>
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          variant="sublte"
+          radius={100}
+          leftIcon={<Search size={20} />}
+        />
       </Group>
-    </NavLink>
+      <LoaderComponent isLoading={isLoading}>
+        <Stack align="stretch">
+          <Collapse in={isOpen}>
+            <FollowersSearch />
+          </Collapse>
+          {followersSearchList.length > 0 ? null : (
+            <ScrollArea type="hover">
+              <UserList
+                listItem={(item, values) => (
+                  <UserListItemInline
+                    user={item}
+                    values={values}
+                    onAddUser={handleAddFollowing}
+                    onRemoveUser={handleRemoveFollowing}
+                    onItemClick={handleItemClick}
+                    itemActive
+                    isLoading={isLoading}
+                  />
+                )}
+                userList={followingList}
+                currentList={followingList}
+                isLoading={isLoading}
+                hideExisting={false}
+              />
+            </ScrollArea>
+          )}
+        </Stack>
+      </LoaderComponent>
+    </>
   );
 }
 
