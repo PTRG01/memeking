@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { IChat } from '../../contexts/chat-provider/chat-provider.interface';
+import { Text, Title } from '@mantine/core';
 
 interface IUserListProps {
   listItem: (item: IUser, values?: string[]) => JSX.Element;
@@ -24,9 +25,9 @@ function UserList({
     () => userList?.filter((user) => !currentListIds?.includes(user?.id)),
     [currentListIds, userList]
   );
-  if (!userList) return null;
+
   return (
-    <div>
+    <>
       {hideExisting
         ? filteredList?.map((user: IUser) => (
             <div key={user.id}>{listItem(user, currentListIds)}</div>
@@ -34,7 +35,7 @@ function UserList({
         : userList?.map((user: IUser) => (
             <div key={user.id}>{listItem(user, currentListIds)}</div>
           ))}
-    </div>
+    </>
   );
 }
 
