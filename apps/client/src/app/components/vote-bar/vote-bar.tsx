@@ -14,6 +14,7 @@ import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { IComment } from '../../contexts/comment-provider/comment-provider.interface';
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface IVoteBarProps {
   onUpvote: (post: IPost) => void;
@@ -33,7 +34,7 @@ export function VoteBar({
   const commentExists = commentsList ? commentsList?.length > 0 : null;
   const voteActive = user ? post?.upvote_ids?.includes(user?.id) : null;
   const upvoteUsers = post?.expand?.upvote_ids?.map((user: IUser) => user);
-
+  const { t } = useTranslation();
   const commentUsers = useMemo(
     () =>
       commentsList?.map(
@@ -85,8 +86,8 @@ export function VoteBar({
                 <UnstyledButton onClick={() => onCommentsOpen()}>
                   {commentsList
                     ? commentsList?.length > 1
-                      ? `${commentsList?.length} comments`
-                      : `${commentsList?.length} comment`
+                      ? `${commentsList?.length} ${t('posts.comments')}`
+                      : `${commentsList?.length} ${t('posts.comment')}`
                     : ''}
                 </UnstyledButton>
               </HoverCard.Target>

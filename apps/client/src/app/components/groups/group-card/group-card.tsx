@@ -35,13 +35,13 @@ export function GroupCard({ group }: IGroupCardProps) {
         <Avatar size="xl" radius={15} />
         <Stack>
           <Title size="sm">{group.title}</Title>
-          <Text>Last visited:</Text>
+          <Text>{t('groups.lastVisited')}</Text>
         </Stack>
       </Group>
 
       <Group noWrap>
         <Button fullWidth onClick={() => navigate(`/groups/${group.id}`)}>
-          View group
+          {t('groups.viewGroup')}
         </Button>
         <Menu>
           <Menu.Target>

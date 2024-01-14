@@ -62,11 +62,13 @@ export default {
       members: 'members',
       join: 'Join',
       joined: 'Joined',
+      viewGroup: 'View group',
       editGroup: 'Edit Group',
       editingNot: 'Editing not allowed',
       yourFeed: 'Your feed',
       yourGroups: 'Your groups',
       followFirst: 'Follow someone first',
+      lastVisited: 'Last visited:',
     },
     posts: {
       editPost: 'Edit post',
@@ -75,6 +77,8 @@ export default {
       confirm: 'Confirm',
       create: 'Create',
       cancel: 'Cancel',
+      comment: 'comment',
+      comments: 'comments',
     },
     profileMenu: {
       yourMemes: 'Your memes',
@@ -100,6 +104,14 @@ export default {
       updatePassword: 'Update your password:',
       nameReq: 'Name must be at lest 2 characters long',
       aboutReq: 'Description must be between 5 and 50 characters.',
+    },
+    languages: {
+      currentLang: 'English',
+      en: 'English',
+      de: 'German',
+      fr: 'French',
+      it: 'Italian',
+      pl: 'Polish',
     },
   },
 };

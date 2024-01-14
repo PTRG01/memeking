@@ -11,7 +11,6 @@ import {
   Text,
   Title,
   UnstyledButton,
-  useMantineTheme,
 } from '@mantine/core';
 import { Dots, FileUpload } from 'tabler-icons-react';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
@@ -29,7 +28,7 @@ export interface ProfileHeaderProps {
 export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { t } = useTranslation();
-  const theme = useMantineTheme();
+
   return (
     <>
       <Card>

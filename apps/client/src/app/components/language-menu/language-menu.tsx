@@ -10,39 +10,39 @@ interface IData {
   image: JSX.Element;
   lng: string;
 }
-const data = [
-  {
-    label: 'English',
-    image: <ReactCountryFlag countryCode="US" svg />,
-    lng: 'en',
-  },
-  {
-    label: 'German',
-    image: <ReactCountryFlag countryCode="DE" svg />,
-    lng: 'de',
-  },
-  {
-    label: 'Italian',
-    image: <ReactCountryFlag countryCode="IT" svg />,
-    lng: 'it',
-  },
-  {
-    label: 'French',
-    image: <ReactCountryFlag countryCode="FR" svg />,
-    lng: 'fr',
-  },
-  {
-    label: 'Polish',
-    image: <ReactCountryFlag countryCode="PL" svg />,
-    lng: 'pl',
-  },
-];
 
 export function LanguageMenu() {
   const [opened, setOpened] = useState(false);
-  const [selected, setSelected] = useState(data[0]);
-  const { i18n } = useTranslation();
 
+  const { t, i18n } = useTranslation();
+  const data = [
+    {
+      label: t('languages.en'),
+      image: <ReactCountryFlag countryCode="US" svg />,
+      lng: 'en',
+    },
+    {
+      label: t('languages.de'),
+      image: <ReactCountryFlag countryCode="DE" svg />,
+      lng: 'de',
+    },
+    {
+      label: t('languages.it'),
+      image: <ReactCountryFlag countryCode="IT" svg />,
+      lng: 'it',
+    },
+    {
+      label: t('languages.fr'),
+      image: <ReactCountryFlag countryCode="FR" svg />,
+      lng: 'fr',
+    },
+    {
+      label: t('languages.pl'),
+      image: <ReactCountryFlag countryCode="PL" svg />,
+      lng: 'pl',
+    },
+  ];
+  const [selected, setSelected] = useState(data[0]);
   const handleItemClick = (item: IData) => {
     setSelected(item);
     i18n.changeLanguage(item.lng);
@@ -74,7 +74,7 @@ export function LanguageMenu() {
         >
           <Group spacing="xs" align="center" mr={15}>
             {selected.image}
-            <span className={styles.label}>{selected.label}</span>
+            <span className={styles.label}>{t('languages.currentLang')}</span>
           </Group>
           <ChevronDown size={15} className={styles.icon} />
         </UnstyledButton>

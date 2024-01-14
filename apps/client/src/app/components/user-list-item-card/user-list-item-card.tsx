@@ -39,7 +39,7 @@ function UserListItemCard({
   const { t } = useTranslation();
 
   return (
-    <Card withBorder padding="xl" radius="md">
+    <Card withBorder padding="lg" radius="md">
       <Card.Section
         h={140}
         style={{
