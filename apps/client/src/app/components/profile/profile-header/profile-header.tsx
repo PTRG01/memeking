@@ -11,6 +11,7 @@ import {
   Text,
   Title,
   UnstyledButton,
+  useMantineTheme,
 } from '@mantine/core';
 import { Dots, FileUpload } from 'tabler-icons-react';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
@@ -18,8 +19,8 @@ import { useState } from 'react';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import { useTranslation } from 'react-i18next';
+import styles from './profile-header.module.css';
 
-/* eslint-disable-next-line */
 export interface ProfileHeaderProps {
   user: IUser;
   userPostsList: IPost[] | null;
@@ -28,7 +29,7 @@ export interface ProfileHeaderProps {
 export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { t } = useTranslation();
-
+  const theme = useMantineTheme();
   return (
     <>
       <Card>
@@ -39,6 +40,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
               'url(https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80)',
           }}
         >
+          <div className={styles.overlay} />
           <Flex h="100%" justify="flex-end" align="flex-end">
             <Menu>
               <Menu.Target>
@@ -51,7 +53,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
                   icon={<FileUpload />}
                   onClick={() => setIsOpened(!isOpened)}
                 >
-                  Choose image
+                  {t('profile.selectImage')}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
@@ -59,7 +61,13 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
         </Card.Section>
       </Card>
 
-      <Group position="left" mb="xl" mt={-15} ml="sm">
+      <Group
+        position="left"
+        mb="xl"
+        mt={-60}
+        ml="sm"
+        className={styles.userInfo}
+      >
         <Menu>
           <Menu.Target>
             <UnstyledButton>
@@ -71,7 +79,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
               icon={<FileUpload />}
               onClick={() => setIsOpened(!isOpened)}
             >
-              Choose image
+              {t('profile.selectImage')}
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -81,7 +89,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
           <Group>
             <Group>
               <Text> {t('profile.memes')}:</Text>
-              <Text>25</Text>
+              <Text>0</Text>
             </Group>
             <Group>
               <Text> {t('profile.posts')}:</Text>
@@ -92,6 +100,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
               <Text>{user?.followers.length}</Text>
             </Group>
           </Group>
+          <Text>{user?.aboutText}</Text>
         </Flex>
       </Group>
       <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>

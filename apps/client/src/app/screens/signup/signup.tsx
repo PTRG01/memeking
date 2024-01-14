@@ -34,26 +34,26 @@ export function Signup() {
         <form onSubmit={form.onSubmit((values) => signUp(values))}>
           <TextInput
             withAsterisk
-            label={t('form.username')}
-            placeholder={t('form.username')}
+            label={t('signup.username')}
+            placeholder={t('signup.username')}
             {...form.getInputProps('username')}
           />
           <TextInput
             withAsterisk
-            label={t('form.name')}
-            placeholder={t('form.placeholderName')}
+            label={t('signup.name')}
+            placeholder={t('signup.placeholderName')}
             {...form.getInputProps('name')}
           />
           <TextInput
             withAsterisk
-            label={t('form.email')}
-            placeholder={t('form.placeholderEmail')}
+            label={t('signup.email')}
+            placeholder={t('signup.placeholderEmail')}
             {...form.getInputProps('email')}
           />
           <PasswordStrenghtInput {...form.getInputProps('password')} />
           <PasswordInput
             withAsterisk
-            label={t('form.confirm')}
+            label={t('signup.confirm')}
             {...form.getInputProps('passwordConfirm')}
           />
 

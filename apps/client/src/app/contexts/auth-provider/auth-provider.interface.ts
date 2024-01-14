@@ -21,6 +21,7 @@ export interface IUser extends Record {
   name: string;
   avatar: string;
   followers: string[];
+  aboutText: string;
 }
 export type TUseUpdateUser = (params: IUser) => Promise<void>;
 export type TUserModel = Record | Admin | null;

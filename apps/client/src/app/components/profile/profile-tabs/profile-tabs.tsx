@@ -1,11 +1,4 @@
-import {
-  Button,
-  PasswordInput,
-  ScrollArea,
-  SimpleGrid,
-  Tabs,
-  TextInput,
-} from '@mantine/core';
+import { ScrollArea, SimpleGrid, Tabs, Text } from '@mantine/core';
 import PostList from '../../posts/post-list/post-list';
 import UserList from '../../user-list/user-list';
 import UserListItemCard from '../../user-list-item-card/user-list-item-card';
@@ -17,6 +10,7 @@ import { useCallback } from 'react';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
+import ProfileSettings from '../profile-settings/profile-settings';
 
 export interface ProfileTabsProps {
   user: IUser;
@@ -90,7 +84,7 @@ export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Panel value="memes" pt="xs">
-        Memes tab content
+        <Text>""</Text>
       </Tabs.Panel>
       <Tabs.Panel value="posts" pt="xs">
         <PostList postList={userPostsList} isLoading={isLoading} />
@@ -119,10 +113,7 @@ export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
         </ScrollArea>
       </Tabs.Panel>
       <Tabs.Panel value="settings" pt="xs">
-        <TextInput disabled placeholder={user?.name} label="Full name" />
-        <PasswordInput disabled label="Password" />
-        <TextInput disabled placeholder={user?.email} label="Email" />
-        <Button mt={20}>Edit</Button>
+        <ProfileSettings user={user} />
       </Tabs.Panel>
     </Tabs>
   );
