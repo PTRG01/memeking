@@ -4,11 +4,10 @@ import en from '../../config/i18n/messages/en';
 import pl from '../../config/i18n/messages/pl';
 import de from '../../config/i18n/messages/de';
 import fr from '../../config/i18n/messages/fr';
-
-/* eslint-disable-next-line */
+import it from '../../config/i18n/messages/it';
 
 i18n.use(initReactI18next).init({
-  resources: { en, pl, de, fr },
+  resources: { en, pl, de, fr, it },
   lng: 'en',
   fallbackLng: 'en',
   debug: true,
