@@ -30,7 +30,9 @@ export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
     handleOpenChatToggle,
     isLoading,
   } = useChatContext();
-
+  // const currentUsersPostsList = userPostsList?.filter(
+  //   (post) => post?.author_Id === user?.id
+  // );
   const handleItemClick = useCallback(
     (id: string) => {
       //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user

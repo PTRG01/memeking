@@ -1,3 +1,4 @@
+import { FileWithPath } from '@mantine/dropzone';
 import { Record } from 'pocketbase';
 
 export type TCreateGroupFunction = (title: string, users: string[]) => void;
@@ -12,7 +13,7 @@ export type TJoinGroupFunction = (users: string[], groupId: string) => void;
 export type TUpdateGroupImageFunction = (image: string, grouId: string) => void;
 export interface IGroup extends Record {
   id: string;
-  avatar: string;
+  avatar: FileWithPath;
   title: string;
   aboutText: string;
   users: string[];

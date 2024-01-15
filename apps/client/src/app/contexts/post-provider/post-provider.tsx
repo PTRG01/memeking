@@ -15,29 +15,48 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     result: userPostsList,
     loading: isLoading,
   } = usePostList();
-  const { createOne, deleteOne, updateOne } = usePost();
+  const {
+    getFullList: getFullPostsList,
+    result: fullPostsList,
+    loading: isFollowingLoading,
+  } = usePostList();
 
-  // CHAT
+  const { createOne, deleteOne, updateOne } = usePost();
 
   const loadPosts = useCallback(() => {
     if (user) {
+      console.log(user?.id);
       getFullList({
         sort: 'created',
         expand: 'upvote_ids, author_id',
-        filter: `author_id~"${(user?.followers, user?.id)}"`,
+        filter: `author_id~"${user?.id}"`,
       });
     }
   }, [user, getFullList]);
+
+  const loadFollowingPosts = useCallback(() => {
+    if (user) {
+      getFullPostsList({
+        sort: 'created',
+        expand: 'upvote_ids, author_id',
+      });
+    }
+  }, [user, getFullPostsList]);
 
   useEffect(() => {
     loadPosts();
   }, [loadPosts]);
 
   useEffect(() => {
+    loadFollowingPosts();
+  }, [loadFollowingPosts]);
+
+  useEffect(() => {
     pb.collection('posts').subscribe('*', async (e) => {
       loadPosts();
+      loadFollowingPosts();
     });
-  }, [loadPosts, userPostsList]);
+  }, [loadPosts, userPostsList, loadFollowingPosts]);
 
   const createPost = (title: string, contentText: string) => {
     if (contentText)
@@ -90,11 +109,14 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     <PostContext.Provider
       value={{
         isLoading,
+        isFollowingLoading,
         userPostsList,
+        fullPostsList,
         handleUpvote,
         createPost,
         updatePost,
         deletePost,
+        loadFollowingPosts,
       }}
     >
       {children}

@@ -14,8 +14,8 @@ export interface IFeedProps {
 }
 
 export function Feed({ groupFeed = false }: IFeedProps) {
-  const { postsListResult, groupListResult, isLoading } = useFeedContext();
-  const { createPost } = usePostContext();
+  const { feedPostsList, groupListResult, isLoading } = useFeedContext();
+  const { createPost, fullPostsList } = usePostContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggleForm = () => {
@@ -25,16 +25,31 @@ export function Feed({ groupFeed = false }: IFeedProps) {
   const handleCreatePost = (values: IPost) => {
     createPost('', values.contentText);
   };
+
+  const groupIds = groupListResult?.map((group) => group.id);
+  console.log(groupIds, fullPostsList);
+
+  const joinedGroupsPostsList = fullPostsList?.filter((post) =>
+    groupIds?.includes(post?.group_id)
+  );
+  console.log(joinedGroupsPostsList);
   return (
     <LoaderComponent isLoading={isLoading}>
       <Container>
         <ScrollArea>
           {!groupFeed && <ContentFormBar onFormClick={handleToggleForm} />}
-          {postsListResult?.map((post) => (
-            <CommentProvider key={post?.id} parentId={post?.id}>
-              <Post post={post} groups={groupListResult} />
-            </CommentProvider>
-          ))}
+          {groupFeed
+            ? joinedGroupsPostsList?.map((post) => (
+                <CommentProvider key={post?.id} parentId={post?.id}>
+                  <Post post={post} groups={groupListResult} />
+                </CommentProvider>
+              ))
+            : feedPostsList?.map((post) => (
+                <CommentProvider key={post?.id} parentId={post?.id}>
+                  <Post post={post} groups={groupListResult} />
+                </CommentProvider>
+              ))}
+
           <PostForm
             isOpen={isOpen}
             onCloseForm={handleToggleForm}

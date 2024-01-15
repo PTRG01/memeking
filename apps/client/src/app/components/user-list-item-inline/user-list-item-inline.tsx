@@ -49,6 +49,7 @@ function UserListItemInline({
           },
         })}
         fullWidth
+        color="gray"
         leftIcon={<Avatar radius={100} size="md" src={user.avatar} />}
         size="md"
         variant="subtle"
@@ -82,7 +83,7 @@ function UserListItemInline({
           </Menu.Dropdown>
         </Menu>
       ) : (
-        <Button variant="subtle" size="md" onClick={handleValues}>
+        <Button variant="subtle" color="gray" size="md" onClick={handleValues}>
           <CirclePlus stroke="green" />
         </Button>
       )}

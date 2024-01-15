@@ -109,9 +109,12 @@ export function GroupWindowProvider({
   //  TODO ADD IMAGE UPLOAD
 
   const updateGroupImage = (groupId: string, image: FileWithPath[]) => {
-    updateOne({
-      avatar: image,
-    });
+    updateOne(
+      {
+        avatar: image,
+      },
+      groupId
+    );
   };
 
   return (

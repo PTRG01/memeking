@@ -29,6 +29,10 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { t } = useTranslation();
 
+  // const currentUsersPostsList = userPostsList?.filter(
+  //   (post) => post?.author_Id === user?.id
+  // );
+
   return (
     <>
       <Card>

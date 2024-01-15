@@ -17,7 +17,7 @@ export function ChatItem({ avatar, id, expand }: IChatItemProps) {
       expand
         ?.map(
           (user: IUser) =>
-            user.username.charAt(0).toUpperCase() + user.username.slice(1)
+            user.name.charAt(0).toUpperCase() + user.name.slice(1)
         )
         .join(', '),
     [expand]
@@ -25,8 +25,10 @@ export function ChatItem({ avatar, id, expand }: IChatItemProps) {
 
   return (
     <Menu.Item onClick={() => handleOpenChatToggle(id)}>
-      <Flex mb={5} align="center">
-        <Avatar size="lg">{avatar}</Avatar>
+      <Flex align="center">
+        <Avatar size="md" radius={100}>
+          {avatar}
+        </Avatar>
         <Flex ml={15} direction="column">
           <Text fw={500}>{chatUsers}</Text>
         </Flex>

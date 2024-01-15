@@ -11,11 +11,12 @@ import {
   useMantineTheme,
   rem,
 } from '@mantine/core';
-import { ChevronDown, X } from 'tabler-icons-react';
+import { ChevronDown, LineDashed, X } from 'tabler-icons-react';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-provider.interface';
 import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-window-provider.interface';
 import { useTranslation } from 'react-i18next';
+import { usePostContext } from '../../contexts/post-provider/post-provider';
 
 export interface IUserListItemCardProps {
   user: IUser;
@@ -37,6 +38,11 @@ function UserListItemCard({
 }: IUserListItemCardProps) {
   const theme = useMantineTheme();
   const { t } = useTranslation();
+  const { fullPostsList } = usePostContext();
+
+  const usersPosts = fullPostsList?.filter(
+    (post) => post.author_id === user?.id
+  );
 
   return (
     <Card withBorder padding="lg" radius="md">
@@ -52,15 +58,15 @@ function UserListItemCard({
         {user?.name}
       </Text>
       <Text ta="center" fz="sm" c="dimmed">
-        Fullstack engineer
+        {user?.aboutText ? user?.aboutText : <LineDashed size={10} />}
       </Text>
       <Flex mt="md" align="center" wrap="nowrap" justify="center" gap={15}>
         <div>
           <Text ta="center" fz="md" fw={500}>
-            {t('profile.followers')}:
+            {t('profile.following')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
-            25
+            {user?.followers.length}
           </Text>
         </div>
         <div>
@@ -68,7 +74,7 @@ function UserListItemCard({
             {t('profile.memes')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
-            10
+            0
           </Text>
         </div>
         <div>
@@ -76,7 +82,7 @@ function UserListItemCard({
             {t('profile.posts')}:
           </Text>
           <Text ta="center" fz="sm" c="dimmed" lh={2}>
-            10
+            {usersPosts?.length}
           </Text>
         </div>
       </Flex>

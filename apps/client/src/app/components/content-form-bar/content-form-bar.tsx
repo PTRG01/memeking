@@ -15,7 +15,7 @@ export interface IContentFormBarProps {
 }
 
 export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Stack align="stretch">

@@ -27,6 +27,7 @@ import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
+import { FileWithPath } from '@mantine/dropzone';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -67,10 +68,10 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     [isOpened, updateGroupDescription]
   );
 
-  // const handleUpdateGroupImage = (groupId: string, image: FileWithPath[] | null) => {
-  //   console.log(image);
-  //   if (image) updateGroupImage(groupId, image);
-  // };
+  const handleUpdateGroupImage = (image: FileWithPath) => {
+    console.log(image);
+    if (image) updateGroupImage(groupId, image);
+  };
 
   const currentUserJoined = useMemo(
     () => groupResult?.users.includes(user.id),
@@ -158,7 +159,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
               <GroupEditForm
                 group={groupResult}
                 onSubmitAbout={handleUpdateDescription}
-                onSubmitImage={() => ''}
+                onSubmitImage={handleUpdateGroupImage}
               />
             </Modal>
           </Stack>
