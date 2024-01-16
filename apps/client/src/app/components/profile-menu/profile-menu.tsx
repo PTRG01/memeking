@@ -46,7 +46,19 @@ export function ProfileMenu() {
           })}
         >
           <Group spacing={7}>
-            <Avatar src={''} alt={''} radius="xl" size="md" />
+            <Avatar
+              src={
+                user?.avatar &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+                  user?.avatar
+                }`
+              }
+              alt={'User profile icon'}
+              radius={100}
+              size="md"
+            />
             <Text fw={500} size="sm" lh={1} mr={3}>
               {user?.name}
             </Text>
@@ -56,7 +68,19 @@ export function ProfileMenu() {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
-          icon={<Avatar radius={100} src={user?.avatar} />}
+          icon={
+            <Avatar
+              radius={100}
+              src={
+                user?.avatar &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+                  user?.avatar
+                }`
+              }
+            />
+          }
           onClick={() => navigate('/profile')}
         >
           <Title order={4}>{user?.name}</Title>

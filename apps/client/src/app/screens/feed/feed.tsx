@@ -27,12 +27,11 @@ export function Feed({ groupFeed = false }: IFeedProps) {
   };
 
   const groupIds = groupListResult?.map((group) => group.id);
-  console.log(groupIds, fullPostsList);
 
   const joinedGroupsPostsList = fullPostsList?.filter((post) =>
     groupIds?.includes(post?.group_id)
   );
-  console.log(joinedGroupsPostsList);
+
   return (
     <LoaderComponent isLoading={isLoading}>
       <Container>

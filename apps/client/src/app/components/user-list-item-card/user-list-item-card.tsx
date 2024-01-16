@@ -49,11 +49,28 @@ function UserListItemCard({
       <Card.Section
         h={140}
         style={{
+          background: 'no-repeat',
+          backgroundSize: 'cover',
           backgroundImage:
-            'url(https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80)',
+            user?.avatar &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            `url(${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+              user?.backgroundImage
+            })`,
         }}
       />
-      <Avatar src={user?.avatar} size={80} radius={80} mx="auto" mt={-30} />
+      <Avatar
+        src={
+          user?.avatar && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${user?.avatar}`
+        }
+        size={80}
+        radius={80}
+        mx="auto"
+        mt={-30}
+      />
       <Text ta="center" fz="lg" fw={500} mt="sm">
         {user?.name}
       </Text>

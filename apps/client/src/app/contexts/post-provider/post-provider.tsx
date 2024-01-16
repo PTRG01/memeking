@@ -25,7 +25,6 @@ export function PostProvider({ children }: React.PropsWithChildren) {
 
   const loadPosts = useCallback(() => {
     if (user) {
-      console.log(user?.id);
       getFullList({
         sort: 'created',
         expand: 'upvote_ids, author_id',

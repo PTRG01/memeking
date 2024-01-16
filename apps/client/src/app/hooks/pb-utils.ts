@@ -75,9 +75,11 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (query = {}, overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const result = (await collection.getOne(id || overrideId, query)) as T;
+
+        const result = (await collection.getOne(
+          (overrideId ? overrideId : id) as string,
+          query
+        )) as T;
         setData(result);
         setLoading(false);
       },
@@ -85,8 +87,13 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
     );
 
     const createOne = useCallback(async (data: Partial<T>) => {
+      const formData = new FormData();
+      for (const key in data) {
+        formData.append(key, data[key] as string | Blob);
+      }
+
       setLoading(true);
-      const result = (await collection.create(data)) as T;
+      const result = (await collection.create(formData)) as T;
       setData(result);
       setLoading(false);
     }, []);
@@ -96,12 +103,14 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
         if (!id && !overrideId) {
           throw new Error('No id provided');
         }
+        const formData = new FormData();
+        for (const key in data) {
+          formData.append(key, data[key] as string | Blob);
+        }
         setLoading(true);
         const result = (await collection.update(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          overrideId ? overrideId : id,
-          data
+          (overrideId ? overrideId : id) as string,
+          formData
         )) as T;
         setData(result);
         setLoading(false);
@@ -113,11 +122,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        await collection.delete(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          overrideId ? overrideId : id
-        );
+        await collection.delete((overrideId ? overrideId : id) as string);
         setData(null);
         setLoading(false);
       },

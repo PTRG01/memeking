@@ -19,13 +19,14 @@ export function GroupList({
   return (
     <Stack align="stretch">
       <LoaderComponent isLoading={isLoading}>
-        <ScrollArea type="hover">
+        <ScrollArea type="hover" mah={500}>
           {groupList?.map((group) => (
             <GroupProvider key={group.id} parentId={group.id}>
               <GroupListItem
                 id={group.id}
                 title={group.title}
                 onItemClick={onItemClick}
+                avatar={group?.avatar}
               />
             </GroupProvider>
           ))}

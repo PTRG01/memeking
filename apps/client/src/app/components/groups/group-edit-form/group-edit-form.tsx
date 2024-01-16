@@ -2,16 +2,15 @@ import { Paper, Textarea, Stack, Button } from '@mantine/core';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
 import { useForm } from '@mantine/form';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FileWithPath } from '@mantine/dropzone';
 import { useTranslation } from 'react-i18next';
-import { pb } from '../../../utils/pocketbase';
 
 /* eslint-disable-next-line */
 export interface IGroupEditFormProps {
   group: IGroup;
   onSubmitAbout: (aboutText: string | null) => void;
-  onSubmitImage: (image: FileWithPath) => void;
+  onSubmitImage: (image: FileWithPath[]) => void;
 }
 
 export function GroupEditForm({
@@ -19,9 +18,8 @@ export function GroupEditForm({
   onSubmitAbout,
   onSubmitImage,
 }: IGroupEditFormProps) {
-  const [image, setImage] = useState<FileWithPath[] | null>(null);
+  const [image, setImage] = useState<FileWithPath[]>();
   const { t } = useTranslation();
-  const formData = new FormData();
 
   const form = useForm({
     initialValues: {
@@ -30,24 +28,11 @@ export function GroupEditForm({
     },
   });
 
-  const handleImageSubmit = (file: FileWithPath) => {
-    console.log(file);
-    formData.append('group_image', file);
-  };
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
-  const handleImageUpload = () => {
-    pb.collection('groups').create(image?.[0]);
-  };
-  const handleImageUpload2 = () => {
-    onSubmitImage(image);
-  };
   return (
     <Paper>
       <Stack mb={15}>
-        <DropzoneButton onSubmit={setImage} />
-        <Button fullWidth onClick={() => onSubmitImage(formData)}>
+        <DropzoneButton onSubmit={(values) => setImage(values.images)} />
+        <Button fullWidth onClick={() => image && onSubmitImage(image)}>
           {t('groups.submitImage')}
         </Button>
       </Stack>
@@ -75,5 +60,4 @@ export function GroupEditForm({
     </Paper>
   );
 }
-
 export default GroupEditForm;

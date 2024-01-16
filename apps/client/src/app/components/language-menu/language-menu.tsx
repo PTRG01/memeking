@@ -63,12 +63,15 @@ export function LanguageMenu() {
       onOpen={() => setOpened(true)}
       onClose={() => setOpened(false)}
       radius="md"
-      width="target"
       withinPortal
       shadow="sm"
+      position="bottom-end"
+      transitionProps={{ transition: 'pop-top-right' }}
     >
       <Menu.Target>
         <UnstyledButton
+          color={opened ? 'blue' : 'gray'}
+          variant={opened ? 'outline' : 'subtle'}
           className={styles.control}
           data-expanded={opened || undefined}
         >

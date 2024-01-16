@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Text, Group, Button, rem, useMantineTheme } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 
@@ -7,20 +7,16 @@ import { Download, X, CloudUpload } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
 
 export interface IDopzoneButtonProps {
-  onSubmit: Dispatch<SetStateAction<FormData>>;
+  onSubmit: (values: { images: FileWithPath[] }) => void;
 }
 
 export function DropzoneButton({ onSubmit }: IDopzoneButtonProps) {
   const theme = useMantineTheme();
   const openRef = useRef<() => void>(null);
-  const [formData, setFormData] = useState(new FormData());
   const { t } = useTranslation();
 
-  const handleOnDrop = (e: FileWithPath[]) => {
-    const newFormData = new FormData();
-    newFormData.append('documents ', e[0]);
-    setFormData(newFormData);
-    onSubmit(newFormData);
+  const handleOnDrop = (images: FileWithPath[]) => {
+    onSubmit({ images });
   };
 
   return (

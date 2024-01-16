@@ -1,6 +1,6 @@
 import { UserSearch } from '../../user-search/user-search';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
-import { Group, Title } from '@mantine/core';
+import { ScrollArea, Stack, Title } from '@mantine/core';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import UserList from '../../user-list/user-list';
@@ -24,30 +24,9 @@ export function ChatAddList() {
   } = useChatWindowContext();
   const { t } = useTranslation();
   return (
-    <Group>
+    <Stack>
       <UserSearch handleSearch={handleSearchToAdd}>
-        <UserList
-          listItem={(item, values) => (
-            <UserListItemInline
-              user={item}
-              values={values}
-              onAddUser={updateChat}
-              onRemoveUser={() => ''}
-              // TODO Fix unnecessary function
-              itemActive={false}
-              isLoading={isLoading}
-            />
-          )}
-          userList={chatToAddList}
-          currentList={currentChatUsers}
-          isLoading={isLoading}
-          hideExisting
-        />
-      </UserSearch>
-
-      {!isSearchUsed && (
-        <Group>
-          <Title size={15}> {t('chat.following')}:</Title>
+        <ScrollArea variant="hover" mah={300}>
           <UserList
             listItem={(item, values) => (
               <UserListItemInline
@@ -55,18 +34,43 @@ export function ChatAddList() {
                 values={values}
                 onAddUser={updateChat}
                 onRemoveUser={() => ''}
+                // TODO Fix unnecessary function
                 itemActive={false}
                 isLoading={isLoading}
               />
             )}
-            userList={followingList}
+            userList={chatToAddList}
             currentList={currentChatUsers}
             isLoading={isLoading}
             hideExisting
           />
-        </Group>
+        </ScrollArea>
+      </UserSearch>
+
+      {!isSearchUsed && (
+        <Stack align="stretch">
+          <Title size={15}> {t('chat.following')}:</Title>
+          <ScrollArea variant="hover" mah={300}>
+            <UserList
+              listItem={(item, values) => (
+                <UserListItemInline
+                  user={item}
+                  values={values}
+                  onAddUser={updateChat}
+                  onRemoveUser={() => ''}
+                  itemActive={false}
+                  isLoading={isLoading}
+                />
+              )}
+              userList={followingList}
+              currentList={currentChatUsers}
+              isLoading={isLoading}
+              hideExisting
+            />
+          </ScrollArea>
+        </Stack>
       )}
-    </Group>
+    </Stack>
   );
 }
 

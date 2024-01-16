@@ -19,19 +19,36 @@ import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import { useTranslation } from 'react-i18next';
 import styles from './profile-header.module.css';
+import { FileWithPath } from '@mantine/dropzone';
 
 export interface ProfileHeaderProps {
   user: IUser;
   userPostsList: IPost[] | null;
+  onAvatarSubmit: (images: FileWithPath[]) => void;
+  onBackgroundSubmit: (images: FileWithPath[]) => void;
 }
 
-export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
-  const [isOpened, setIsOpened] = useState(false);
+export function ProfileHeader({
+  user,
+  userPostsList,
+  onAvatarSubmit,
+  onBackgroundSubmit,
+}: ProfileHeaderProps) {
+  const [isAvatarOpened, setIsAvatarOpened] = useState(false);
+  const [isBackgroundOpened, setIsBackgroundOpened] = useState(false);
+  const [avatar, setAvatar] = useState<FileWithPath[]>();
+  const [background, setBackground] = useState<FileWithPath[]>();
+
   const { t } = useTranslation();
 
-  // const currentUsersPostsList = userPostsList?.filter(
-  //   (post) => post?.author_Id === user?.id
-  // );
+  const handleAvatarSubmit = () => {
+    if (avatar) onAvatarSubmit(avatar);
+    setIsAvatarOpened(false);
+  };
+  const handleBackgroundSubmit = () => {
+    if (background) onBackgroundSubmit(background);
+    setIsBackgroundOpened(false);
+  };
 
   return (
     <>
@@ -39,8 +56,14 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
         <Card.Section
           mih={200}
           style={{
+            background: 'no-repeat',
+            backgroundSize: 'cover',
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80)',
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              `url(${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+                user?.backgroundImage
+              })`,
           }}
         >
           <div className={styles.overlay} />
@@ -54,7 +77,7 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<FileUpload />}
-                  onClick={() => setIsOpened(!isOpened)}
+                  onClick={() => setIsBackgroundOpened(!isBackgroundOpened)}
                 >
                   {t('profile.selectImage')}
                 </Menu.Item>
@@ -63,7 +86,6 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
           </Flex>
         </Card.Section>
       </Card>
-
       <Group
         position="left"
         mb="xl"
@@ -74,13 +96,23 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
         <Menu>
           <Menu.Target>
             <UnstyledButton>
-              <Avatar size="xl" radius={100} />
+              <Avatar
+                size="xl"
+                radius={100}
+                src={
+                  user && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+                    user?.avatar
+                  }`
+                }
+              />
             </UnstyledButton>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
               icon={<FileUpload />}
-              onClick={() => setIsOpened(!isOpened)}
+              onClick={() => setIsAvatarOpened(!isAvatarOpened)}
             >
               {t('profile.selectImage')}
             </Menu.Item>
@@ -106,10 +138,28 @@ export function ProfileHeader({ user, userPostsList }: ProfileHeaderProps) {
           <Text>{user?.aboutText}</Text>
         </Flex>
       </Group>
-      <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>
+      <Modal
+        opened={isAvatarOpened}
+        onClose={() => setIsAvatarOpened(!isAvatarOpened)}
+      >
         <Stack mb={15}>
-          <DropzoneButton onSubmit={() => ''} />
-          <Button fullWidth type="submit">
+          <DropzoneButton onSubmit={(values) => setAvatar(values.images)} />
+          <Button fullWidth type="submit" onClick={() => handleAvatarSubmit()}>
+            {t('groups.submitImage')}
+          </Button>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={isBackgroundOpened}
+        onClose={() => setIsBackgroundOpened(!isBackgroundOpened)}
+      >
+        <Stack mb={15}>
+          <DropzoneButton onSubmit={(values) => setBackground(values.images)} />
+          <Button
+            fullWidth
+            type="submit"
+            onClick={() => handleBackgroundSubmit()}
+          >
             {t('groups.submitImage')}
           </Button>
         </Stack>

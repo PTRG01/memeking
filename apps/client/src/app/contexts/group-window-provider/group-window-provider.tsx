@@ -108,10 +108,10 @@ export function GroupWindowProvider({
 
   //  TODO ADD IMAGE UPLOAD
 
-  const updateGroupImage = (groupId: string, image: FileWithPath[]) => {
+  const updateGroupImage = (image: FileWithPath[]) => {
     updateOne(
       {
-        avatar: image,
+        avatar: image[0],
       },
       groupId
     );

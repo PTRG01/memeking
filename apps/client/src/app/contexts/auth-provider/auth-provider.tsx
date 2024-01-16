@@ -7,9 +7,10 @@ import {
   TSignUpFunction,
   TSignInFunction,
   TLogoutFunction,
+  TUpdateUserBackgroundFunction,
+  TUpdateUserAvatarFunction,
 } from './auth-provider.interface';
 import { authReducer, IAuthState } from './auth-reducer';
-/*eslint-disable*/
 
 const initialState: IAuthState = {
   user: null,
@@ -95,6 +96,17 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     dispatch({ type: 'SIGNOUT', payload: null });
   };
 
+  const updateUserAvatar: TUpdateUserAvatarFunction = (image) => {
+    updateOne({
+      avatar: image[0],
+    });
+  };
+  const updateUserBackground: TUpdateUserBackgroundFunction = (image) => {
+    updateOne({
+      backgroundImage: image[0],
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -106,6 +118,8 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         isLoading: loading,
         isAuthLoading: isLoading,
         updateCurrentUser: updateOne,
+        updateUserAvatar,
+        updateUserBackground,
       }}
     >
       {children}

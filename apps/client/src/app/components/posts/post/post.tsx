@@ -59,7 +59,19 @@ export function Post({ post, groups }: IPostProps) {
       <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
-            <Avatar mr={20} size="lg" src={authorData?.avatar} />
+            <Avatar
+              mr={20}
+              size="lg"
+              radius={100}
+              src={
+                authorData?.avatar &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                `${import.meta.env.VITE_FILES_URL}/users/${authorData?.id}/${
+                  authorData?.avatar
+                }`
+              }
+            />
             <Stack spacing={1}>
               <Title size="h4">{currentGroup?.title}</Title>
               <Title size="h4">{authorData?.name}</Title>

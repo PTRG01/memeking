@@ -1,4 +1,4 @@
-import { ActionIcon, Menu, ScrollArea, Text, Container } from '@mantine/core';
+import { Menu, ScrollArea, Text, Container, Button } from '@mantine/core';
 import { Message2 } from 'tabler-icons-react';
 import { useState } from 'react';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
@@ -10,26 +10,26 @@ import { useTranslation } from 'react-i18next';
 export function ChatList() {
   const [active, setActive] = useState(false);
   const { userChatsList, isLoading } = useChatContext();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <LoaderComponent isLoading={isLoading}>
       <Menu
         width={250}
-        zIndex={1000}
         withinPortal
         onOpen={() => setActive(true)}
         onClose={() => setActive(false)}
       >
         <Menu.Target>
-          <ActionIcon
-            size="lg"
-            radius="lg"
+          <Button
+            size="md"
+            radius={100}
             color={active ? 'blue' : 'gray'}
-            variant={active ? 'filled' : 'outline'}
+            variant={active ? 'outline' : 'subtle'}
+            p={2}
           >
-            <Message2 color="white" />
-          </ActionIcon>
+            <Message2 size="md" color="white" />
+          </Button>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label>{t('chat.messages')} </Menu.Label>

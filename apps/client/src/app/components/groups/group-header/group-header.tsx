@@ -45,12 +45,12 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     isLoading,
   } = useGroupWindowContext();
   const [isOpened, setIsOpened] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isFormOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 
   const handleToggleForm = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
+    setIsOpen(!isFormOpen);
+  }, [isFormOpen]);
 
   const handleCreatePost = useCallback(
     (values: IPost) => {
@@ -67,12 +67,10 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     },
     [isOpened, updateGroupDescription]
   );
-
-  const handleUpdateGroupImage = (image: FileWithPath) => {
-    console.log(image);
-    if (image) updateGroupImage(groupId, image);
+  const handleUpdateImage = (image: FileWithPath[]) => {
+    updateGroupImage(image);
+    setIsOpened(false);
   };
-
   const currentUserJoined = useMemo(
     () => groupResult?.users.includes(user.id),
     [groupResult, user]
@@ -92,7 +90,11 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
             radius={15}
             mb={15}
             withPlaceholder
-            // src={`http://127.0.0.1:8090/api/files/groups/${groupId}/${groupResult?.avatar}`}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            src={`${import.meta.env.VITE_FILES_URL}/groups/${groupId}/${
+              groupResult?.avatar
+            }`}
           />
           <Stack mah={500} px={15}>
             <Title>{groupResult?.title}</Title>
@@ -130,7 +132,6 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                   {t('groups.join')}
                 </Button>
               )}
-
               {currentUserJoined ? (
                 <Menu>
                   <Menu.Target>
@@ -159,7 +160,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
               <GroupEditForm
                 group={groupResult}
                 onSubmitAbout={handleUpdateDescription}
-                onSubmitImage={handleUpdateGroupImage}
+                onSubmitImage={handleUpdateImage}
               />
             </Modal>
           </Stack>
@@ -168,7 +169,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           <ContentFormBar onFormClick={handleToggleForm} />
         ) : null}
         <PostForm
-          isOpen={isOpen}
+          isOpen={isFormOpen}
           onCloseForm={handleToggleForm}
           onFormSubmit={handleCreatePost}
         />

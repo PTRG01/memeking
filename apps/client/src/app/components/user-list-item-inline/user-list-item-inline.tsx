@@ -50,7 +50,19 @@ function UserListItemInline({
         })}
         fullWidth
         color="gray"
-        leftIcon={<Avatar radius={100} size="md" src={user.avatar} />}
+        leftIcon={
+          <Avatar
+            radius={100}
+            size="md"
+            src={
+              user?.avatar && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
+                user?.avatar
+              }`
+            }
+          />
+        }
         size="md"
         variant="subtle"
         onClick={() => (onItemClick ? onItemClick(user.id) : null)}
@@ -64,7 +76,7 @@ function UserListItemInline({
       ) : values?.includes(user.id) ? (
         <Menu variant="subtle">
           <Menu.Target>
-            <Button size="md" variant="subtle">
+            <Button size="md" variant="subtle" color="gray">
               <Dots />
             </Button>
           </Menu.Target>
