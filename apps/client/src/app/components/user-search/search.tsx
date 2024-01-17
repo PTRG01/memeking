@@ -1,31 +1,27 @@
-import {
-  TextInput,
-  Flex,
-  Button,
-  Container,
-  List,
-  NavLink,
-  Group,
-} from '@mantine/core';
+import { TextInput, Flex, Button, List, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useUserList } from '../../hooks/pb-utils';
-import UserListItem from '../../components/user-list-item/user-list-item';
+import UserListItem from '../user-list-item/UserListItem';
 import { Search } from 'tabler-icons-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useToggle } from '@mantine/hooks';
+import { useCallback, useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 import {
   TUserModel,
   useAuthContext,
 } from '../../contexts/auth-provider/auth-provider';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 /* eslint-disable-next-line */
 
-export interface ISearchBarProps {
+export interface IUserSearch {
   onAddUser: (value: string) => void;
   onRemoveUser: (value: string) => void;
   values: string[];
   loading: boolean;
+  hideExisting: boolean;
+  onInputUsed?: () => void;
 }
 
 export function UserSearch({
@@ -33,15 +29,20 @@ export function UserSearch({
   onRemoveUser,
   values,
   loading,
-}: ISearchBarProps) {
-  const { getList, result } = useUserList();
+  hideExisting,
+  onInputUsed,
+}: IUserSearch) {
   const { user } = useAuthContext();
+  const { getList, searchList } = useChatContext();
+  const { t, i18n } = useTranslation();
 
-  const filterQueryResult = (currentUser: TUserModel) => {
-    return result?.filter((user) => {
-      return user.id !== currentUser?.id;
-    });
-  };
+  const filterQueryResult = (currentUser: TUserModel) =>
+    !hideExisting
+      ? searchList?.filter((user) => user?.id !== currentUser?.id)
+      : searchList?.filter(
+          (user) => user.id !== currentUser?.id && !values.includes(user.id)
+        );
+
   const filteredUsers = filterQueryResult(user);
   const form = useForm({
     initialValues: {
@@ -49,17 +50,18 @@ export function UserSearch({
     },
   });
 
-  useEffect(() => {
-    handleSearch(form.values.search);
-  }, [form.values.search]);
-
   const handleSearch = useCallback((value: string) => {
     if (value.length >= 3) {
       getList({
         queryParams: { filter: `name~"${value}"` },
       });
+      onInputUsed();
     }
   }, []);
+
+  useEffect(() => {
+    handleSearch(form.values.search);
+  }, [form.values.search]);
 
   return (
     <Group>
@@ -71,12 +73,12 @@ export function UserSearch({
         >
           <Flex gap="sm">
             <TextInput icon={<Search />} {...form.getInputProps('search')} />
-            <Button type="submit">Search</Button>
+            <Button type="submit">{t('search.search')}</Button>
           </Flex>
         </form>
       </Group>
       <List mt="lg" size="sm" w="100%">
-        {result && form.values.search.length >= 3
+        {searchList && form.values.search.length >= 3
           ? filteredUsers?.map((item) => (
               <UserListItem
                 label={item.name}

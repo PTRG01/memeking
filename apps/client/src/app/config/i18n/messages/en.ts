@@ -23,5 +23,7 @@ export default {
       placeholderName: 'Your name',
       placeholderEmail: ' your@mail.com',
     },
+    search: { search: 'Search' },
+    following: { following: 'Following' },
   },
 };

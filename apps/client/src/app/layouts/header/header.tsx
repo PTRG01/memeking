@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import AuthLoader from '../../components/auth-loader/auth-loader';
-import UserSearch from '../../components/search/search';
+import ChatList from '../../components/chat/chat-list/chat-list';
+import { useState } from 'react';
+import { usePostContext } from '../../contexts/post-provider/post-provider';
 
 /* eslint-disable-next-line */
 export interface HeaderProps {}
@@ -13,10 +15,19 @@ export function Header(props: HeaderProps) {
   const { logout } = useAuthContext();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const [isOpenForm, setIsOpenForm] = useState(false);
+  const { createPost } = usePostContext();
 
+  // const handleToggleForm = (openState: boolean) => {
+  //   setIsOpenForm(!openState);
+  // };
+
+  // const handleCreatePost = (values: IPost) => {
+  //   createPost(values.title, values.contentText);
+  // };
   return (
     <>
-      <Group>
+      <Button variant="transparent" onClick={() => navigate('/')}>
         <Text>
           Meme
           <span role="img" aria-label="crown emoji">
@@ -24,12 +35,29 @@ export function Header(props: HeaderProps) {
           </span>
           King
         </Text>
-      </Group>
+      </Button>
 
       <Group position="right">
         {/* TODO add account menu when loggedIn */}
         <AuthLoader>
           <Group>
+            {/* <PostForm
+              isOpen={isOpenForm}
+              onCloseForm={handleToggleForm}
+              onFormSubmit={handleCreatePost}
+            /> */}
+
+            {/* {isLoggedIn && (
+              <Button
+                radius={100}
+                color="gray"
+                onClick={() => handleToggleForm(isOpenForm)}
+              >
+                <CirclePlus />
+              </Button>
+            )} */}
+            {isLoggedIn && <ChatList />}
+
             {!isLoggedIn && (
               <Button
                 size="xs"
@@ -58,7 +86,6 @@ export function Header(props: HeaderProps) {
         </AuthLoader>
 
         <Group position="right">
-          {' '}
           <Button
             size="xs"
             key={'en'}
