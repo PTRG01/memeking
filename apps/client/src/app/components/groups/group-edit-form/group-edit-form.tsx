@@ -4,12 +4,13 @@ import { useForm } from '@mantine/form';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useState } from 'react';
 import { FileWithPath } from '@mantine/dropzone';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 export interface IGroupEditFormProps {
-  group: IGroup | null;
+  group: IGroup;
   onSubmitAbout: (aboutText: string | null) => void;
-  onSubmitImage: () => void;
+  onSubmitImage: (image: FileWithPath[]) => void;
 }
 
 export function GroupEditForm({
@@ -17,7 +18,9 @@ export function GroupEditForm({
   onSubmitAbout,
   onSubmitImage,
 }: IGroupEditFormProps) {
-  const [image, setImage] = useState<FileWithPath[] | null>(null);
+  const [image, setImage] = useState<FileWithPath[]>();
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       aboutText: group?.aboutText,
@@ -25,13 +28,12 @@ export function GroupEditForm({
     },
   });
 
-  if (!group) return null;
   return (
     <Paper>
       <Stack mb={15}>
-        <DropzoneButton onSubmit={setImage} />
-        <Button fullWidth type="submit">
-          Submit image
+        <DropzoneButton onSubmit={(values) => setImage(values.images)} />
+        <Button fullWidth onClick={() => image && onSubmitImage(image)}>
+          {t('groups.submitImage')}
         </Button>
       </Stack>
       <form
@@ -51,12 +53,11 @@ export function GroupEditForm({
             {...form.getInputProps('aboutText')}
           ></Textarea>
           <Button fullWidth type="submit">
-            Submit description
+            {t('groups.submitDescription')}
           </Button>
         </Stack>
       </form>
     </Paper>
   );
 }
-
 export default GroupEditForm;

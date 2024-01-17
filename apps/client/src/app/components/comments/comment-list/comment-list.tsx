@@ -2,6 +2,7 @@ import { IComment } from '../../../contexts/comment-provider/comment-provider.in
 import { Box, Divider, ScrollArea } from '@mantine/core';
 import CommentItem from '../comment-item/comment-item';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useMemo } from 'react';
 
 /* eslint-disable-next-line */
 export interface ICommentListProps {
@@ -9,7 +10,10 @@ export interface ICommentListProps {
 }
 
 export function CommentList({ commentsList }: ICommentListProps) {
-  const listHeight = !commentsList ? 0 : commentsList?.length > 2 ? 300 : 150;
+  const listHeight = useMemo(
+    () => (!commentsList ? 0 : commentsList?.length > 2 ? 300 : 150),
+    [commentsList]
+  );
 
   //  TODO ADD AUTO SCROLL AFTER ADDING A COMMENT ?
   return (

@@ -69,7 +69,7 @@ export const ApplicationFrame = ({
       }
       header={
         header && (
-          <Header height={{ base: 60 }} p="md">
+          <Header height={{ base: 60 }} px="md" py="sm">
             <Group position="apart">
               <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                 <Burger

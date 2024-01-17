@@ -1,18 +1,18 @@
 import { ActionIcon, Group } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { isNotEmpty, useForm } from '@mantine/form';
 import { Send } from 'tabler-icons-react';
 import EmojiTextArea, {
   TOnTextSubmitFunction,
 } from '../../emoji-text-area/emoji-text-area';
-/* eslint-disable-next-line */
+
 export interface IChatMessageBarProps {
-  recordId: string;
+  chatId: string;
   onTextSubmit: TOnTextSubmitFunction;
   isLoading: boolean;
 }
 
 export function ChatMessageBar({
-  recordId,
+  chatId,
   onTextSubmit,
   isLoading,
 }: IChatMessageBarProps) {
@@ -20,16 +20,20 @@ export function ChatMessageBar({
     initialValues: {
       chatInput: '',
     },
+    validate: {
+      chatInput: isNotEmpty(''),
+    },
   });
 
   const handleChatInput = (values: string) => {
-    onTextSubmit(values, recordId);
+    if (!values) return;
+    onTextSubmit(values, chatId);
     form.reset();
   };
   return (
     <form
-      key={recordId}
-      id={recordId}
+      key={chatId}
+      id={chatId}
       onSubmit={form.onSubmit((values) => {
         handleChatInput(values.chatInput);
       })}

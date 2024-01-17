@@ -11,8 +11,10 @@ import {
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useNavigate } from 'react-router-dom';
+import { navigateData } from '../../../utils/navigate';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
-/* eslint-disable-next-line */
 export interface IGroupSearchListItemProps {
   group: IGroup;
 }
@@ -20,11 +22,12 @@ export interface IGroupSearchListItemProps {
 export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
   const { joinGroup } = useGroupContext();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
-  const handleJoinGroup = () => {
+  const handleJoinGroup = useCallback(() => {
     joinGroup(group?.users, group?.id);
     navigate(`/groups/${group?.id}`);
-  };
+  }, [group, joinGroup, navigate]);
   return (
     <Paper p={15} mb={10} radius={15}>
       <Group position="apart" noWrap>
@@ -32,22 +35,20 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
           <Avatar size="lg" radius={10} />
 
           <Stack spacing={0}>
-            <UnstyledButton onClick={() => navigate(`/groups/${group?.id}`)}>
+            <UnstyledButton
+              onClick={() => navigate(`${navigateData.groups}/${group?.id}`)}
+            >
               <Title size="h2">{group?.title}</Title>
             </UnstyledButton>
             <Group spacing={0}>
-              <Text>members</Text>
+              <Text>
+                {group.users.length} {t('groups.members')}
+              </Text>
             </Group>
-            <Text>
-              {group?.aboutText}
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit
-              ipsa eos doloribus illum, magnam consequuntur dolor accusamus rem
-              nam ipsam laborum perferendis ipsum, unde voluptatem
-              reprehenderit, atque obcaecati sint voluptate.
-            </Text>
+            <Text>{group?.aboutText}</Text>
           </Stack>
         </Group>
-        <Button onClick={() => handleJoinGroup()}>Join</Button>
+        <Button onClick={() => handleJoinGroup()}>{t('groups.join')}</Button>
       </Group>
     </Paper>
   );

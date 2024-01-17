@@ -10,10 +10,7 @@ export type TCreateGroupPostFunction = (
 export type TLeaveGroupFunction = () => void;
 export type TDeleteGroupFunction = (groupId: string) => void;
 export type TJoinGroupFunction = (users: string[]) => void;
-export type TUpdateGroupImageFunction = (
-  groupId: string,
-  image: FileWithPath[]
-) => void;
+export type TUpdateGroupImageFunction = (image: FileWithPath[]) => void;
 export type TUpdateGroupDescriptionFunction = (aboutText: string) => void;
 
 export interface IGroupWindowContext {

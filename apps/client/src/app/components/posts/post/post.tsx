@@ -9,7 +9,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import VoteBar from '../../vote-bar/vote-bar';
 import { usePostContext } from '../../../contexts/post-provider/post-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
@@ -18,18 +18,30 @@ import CommentBar from '../../comments/comment-bar/comment-bar';
 import { useCommentContext } from '../../../contexts/comment-provider/comment-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
+import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { useTranslation } from 'react-i18next';
 
 export interface IPostProps {
   post: IPost;
-  groupsData?: IGroup[] | null;
+  groups?: IGroup[] | null;
 }
 
-export function Post({ post, groupsData }: IPostProps) {
+export function Post({ post, groups }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
+  const { user } = useAuthContext();
   const { deletePost, updatePost, handleUpvote } = usePostContext();
   const { commentListResult, isLoading } = useCommentContext();
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const isAdmin = useMemo(() => post?.author_id === user?.id, [post, user]);
+
+  const currentGroup = useMemo(
+    () => groups?.find((group) => group?.id === post.group_id),
+    [groups, post]
+  );
+  const authorData = useMemo(() => post.expand.author_id as IUser, [post]);
 
   const handleOpenPostForm = (openState: boolean) => {
     setEditFormOpen(!openState);
@@ -42,15 +54,24 @@ export function Post({ post, groupsData }: IPostProps) {
     setCommentsOpen(!commentsOpen);
   };
 
-  const currentGroup = groupsData?.find((group) => group?.id === post.group_id);
-  const authorData = post.expand.author_id as IUser;
-
   return (
-    <Stack align="stretch" maw={900}>
+    <Stack align="stretch" maw={1000}>
       <Paper p={25} my={10} radius="lg">
         <Flex align="center" justify="space-between">
           <Group>
-            <Avatar mr={20} size="lg" src={authorData?.avatar} />
+            <Avatar
+              mr={20}
+              size="lg"
+              radius={100}
+              src={
+                authorData?.avatar &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                `${import.meta.env.VITE_FILES_URL}/users/${authorData?.id}/${
+                  authorData?.avatar
+                }`
+              }
+            />
             <Stack spacing={1}>
               <Title size="h4">{currentGroup?.title}</Title>
               <Title size="h4">{authorData?.name}</Title>
@@ -65,12 +86,18 @@ export function Post({ post, groupsData }: IPostProps) {
               />
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
-                Edit post
-              </Menu.Item>
-              <Menu.Item onClick={() => deletePost(post?.id)}>
-                Delete post
-              </Menu.Item>
+              {isAdmin ? (
+                <>
+                  <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
+                    {t('posts.editPost')}
+                  </Menu.Item>
+                  <Menu.Item onClick={() => deletePost(post?.id)}>
+                    {t('posts.deletePost')}
+                  </Menu.Item>
+                </>
+              ) : (
+                <Menu.Item> {t('posts.editingNot')}</Menu.Item>
+              )}
             </Menu.Dropdown>
           </Menu>
         </Flex>

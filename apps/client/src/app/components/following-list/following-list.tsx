@@ -1,16 +1,23 @@
-import { Badge, Group, List, NavLink } from '@mantine/core';
-import { useState } from 'react';
+import {
+  Badge,
+  Button,
+  Collapse,
+  Group,
+  ScrollArea,
+  Stack,
+  Title,
+} from '@mantine/core';
+import { useCallback, useState } from 'react';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import LoaderComponent from '../loader/loader';
 import { useTranslation } from 'react-i18next';
 import UserList from '../user-list/user-list';
 import UserListItemInline from '../user-list-item-inline/user-list-item-inline';
-
-/* eslint-disable-next-line */
+import { Search } from 'tabler-icons-react';
+import FollowersSearch from '../followers-search/followers-search';
 
 export function FollowingList() {
-  const [active, setActive] = useState(false);
   const { user } = useAuthContext();
   const {
     isLoading,
@@ -19,41 +26,53 @@ export function FollowingList() {
     handleRemoveFollowing,
     userChatsList,
     createChatWithUser,
+    followersSearchList,
     handleOpenChatToggle,
   } = useChatContext();
   const { t } = useTranslation();
-
-  function handleItemClick(id: string) {
-    const currentUsers = [user?.id, id];
-    const matchingChat = userChatsList?.find(
-      (chat) =>
-        chat?.users?.length === currentUsers.length &&
-        chat.users.every((userId) => currentUsers?.includes(userId))
-    );
-    if (!matchingChat) {
-      createChatWithUser(id);
-      return;
-    }
-    const chatExists = matchingChat?.users?.includes(id);
-    if (chatExists) handleOpenChatToggle(matchingChat?.id);
-  }
-  return (
-    <NavLink
-      label={t('following.following')}
-      childrenOffset={0}
-      active={active}
-      variant="filled"
-      icon={
-        <Badge size="xs" variant="filled" color="blue" w={16} h={16} p={0}>
-          {user?.followers.length}
-        </Badge>
+  const [isOpen, setIsOpen] = useState(false);
+  const handleItemClick = useCallback(
+    (id: string) => {
+      //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
+      const currentUsers = [user?.id, id];
+      const matchingChat = userChatsList?.find(
+        (chat) =>
+          chat?.users?.length === currentUsers.length &&
+          chat.users.every((userId) => currentUsers?.includes(userId))
+      );
+      if (!matchingChat) {
+        createChatWithUser(id);
+        return;
       }
-      onClick={() => setActive(!active)}
-    >
-      <Group>
-        <List mt="lg" size="sm" w="100%">
-          <LoaderComponent isLoading={isLoading}>
-            <Group>
+      const chatExists = matchingChat?.users?.includes(id);
+      if (chatExists) handleOpenChatToggle(matchingChat?.id);
+    },
+    [createChatWithUser, handleOpenChatToggle, user, userChatsList]
+  );
+
+  return (
+    <>
+      <Group position="apart">
+        <Group>
+          <Badge size="xs" variant="filled" color="blue" w={16} h={16} p={1}>
+            {user?.followers.length}
+          </Badge>
+          <Title order={4}>{t('following.following')}</Title>
+        </Group>
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          variant="sublte"
+          radius={100}
+          leftIcon={<Search size={20} />}
+        />
+      </Group>
+      <LoaderComponent isLoading={isLoading}>
+        <Stack align="stretch">
+          <Collapse in={isOpen}>
+            <FollowersSearch />
+          </Collapse>
+          {followersSearchList.length > 0 ? null : (
+            <ScrollArea type="hover">
               <UserList
                 listItem={(item, values) => (
                   <UserListItemInline
@@ -62,7 +81,7 @@ export function FollowingList() {
                     onAddUser={handleAddFollowing}
                     onRemoveUser={handleRemoveFollowing}
                     onItemClick={handleItemClick}
-                    itemActive={true}
+                    itemActive
                     isLoading={isLoading}
                   />
                 )}
@@ -71,11 +90,11 @@ export function FollowingList() {
                 isLoading={isLoading}
                 hideExisting={false}
               />
-            </Group>
-          </LoaderComponent>
-        </List>
-      </Group>
-    </NavLink>
+            </ScrollArea>
+          )}
+        </Stack>
+      </LoaderComponent>
+    </>
   );
 }
 

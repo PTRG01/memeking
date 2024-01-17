@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import ContentForm from './content-form';
+import PasswordInput from './password-input';
 
-describe('ContentForm', () => {
+describe('PasswordInput', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ContentForm />);
+    const { baseElement } = render(<PasswordInput />);
     expect(baseElement).toBeTruthy();
   });
 });

@@ -5,8 +5,8 @@ import { IComment } from '../../../contexts/comment-provider/comment-provider.in
 import LoaderComponent from '../../loader/loader';
 import { useCommentContext } from '../../../contexts/comment-provider/comment-provider';
 import { useForm } from '@mantine/form';
+import { useCallback } from 'react';
 
-/* eslint-disable-next-line */
 export interface ICommentBarProps {
   commentsList: IComment[] | null;
   isOpen: boolean;
@@ -24,19 +24,22 @@ export function CommentBar({
     initialValues: { contentText: '' },
   });
 
-  const handleFormSubmit = (values: IComment) => {
-    createComment(values.contentText);
-    form.reset();
-  };
+  const handleFormSubmit = useCallback(
+    (values: IComment) => {
+      createComment(values.contentText);
+      form.reset();
+    },
+    [createComment, form]
+  );
 
   return (
     <Stack align="stretch" my={15}>
       <Divider />
-      {isOpen ? (
+      {isOpen && (
         <LoaderComponent isLoading={isLoading}>
           <CommentList commentsList={commentsList} />
         </LoaderComponent>
-      ) : null}
+      )}
       <form
         onSubmit={form.onSubmit((values) =>
           handleFormSubmit(values as IComment)

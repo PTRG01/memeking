@@ -19,21 +19,22 @@ import {
   UserCheck,
 } from 'tabler-icons-react';
 import GroupEditForm from '../group-edit-form/group-edit-form';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useGroupWindowContext } from '../../../contexts/group-window-provider/group-window-provider';
 import LoaderComponent from '../../loader/loader';
-import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { useTranslation } from 'react-i18next';
+import { FileWithPath } from '@mantine/dropzone';
 
-/* eslint-disable-next-line */
 export interface IGroupHeaderProps {
   groupId: string;
+  user: IUser;
 }
 
-export function GroupHeader({ groupId }: IGroupHeaderProps) {
-  const { user } = useAuthContext();
+export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
   const {
     groupResult,
     updateGroupImage,
@@ -44,28 +45,40 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
     isLoading,
   } = useGroupWindowContext();
   const [isOpened, setIsOpened] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isFormOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
-  const handleToggleForm = () => {
-    setIsOpen(!isOpen);
+  const handleToggleForm = useCallback(() => {
+    setIsOpen(!isFormOpen);
+  }, [isFormOpen]);
+
+  const handleCreatePost = useCallback(
+    (values: IPost) => {
+      createGroupPost(values.contentText, groupId);
+    },
+    [createGroupPost, groupId]
+  );
+
+  const handleUpdateDescription = useCallback(
+    (aboutText: string | null) => {
+      if (!aboutText) return;
+      updateGroupDescription(aboutText);
+      setIsOpened(!isOpened);
+    },
+    [isOpened, updateGroupDescription]
+  );
+  const handleUpdateImage = (image: FileWithPath[]) => {
+    updateGroupImage(image);
+    setIsOpened(false);
   };
-  const handleCreatePost = (values: IPost) => {
-    createGroupPost(values.contentText, groupId);
-  };
-
-  const handleUpdateDescription = (aboutText: string | null) => {
-    if (!aboutText) return;
-    updateGroupDescription(aboutText);
-    setIsOpened(!isOpened);
-  };
-
-  // const handleUpdateGroupImage = (groupId: string, image: FileWithPath[] | null) => {
-  //   console.log(image);
-  //   if (image) updateGroupImage(groupId, image);
-  // };
-
-  const currentUserJoined = user ? groupResult?.users.includes(user.id) : null;
-  const isAdmin = groupResult?.author_id === user?.id;
+  const currentUserJoined = useMemo(
+    () => groupResult?.users.includes(user.id),
+    [groupResult, user]
+  );
+  const isAdmin = useMemo(
+    () => groupResult?.author_id === user?.id,
+    [groupResult, user]
+  );
 
   if (!groupResult) return null;
   return (
@@ -77,11 +90,17 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
             radius={15}
             mb={15}
             withPlaceholder
-            // src={`http://127.0.0.1:8090/api/files/groups/${groupId}/${groupResult?.avatar}`}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            src={`${import.meta.env.VITE_FILES_URL}/groups/${groupId}/${
+              groupResult?.avatar
+            }`}
           />
           <Stack mah={500} px={15}>
             <Title>{groupResult?.title}</Title>
-            <Text>{groupResult?.users.length} members</Text>
+            <Text>
+              {groupResult?.users.length} {t('groups.members')}
+            </Text>
             <Text>{groupResult?.aboutText}</Text>
             <Group position="right">
               {currentUserJoined ? (
@@ -93,7 +112,7 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
                       leftIcon={<UserCheck />}
                       rightIcon={<TriangleInverted fill="white" size={10} />}
                     >
-                      Joined
+                      {t('groups.joined')}
                     </Button>
                   </Menu.Target>
                   <Menu.Dropdown>
@@ -101,7 +120,7 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
                       icon={<DoorExit size={15} />}
                       onClick={() => leaveGroup()}
                     >
-                      Leave group
+                      {t('groups.leave')}
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
@@ -110,10 +129,9 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
                   leftIcon={<Plus />}
                   onClick={() => joinGroup(groupResult?.users)}
                 >
-                  Join
+                  {t('groups.join')}
                 </Button>
               )}
-
               {currentUserJoined ? (
                 <Menu>
                   <Menu.Target>
@@ -127,10 +145,10 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
                         onClick={() => setIsOpened(!isOpened)}
                         icon={<Edit size={15} />}
                       >
-                        Edit group
+                        {t('groups.editGroup')}
                       </Menu.Item>
                     ) : (
-                      <Menu.Item>Editing not allowed</Menu.Item>
+                      <Menu.Item> {t('groups.editingNot')}</Menu.Item>
                     )}
                   </Menu.Dropdown>
                 </Menu>
@@ -142,16 +160,16 @@ export function GroupHeader({ groupId }: IGroupHeaderProps) {
               <GroupEditForm
                 group={groupResult}
                 onSubmitAbout={handleUpdateDescription}
-                onSubmitImage={() => ''}
+                onSubmitImage={handleUpdateImage}
               />
             </Modal>
           </Stack>
         </Paper>
         {currentUserJoined ? (
-          <ContentFormBar onPostClick={handleToggleForm} />
+          <ContentFormBar onFormClick={handleToggleForm} />
         ) : null}
         <PostForm
-          isOpen={isOpen}
+          isOpen={isFormOpen}
           onCloseForm={handleToggleForm}
           onFormSubmit={handleCreatePost}
         />

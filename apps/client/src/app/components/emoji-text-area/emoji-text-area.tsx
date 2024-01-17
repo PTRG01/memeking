@@ -2,9 +2,14 @@ import { MoodSmile, Send } from 'tabler-icons-react';
 import { ActionIcon, Popover, Textarea } from '@mantine/core';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { ChangeEvent, Dispatch, SetStateAction, useRef } from 'react';
-
-/* eslint-disable-next-line */
+import {
+  ChangeEvent,
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useCallback,
+  useRef,
+} from 'react';
 
 export type TOnTextSubmitFunction = (message: string, recordId: string) => void;
 
@@ -35,32 +40,47 @@ export function EmojiTextArea({
 }: IEmojiTextAreaProps) {
   const textarea = useRef<HTMLTextAreaElement | null>(null);
 
-  const insertAtCursor = (emoji: string) => {
-    const input = emoji.trim();
-    const message = value;
+  const insertAtCursor = useCallback(
+    (emoji: string) => {
+      const input = emoji.trim();
+      const message = value;
 
-    if (!input) {
-      return message;
-    }
-    if (!textarea.current) return message;
-    textarea.current.value = message;
-    const { selectionStart, selectionEnd } = textarea.current;
+      if (!input) {
+        return message;
+      }
+      if (!textarea.current) return message;
+      textarea.current.value = message;
+      const { selectionStart, selectionEnd } = textarea.current;
 
-    const newMessage =
-      message.slice(0, selectionStart) + input + message.slice(selectionEnd);
-    if (newMessage) onChange(newMessage);
-  };
+      const newMessage =
+        message.slice(0, selectionStart) + input + message.slice(selectionEnd);
+      if (newMessage) onChange(newMessage);
+    },
+    [onChange, value]
+  );
 
-  const handleChatInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    if (event.type === 'click') return;
-    else onChange(event.currentTarget.value);
-  };
+  const handleChatInput = useCallback(
+    (event: ChangeEvent<HTMLTextAreaElement>) => {
+      if (event.type === 'click') return;
+      onChange(event.currentTarget.value);
+    },
+    [onChange]
+  );
+
+  const handleOnKeydown = useCallback(
+    (event: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        onSubmit(event.currentTarget.value);
+      }
+    },
+    [onSubmit]
+  );
 
   return (
     <Textarea
       radius={radius}
       size="md"
-      id="textarea"
       autosize
       variant={variant}
       minRows={minRows}
@@ -70,9 +90,7 @@ export function EmojiTextArea({
       label={label}
       onChange={(event) => handleChatInput(event)}
       onKeyDown={(event) => {
-        if (event.key === 'Enter') {
-          onSubmit(event.currentTarget.value);
-        }
+        handleOnKeydown(event);
       }}
       rightSectionWidth={60}
       rightSection={

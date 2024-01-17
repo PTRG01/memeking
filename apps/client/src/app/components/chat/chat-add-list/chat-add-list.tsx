@@ -1,12 +1,11 @@
 import { UserSearch } from '../../user-search/user-search';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
-import { Group, Title } from '@mantine/core';
+import { ScrollArea, Stack, Title } from '@mantine/core';
 import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import UserList from '../../user-list/user-list';
 import UserListItemInline from '../../user-list-item-inline/user-list-item-inline';
-
-/* eslint-disable-next-line */
+import { useTranslation } from 'react-i18next';
 
 export interface IAddToChatListProps {
   id: string;
@@ -23,32 +22,11 @@ export function ChatAddList() {
     handleSearchToAdd,
     isSearchUsed,
   } = useChatWindowContext();
+  const { t } = useTranslation();
   return (
-    <Group>
-      <UserSearch handleSearch={handleSearchToAdd} loading={isLoading}>
-        <UserList
-          listItem={(item, values) => (
-            <UserListItemInline
-              user={item}
-              values={values}
-              onAddUser={updateChat}
-              onRemoveUser={() => ''}
-              handleItemClick={() => ''}
-              itemActive={false}
-              isLoading={isLoading}
-            />
-          )}
-          key={'toAddSearchListKey'}
-          userList={chatToAddList}
-          currentList={currentChatUsers}
-          isLoading={isLoading}
-          hideExisting={true}
-        />
-      </UserSearch>
-
-      {!isSearchUsed ? (
-        <Group>
-          <Title size={15}>Following:</Title>
+    <Stack>
+      <UserSearch handleSearch={handleSearchToAdd}>
+        <ScrollArea variant="hover" mah={300}>
           <UserList
             listItem={(item, values) => (
               <UserListItemInline
@@ -56,20 +34,43 @@ export function ChatAddList() {
                 values={values}
                 onAddUser={updateChat}
                 onRemoveUser={() => ''}
-                handleItemClick={() => ''}
+                // TODO Fix unnecessary function
                 itemActive={false}
                 isLoading={isLoading}
               />
             )}
-            key={'toAddFollowingListKey'}
-            userList={followingList}
+            userList={chatToAddList}
             currentList={currentChatUsers}
             isLoading={isLoading}
-            hideExisting={true}
+            hideExisting
           />
-        </Group>
-      ) : null}
-    </Group>
+        </ScrollArea>
+      </UserSearch>
+
+      {!isSearchUsed && (
+        <Stack align="stretch">
+          <Title size={15}> {t('chat.following')}:</Title>
+          <ScrollArea variant="hover" mah={300}>
+            <UserList
+              listItem={(item, values) => (
+                <UserListItemInline
+                  user={item}
+                  values={values}
+                  onAddUser={updateChat}
+                  onRemoveUser={() => ''}
+                  itemActive={false}
+                  isLoading={isLoading}
+                />
+              )}
+              userList={followingList}
+              currentList={currentChatUsers}
+              isLoading={isLoading}
+              hideExisting
+            />
+          </ScrollArea>
+        </Stack>
+      )}
+    </Stack>
   );
 }
 

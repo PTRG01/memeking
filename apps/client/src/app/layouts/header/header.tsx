@@ -4,27 +4,14 @@ import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import AuthLoader from '../../components/auth-loader/auth-loader';
 import ChatList from '../../components/chat/chat-list/chat-list';
-import { useState } from 'react';
-import { usePostContext } from '../../contexts/post-provider/post-provider';
+import LanguageMenu from '../../components/language-menu/language-menu';
+import ProfileMenu from '../../components/profile-menu/profile-menu';
 
-/* eslint-disable-next-line */
-export interface HeaderProps {}
-
-export function Header(props: HeaderProps) {
+export function Header() {
   const { isLoggedIn } = useAuthContext();
-  const { logout } = useAuthContext();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
-  const [isOpenForm, setIsOpenForm] = useState(false);
-  const { createPost } = usePostContext();
+  const { t } = useTranslation();
 
-  // const handleToggleForm = (openState: boolean) => {
-  //   setIsOpenForm(!openState);
-  // };
-
-  // const handleCreatePost = (values: IPost) => {
-  //   createPost(values.title, values.contentText);
-  // };
   return (
     <>
       <Button variant="transparent" onClick={() => navigate('/')}>
@@ -38,24 +25,8 @@ export function Header(props: HeaderProps) {
       </Button>
 
       <Group position="right">
-        {/* TODO add account menu when loggedIn */}
         <AuthLoader>
           <Group>
-            {/* <PostForm
-              isOpen={isOpenForm}
-              onCloseForm={handleToggleForm}
-              onFormSubmit={handleCreatePost}
-            /> */}
-
-            {/* {isLoggedIn && (
-              <Button
-                radius={100}
-                color="gray"
-                onClick={() => handleToggleForm(isOpenForm)}
-              >
-                <CirclePlus />
-              </Button>
-            )} */}
             {isLoggedIn && <ChatList />}
 
             {!isLoggedIn && (
@@ -72,34 +43,12 @@ export function Header(props: HeaderProps) {
                 {t('header.signup')}
               </Button>
             )}
-            {isLoggedIn && (
-              <Button size="xs" onClick={() => navigate('/profile')}>
-                {t('header.profile')}
-              </Button>
-            )}
-            {isLoggedIn && (
-              <Button size="xs" onClick={() => logout()}>
-                {t('header.signout')}
-              </Button>
-            )}
+
+            {isLoggedIn && <ProfileMenu />}
           </Group>
         </AuthLoader>
-
         <Group position="right">
-          <Button
-            size="xs"
-            key={'en'}
-            onClick={() => i18n.changeLanguage('en')}
-          >
-            EN
-          </Button>
-          <Button
-            size="xs"
-            key={'pl'}
-            onClick={() => i18n.changeLanguage('pl')}
-          >
-            PL
-          </Button>
+          <LanguageMenu />
         </Group>
       </Group>
     </>

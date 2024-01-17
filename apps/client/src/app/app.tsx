@@ -22,7 +22,7 @@ import Settings from './screens/settings/settings';
 import ChatsContainer from './components/chat/chats-container/chats-container';
 import { PostProvider } from './contexts/post-provider/post-provider';
 import { GroupProvider } from './contexts/group-provider/group-provider';
-import GroupJoinedList from './components/groups/group-joined-list/group-joined-list';
+import UserGroupList from './components/groups/user-group-list/user-group-list';
 import GroupSearchList from './components/groups/group-search-list/group-search-list';
 import { FeedProvider } from './contexts/feed-provider/feed-provider';
 import Feed from './screens/feed/feed';
@@ -58,10 +58,18 @@ export function App() {
                       }
                     >
                       <Route
+                        path="/feed"
+                        element={
+                          <FeedProvider>
+                            <Feed />
+                          </FeedProvider>
+                        }
+                      />
+                      <Route
                         path="/groups/feed"
                         element={
                           <FeedProvider>
-                            <Feed groupFeed={true} />
+                            <Feed groupFeed />
                           </FeedProvider>
                         }
                       />
@@ -70,16 +78,18 @@ export function App() {
                         element={<GroupSearchList />}
                       />
                       <Route path="/groups/:groupId" element={<Group />} />
-                      <Route
-                        path="/groups/joins"
-                        element={<GroupJoinedList />}
-                      />
+                      <Route path="/groups/joins" element={<UserGroupList />} />
 
                       <Route path="/create" element={<Create />} />
                       <Route path="/create/:createId" element={<Create />} />
                       <Route path="/games" element={<Games />} />
                       <Route path="/games/:gameId" element={<Game />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route
+                        path="/profile/:profileTab"
+                        element={<Profile />}
+                      />
+
                       <Route path="/settings" element={<Settings />} />
                     </Route>
                   </Routes>

@@ -1,113 +1,34 @@
-import {
-  Group,
-  Flex,
-  Avatar,
-  Title,
-  Text,
-  Tabs,
-  TextInput,
-  Button,
-  SimpleGrid,
-  Container,
-  Stack,
-  Box,
-} from '@mantine/core';
-import { Photo, MessageCircle, Settings, Friends } from 'tabler-icons-react';
+import { Stack, Container } from '@mantine/core';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
-import { useChatContext } from '../../contexts/chat-provider/chat-provider';
-import UserList from '../../components/user-list/user-list';
-import UserListItemCard from '../../components/user-list-item-card/user-list-item-card';
-import PostList from '../../components/posts/post-list/post-list';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
+import ProfileHeader from '../../components/profile/profile-header/profile-header';
+import ProfileTabs from '../../components/profile/profile-tabs/profile-tabs';
+import LoaderComponent from '../../components/loader/loader';
 
-/* eslint-disable-next-line */
-export interface ProfileProps {}
-
-export function Profile(props: ProfileProps) {
-  const { user } = useAuthContext();
-  const {
-    followingList,
-    handleAddFollowing,
-    handleRemoveFollowing,
-    isLoading,
-  } = useChatContext();
+export function Profile() {
+  const { user, isLoading, updateUserAvatar, updateUserBackground } =
+    useAuthContext();
   const { userPostsList } = usePostContext();
-  const handleItemClick = () => {
-    return '';
-  };
 
+  if (!user) return;
   return (
-    <Box mx={10} mt={10}>
-      <Group position="left" mb="xl">
-        <Avatar size="xl" />
-        <Flex direction="column">
-          <Title>{user?.name}</Title>
-          <Group>
-            <Group>
-              <Text>Memes:</Text>
-              <Text>25</Text>
-            </Group>
-            <Group>
-              <Text>Posts:</Text>
-              <Text>{userPostsList?.length}</Text>
-            </Group>
-            <Group>
-              <Text>Following:</Text> <Text>{user?.followers.length}</Text>
-            </Group>
-          </Group>
-        </Flex>
-      </Group>
-      <Tabs defaultValue="memes">
-        <Tabs.List>
-          <Tabs.Tab value="memes" icon={<Photo size="0.8rem" />}>
-            Memes
-          </Tabs.Tab>
-          <Tabs.Tab value="posts" icon={<MessageCircle size="0.8rem" />}>
-            Posts
-          </Tabs.Tab>
-          <Tabs.Tab value="following" icon={<Friends size="0.8rem" />}>
-            Following
-          </Tabs.Tab>
-
-          <Tabs.Tab value="settings" icon={<Settings size="0.8rem" />}>
-            Settings
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="memes" pt="xs">
-          Gallery tab content
-        </Tabs.Panel>
-        <Tabs.Panel value="posts" pt="xs">
-          <PostList postList={userPostsList} isLoading={isLoading} />
-        </Tabs.Panel>
-        <Tabs.Panel value="following" pt="xs">
-          <SimpleGrid cols={3}>
-            <UserList
-              listItem={(item, values) => (
-                <UserListItemCard
-                  user={item}
-                  values={values}
-                  onAddUser={handleAddFollowing}
-                  onRemoveUser={handleRemoveFollowing}
-                  handleItemClick={handleItemClick}
-                  itemActive={false}
-                  isLoading={isLoading}
-                />
-              )}
-              userList={followingList}
-              currentList={followingList}
-              isLoading={isLoading}
-              hideExisting={false}
+    <Container>
+      <Stack align="stretch" maw={1000}>
+        <LoaderComponent isLoading={isLoading}>
+          <>
+            <ProfileHeader
+              user={user}
+              userPostsList={userPostsList}
+              onAvatarSubmit={updateUserAvatar}
+              onBackgroundSubmit={updateUserBackground}
             />
-          </SimpleGrid>
-        </Tabs.Panel>
-        <Tabs.Panel value="settings" pt="xs">
-          <TextInput placeholder={user?.name} label="Full name" />
-          <TextInput placeholder="********" label="Password" />
-          <TextInput placeholder={user?.email} label="Email" />
-          <Button mt={20}>Edit</Button>
-        </Tabs.Panel>
-      </Tabs>
-    </Box>
+            {userPostsList && (
+              <ProfileTabs user={user} userPostsList={userPostsList} />
+            )}
+          </>
+        </LoaderComponent>
+      </Stack>
+    </Container>
   );
 }
 

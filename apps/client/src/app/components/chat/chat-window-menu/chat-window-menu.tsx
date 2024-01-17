@@ -1,34 +1,53 @@
 import { Group, UnstyledButton, Avatar, Title, Menu } from '@mantine/core';
 import { DoorExit } from 'tabler-icons-react';
-import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
-import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+interface IChatWindowMenuProps {
+  user: IUser | null;
+  chatAvatar: IUser;
+  chatId: string;
+  currentChatUsers: IUser[];
+  currentChatUsersIds: string[];
+  onLeaveChat: (chatId: string, currentChatUsersIds: string[]) => void;
+}
+function ChatWindowMenu({
+  user,
+  chatAvatar,
+  chatId,
+  currentChatUsers,
+  currentChatUsersIds,
+  onLeaveChat,
+}: IChatWindowMenuProps) {
+  const { t } = useTranslation();
 
-function ChatWindowMenu() {
-  const { user } = useAuthContext();
-  const { chatId, avatar, currentChatUsers, currentChatUsersIds, leaveChat } =
-    useChatWindowContext();
+  const chatUserNames = useMemo(
+    () =>
+      currentChatUsers
+        ?.map((user) => user.name)
+        ?.filter((chatUser: string) => chatUser !== user?.name)
+        .join(', '),
+    [currentChatUsers, user]
+  );
 
-  const chatUserNames = currentChatUsers
-    ?.map((user) => user.name)
-    ?.filter((chatUser: string) => chatUser !== user?.name)
-    .join(', ');
-
-  const handleLeaveChat = () => {
-    leaveChat(chatId, currentChatUsersIds);
-  };
+  const handleLeaveChat = useCallback(() => {
+    onLeaveChat(chatId, currentChatUsersIds);
+  }, [chatId, currentChatUsersIds, onLeaveChat]);
   return (
     <Menu shadow="md" width={200} position="right-start" offset={25}>
       <Menu.Target>
         <UnstyledButton>
           <Group>
-            <Avatar src={avatar} size={45} radius="xl" />
-            <Title
-              color="white"
-              weight={500}
-              size={17}
-              maw={230}
-              truncate={true}
-            >
+            <Avatar
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              src={`${import.meta.env.VITE_FILES_URL}/users/${chatAvatar?.id}/${
+                chatAvatar?.avatar
+              }`}
+              size={45}
+              radius="xl"
+            />
+            <Title color="white" weight={500} size={17} maw={230} truncate>
               {chatUserNames}
             </Title>
           </Group>
@@ -36,7 +55,7 @@ function ChatWindowMenu() {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item onClick={handleLeaveChat} icon={<DoorExit />}>
-          Leave chat
+          {t('chat.leave')}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

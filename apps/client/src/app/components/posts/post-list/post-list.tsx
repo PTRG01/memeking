@@ -1,6 +1,4 @@
-/* eslint-disable-next-line */
-
-import { ScrollArea, SimpleGrid, Stack } from '@mantine/core';
+import { ScrollArea, Stack } from '@mantine/core';
 import { CommentProvider } from '../../../contexts/comment-provider/comment-provider';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import LoaderComponent from '../../loader/loader';
@@ -11,7 +9,6 @@ export interface IPostListProps {
 
   isLoading: boolean;
 }
-// TODO FIX LIST NOT EXTENDING TO FRAME WIDTH
 
 export function PostList({ postList, isLoading }: IPostListProps) {
   return (
@@ -20,7 +17,7 @@ export function PostList({ postList, isLoading }: IPostListProps) {
         <ScrollArea mih={720} type="hover">
           {postList?.map((post: IPost) => (
             <CommentProvider key={post.id} parentId={post.id}>
-              <Post post={post} groupsData={null} />
+              <Post post={post} />
             </CommentProvider>
           ))}
         </ScrollArea>

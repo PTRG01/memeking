@@ -15,32 +15,50 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     result: userPostsList,
     loading: isLoading,
   } = usePostList();
-  const { createOne, deleteOne, updateOne } = usePost();
+  const {
+    getFullList: getFullPostsList,
+    result: fullPostsList,
+    loading: isFollowingLoading,
+  } = usePostList();
 
-  // CHAT
+  const { createOne, deleteOne, updateOne } = usePost();
 
   const loadPosts = useCallback(() => {
     if (user) {
       getFullList({
         sort: 'created',
-        expand: 'upvote_ids,author_id',
-        filter: `author_id~"${(user?.followers, user?.id)}"`,
+        expand: 'upvote_ids, author_id',
+        filter: `author_id~"${user?.id}"`,
       });
     }
   }, [user, getFullList]);
+
+  const loadFollowingPosts = useCallback(() => {
+    if (user) {
+      getFullPostsList({
+        sort: 'created',
+        expand: 'upvote_ids, author_id',
+      });
+    }
+  }, [user, getFullPostsList]);
 
   useEffect(() => {
     loadPosts();
   }, [loadPosts]);
 
   useEffect(() => {
+    loadFollowingPosts();
+  }, [loadFollowingPosts]);
+
+  useEffect(() => {
     pb.collection('posts').subscribe('*', async (e) => {
       loadPosts();
+      loadFollowingPosts();
     });
-  }, [loadPosts, userPostsList]);
+  }, [loadPosts, userPostsList, loadFollowingPosts]);
 
   const createPost = (title: string, contentText: string) => {
-    if (title && contentText)
+    if (contentText)
       createOne({
         author_id: user?.id,
         avatar: user?.avatar,
@@ -50,16 +68,16 @@ export function PostProvider({ children }: React.PropsWithChildren) {
   };
 
   const updatePost = (values: IPost, post: IPost) => {
-    console.log(values, post);
-    updateOne(
-      {
-        author_id: user?.id,
-        avatar: post.avatar,
-        title: values.title,
-        contentText: values.contentText,
-      },
-      post.id
-    );
+    if (values && post)
+      updateOne(
+        {
+          author_id: user?.id,
+          avatar: post.avatar,
+          title: values.title,
+          contentText: values.contentText,
+        },
+        post.id
+      );
   };
 
   const deletePost = async (id: string) => {
@@ -90,11 +108,14 @@ export function PostProvider({ children }: React.PropsWithChildren) {
     <PostContext.Provider
       value={{
         isLoading,
+        isFollowingLoading,
         userPostsList,
+        fullPostsList,
         handleUpvote,
         createPost,
         updatePost,
         deletePost,
+        loadFollowingPosts,
       }}
     >
       {children}

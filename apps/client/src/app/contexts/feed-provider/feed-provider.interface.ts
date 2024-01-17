@@ -5,6 +5,6 @@ export type TCreateGroupFunction = (title: string, users: string[]) => void;
 
 export interface IFeedContext {
   isLoading: boolean;
-  postsListResult: IPost[] | null;
+  feedPostsList: IPost[] | null;
   groupListResult: IGroup[] | null;
 }

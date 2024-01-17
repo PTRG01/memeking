@@ -8,19 +8,25 @@ import { GroupProvider } from '../../../contexts/group-provider/group-provider';
 export interface GroupListProps {
   groupList: IGroup[] | null;
   onItemClick: (id: string) => void;
+  isLoading: boolean;
 }
 
-export function GroupList({ groupList, onItemClick }: GroupListProps) {
+export function GroupList({
+  groupList,
+  onItemClick,
+  isLoading,
+}: GroupListProps) {
   return (
     <Stack align="stretch">
-      <LoaderComponent isLoading={false}>
-        <ScrollArea type="hover">
+      <LoaderComponent isLoading={isLoading}>
+        <ScrollArea type="hover" mah={500}>
           {groupList?.map((group) => (
             <GroupProvider key={group.id} parentId={group.id}>
               <GroupListItem
                 id={group.id}
                 title={group.title}
                 onItemClick={onItemClick}
+                avatar={group?.avatar}
               />
             </GroupProvider>
           ))}

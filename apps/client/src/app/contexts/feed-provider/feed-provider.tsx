@@ -1,7 +1,5 @@
-import React, { useCallback, useContext, useEffect } from 'react';
-import { useGroupList, usePost, usePostList } from '../../hooks/pb-utils';
+import React, { useContext } from 'react';
 import { useAuthContext } from '../auth-provider/auth-provider';
-import { pb } from '../../utils/pocketbase';
 import { IFeedContext } from './feed-provider.interface';
 import { usePostContext } from '../post-provider/post-provider';
 import { useGroupContext } from '../group-provider/group-provider';
@@ -15,55 +13,32 @@ export const FeedContext = React.createContext<IFeedContext | null>(null);
 
 export function FeedProvider({ children }: IFeedProviderProps) {
   const { user } = useAuthContext();
-  const { userPostsList: postsListResult, isLoading } = usePostContext();
-  const { groupListResult } = useGroupContext();
   const {
-    getList,
-    // result: postsListResult,
-  } = usePostList();
+    fullPostsList,
+    userPostsList,
+    isFollowingLoading: isLoading,
+  } = usePostContext();
+  const { groupListResult } = useGroupContext();
 
-  const { createOne: createOnePost } = usePost();
+  const followingPostsList =
+    fullPostsList &&
+    fullPostsList?.filter((post) => user?.followers.includes(post.author_id));
 
-  const currentGroupsIds = groupListResult?.map((group) => group.id);
+  const feedPostsList = followingPostsList &&
+    userPostsList && [...followingPostsList, ...userPostsList];
 
-  // const loadGroupsPosts = useCallback(() => {
-  //   getList({
-  //     queryParams: {
-  //       sort: 'created',
-  //       expand: 'author_id',
-  //       filter: `group_id~"${currentGroupsIds}"`,
-  //     },
-  //   });
-  // }, [getList, currentGroupsIds]);
-
-  // useEffect(() => {
-  //   loadGroupsPosts();
-  // }, [loadGroupsPosts]);
-
-  // useEffect(() => {
-  //   pb.collection('posts').subscribe('*', async (e) => {
-  //     loadGroupsPosts();
-  //   });
-  // }, [loadGroupsPosts, postsListResult]);
-
-  // useEffect(() => {
-  //   console.log(userPostsList);
-  // }, [userPostsList]);
-
-  const createGroupPost = (contentText: string, groupId: string) => {
-    createOnePost({
-      author_id: user?.id,
-      contentText: contentText,
-      group_id: groupId,
-    });
-  };
+  // const feedPostsList =
+  //   combinedPostLists &&
+  //   combinedPostLists?.sort(
+  //     (a, b) => new Date(a.created) - new Date(b.created)
+  //   );
 
   return (
     <FeedContext.Provider
       value={{
         isLoading,
         groupListResult,
-        postsListResult,
+        feedPostsList,
       }}
     >
       {children}
