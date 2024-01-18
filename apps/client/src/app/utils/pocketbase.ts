@@ -1,3 +1,3 @@
 import PocketBase from 'pocketbase';
-
-export const pb = new PocketBase('http://127.0.0.1:8090');
+const url = 'https://meme-king.pockethost.io/';
+export const pb = new PocketBase(url);
