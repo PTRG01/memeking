@@ -16,11 +16,14 @@ export default {
       profile: 'Profil',
     },
     signup: {
-      reqNum: 'Inclut un chiffre',
+      reqNum: 'Inclut un numéro',
       reqLower: 'Inclut une lettre minuscule',
       reqUpper: 'Inclut une lettre majuscule',
       reqSymbol: 'Inclut un symbole spécial',
-      reqChar: 'Doit contenir au moins 6 caractères',
+      reqChar: 'A au moins 6 caractères',
+      nameReq: 'Le nom doit comporter entre 2 et 20 caractères',
+      usernameReq:
+        "Le nom d'utilisateur doit comporter entre 2 et 10 caractères",
       username: "Nom d'utilisateur",
       email: 'E-mail',
       emailInvalid: 'E-mail invalide',

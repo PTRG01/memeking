@@ -21,6 +21,8 @@ export default {
       reqUpper: 'Includes uppercase letter',
       reqSymbol: 'Includes special symbol',
       reqChar: 'Has at least 6 characters',
+      nameReq: 'Name must be 2-20 characters long',
+      usernameReq: 'Name must be 2-10 characters long',
       username: 'Username',
       email: 'Email',
       emailInvalid: 'Invalid email',

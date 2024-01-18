@@ -26,7 +26,7 @@ export function ChatList() {
             radius={100}
             color={active ? 'blue' : 'gray'}
             variant={active ? 'outline' : 'subtle'}
-            p={2}
+            p={6}
           >
             <Message2 size="md" color="white" />
           </Button>

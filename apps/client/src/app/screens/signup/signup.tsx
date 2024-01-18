@@ -18,14 +18,11 @@ export function Signup() {
       name: '',
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      name: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
-      username: hasLength(
-        { min: 2, max: 10 },
-        'Name must be 2-10 characters long'
-      ),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : t('signup.email')),
+      name: hasLength({ min: 2, max: 20 }, t('signup.nameReq')),
+      username: hasLength({ min: 2, max: 10 }, t('signup.usernameReq')),
       passwordConfirm: (value, values) =>
-        value !== values.password ? 'Passwords did not match' : null,
+        value !== values.password ? t('signup.passwordNotMatch') : null,
     },
   });
   return (
