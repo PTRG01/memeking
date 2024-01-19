@@ -1,3 +1,3 @@
 import PocketBase from 'pocketbase';
-const url = 'https://meme-king.pockethost.io/';
+const url = import.meta.env.VITE_POCKETBASE_URL;
 export const pb = new PocketBase(url);
