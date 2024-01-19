@@ -36,7 +36,7 @@ export function AboutEditForm({ value, onSubmit }: AboutEditFormProps) {
           {...form.getInputProps('aboutText')}
         />
         <Group position="right" mt="md">
-          <Button type="submit">{t('profile.submit')}</Button>{' '}
+          <Button type="submit">{t('profile.submit')}</Button>
         </Group>
       </Stack>
     </form>
