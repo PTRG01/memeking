@@ -9,6 +9,7 @@ import {
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
+import { createImageUrl } from '../../utils/image-url';
 
 /* eslint-disable-next-line */
 export interface IContentFormBarProps {
@@ -27,12 +28,7 @@ export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
               radius={100}
               size="lg"
               src={
-                user?.avatar &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                  user?.avatar
-                }`
+                user?.avatar && createImageUrl('users', user?.id, user.avatar)
               }
             />
           </UnstyledButton>

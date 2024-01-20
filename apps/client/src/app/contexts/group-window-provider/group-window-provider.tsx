@@ -23,6 +23,7 @@ export function GroupWindowProvider({
   const {
     deleteOne,
     updateOne,
+    updateImage,
     getOne,
     data: groupResult,
     loading: isLoading,
@@ -37,17 +38,19 @@ export function GroupWindowProvider({
   const { createOne: createOnePost } = usePost();
 
   const loadGroup = useCallback(() => {
+    if (!groupId) return;
     getOne({
       queryParams: {
         sort: 'created',
         expand: 'users',
       },
     });
-  }, [getOne]);
+  }, [getOne, groupId]);
 
   useEffect(() => {
+    if (!groupId) return;
     loadGroup();
-  }, [loadGroup]);
+  }, [loadGroup, groupId]);
 
   useEffect(() => {
     pb.collection('groups').subscribe('*', async (e) => {
@@ -109,7 +112,7 @@ export function GroupWindowProvider({
   //  TODO ADD IMAGE UPLOAD
 
   const updateGroupImage = (image: FileWithPath[]) => {
-    updateOne(
+    updateImage(
       {
         avatar: image[0],
       },

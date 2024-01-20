@@ -1,5 +1,6 @@
 import { Avatar, Button, Title } from '@mantine/core';
 import { FileWithPath } from '@mantine/dropzone';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface IGroupItemProps {
   id: string;
@@ -25,11 +26,7 @@ export function GroupListItem({
         <Avatar
           size="md"
           radius={5}
-          src={
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            avatar && `${import.meta.env.VITE_FILES_URL}/groups/${id}/${avatar}`
-          }
+          src={avatar && createImageUrl('groups', id, avatar)}
         />
       }
       onClick={() => onItemClick(id)}

@@ -154,6 +154,7 @@ export function ChatWindowProvider({
         chatId,
         avatar,
         messages,
+        currentChat,
         currentChatUsers,
         sendMessage,
         currentChatUsersIds,

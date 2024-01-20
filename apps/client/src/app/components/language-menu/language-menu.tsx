@@ -18,22 +18,22 @@ export function LanguageMenu() {
   const data = [
     {
       label: t('languages.en'),
-      image: <ReactCountryFlag countryCode="US" svg />,
+      image: <ReactCountryFlag countryCode="US" svg sizes="md" />,
       lng: 'en',
     },
     {
       label: t('languages.de'),
-      image: <ReactCountryFlag countryCode="DE" svg />,
+      image: <ReactCountryFlag countryCode="DE" svg sizes="md" />,
       lng: 'de',
     },
     {
       label: t('languages.it'),
-      image: <ReactCountryFlag countryCode="IT" svg />,
+      image: <ReactCountryFlag countryCode="IT" svg sizes="md" />,
       lng: 'it',
     },
     {
       label: t('languages.fr'),
-      image: <ReactCountryFlag countryCode="FR" svg />,
+      image: <ReactCountryFlag countryCode="FR" svg sizes="md" />,
       lng: 'fr',
     },
     {

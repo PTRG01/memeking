@@ -28,6 +28,7 @@ import PostForm from '../../posts/post-form/post-form';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
 import { FileWithPath } from '@mantine/dropzone';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -90,11 +91,11 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
             radius={15}
             mb={15}
             withPlaceholder
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            src={`${import.meta.env.VITE_FILES_URL}/groups/${groupId}/${
-              groupResult?.avatar
-            }`}
+            src={
+              groupResult?.avatar &&
+              groupId &&
+              createImageUrl('groups', groupId, groupResult?.avatar)
+            }
           />
           <Stack mah={500} px={15}>
             <Title>{groupResult?.title}</Title>

@@ -14,15 +14,17 @@ import ChatWindowMenu from '../chat-window-menu/chat-window-menu';
 import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 import ChatScrollArea from '../chat-scroll-area/chat-scroll-area';
 import ChatMessageBar from '../chat-message-bar/chat-message-bar';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { createImageUrl } from '../../../utils/image-url';
 
 export function ChatWindow() {
   const { user } = useAuthContext();
   const { handleOpenChatToggle } = useChatContext();
   const {
     chatId,
+
     currentChatUsers,
     currentChatUsersIds,
     sendMessage,
@@ -31,9 +33,10 @@ export function ChatWindow() {
   } = useChatWindowContext();
   const [isOpened, setIsOpened] = useState(false);
 
-  const chatAvatar = currentChatUsers?.filter(
-    (chatUser) => chatUser?.id !== user?.id
-  )[0];
+  const chatAvatar = useMemo(
+    () => currentChatUsers?.filter((chatUser) => chatUser.id !== user?.id)[0],
+    [currentChatUsers, user]
+  );
 
   return isOpened ? (
     <Flex align="flex-end">
@@ -41,11 +44,10 @@ export function ChatWindow() {
         <Avatar
           radius={100}
           size="lg"
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          src={`${import.meta.env.VITE_FILES_URL}/users/${chatAvatar?.id}/${
-            chatAvatar?.avatar
-          }`}
+          src={
+            chatAvatar &&
+            createImageUrl('users', chatAvatar?.id, chatAvatar.avatar)
+          }
         />
       </UnstyledButton>
     </Flex>

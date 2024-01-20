@@ -13,30 +13,37 @@ export function FollowersSearch() {
     handleAddFollowing,
     handleRemoveFollowing,
     isLoading,
+    isUserLoading,
+    isSearchLoading,
   } = useChatContext();
 
   return (
     <Flex>
       <UserSearch handleSearch={handleSearch}>
         <LoaderComponent isLoading={isLoading}>
-          <ScrollArea type="hover">
-            <UserList
-              listItem={(item, values) => (
-                <UserListItemInline
-                  user={item}
-                  values={values}
-                  onAddUser={handleAddFollowing}
-                  onRemoveUser={handleRemoveFollowing}
-                  itemActive={false}
-                  isLoading={isLoading}
-                />
-              )}
-              userList={followersSearchList}
-              currentList={followingList}
-              isLoading={isLoading}
-              hideExisting={false}
-            />
-          </ScrollArea>
+          {
+            <ScrollArea
+              type="hover"
+              mih={followersSearchList.length > 0 ? 100 : 0}
+            >
+              <UserList
+                listItem={(item, values) => (
+                  <UserListItemInline
+                    user={item}
+                    values={values}
+                    onAddUser={handleAddFollowing}
+                    onRemoveUser={handleRemoveFollowing}
+                    itemActive={false}
+                    isLoading={isUserLoading}
+                  />
+                )}
+                userList={followersSearchList}
+                currentList={followingList}
+                isLoading={isSearchLoading}
+                hideExisting={false}
+              />
+            </ScrollArea>
+          }
         </LoaderComponent>
       </UserSearch>
     </Flex>

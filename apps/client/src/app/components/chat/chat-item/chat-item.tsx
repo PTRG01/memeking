@@ -3,6 +3,9 @@ import { useChatContext } from '../../../contexts/chat-provider/chat-provider';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useMemo } from 'react';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
+import { createImageUrl } from '../../../utils/image-url';
+import { toUppercaseArr } from '../../../utils/uppercase';
+import { useChatWindowContext } from '../../../contexts/chat-window-provider/chat-window-provider';
 
 export interface IChatItemProps {
   avatar: string;
@@ -13,19 +16,25 @@ export interface IChatItemProps {
 export function ChatItem({ avatar, id, expand }: IChatItemProps) {
   const { user } = useAuthContext();
   const { handleOpenChatToggle } = useChatContext();
+  const { messages } = useChatWindowContext();
 
-  const chatUsers = useMemo(
-    () =>
-      expand
-        ?.map(
-          (user: IUser) =>
-            user.name.charAt(0).toUpperCase() + user.name.slice(1)
-        )
-        .join(', '),
-    [expand]
+  const lastMessage = useMemo(
+    () => messages?.slice(-1)[0]?.content,
+    [messages]
   );
 
-  const chatAvatar = expand.filter((chatUser) => chatUser?.id !== user?.id)[0];
+  const chatUsers = useMemo(
+    () => expand.filter((chatUser) => chatUser.id !== user?.id),
+    [expand, user]
+  );
+  const chatUsernames = useMemo(
+    () => chatUsers.map((user) => user.name),
+    [chatUsers]
+  );
+  const chatAvatar = useMemo(
+    () => expand.filter((chatUser) => chatUser?.id !== user?.id)[0],
+    [expand, user]
+  );
 
   return (
     <Menu.Item onClick={() => handleOpenChatToggle(id)}>
@@ -35,16 +44,15 @@ export function ChatItem({ avatar, id, expand }: IChatItemProps) {
           radius={100}
           src={
             chatAvatar?.avatar &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            `${import.meta.env.VITE_FILES_URL}/users/${chatAvatar?.id}/${
-              chatAvatar?.avatar
-            }`
+            createImageUrl('users', chatAvatar?.id, chatAvatar?.avatar)
           }
         />
         <Flex ml={15} direction="column">
           <Text maw={150} truncate="end" fw={500}>
-            {chatUsers}
+            {toUppercaseArr(chatUsernames)}
+          </Text>
+          <Text maw={150} truncate="end">
+            {lastMessage}
           </Text>
         </Flex>
       </Flex>

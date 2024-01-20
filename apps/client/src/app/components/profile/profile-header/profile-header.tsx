@@ -20,6 +20,7 @@ import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import { useTranslation } from 'react-i18next';
 import styles from './profile-header.module.css';
 import { FileWithPath } from '@mantine/dropzone';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface ProfileHeaderProps {
   user: IUser;
@@ -58,12 +59,11 @@ export function ProfileHeader({
           style={{
             background: 'no-repeat',
             backgroundSize: 'cover',
-            backgroundImage:
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              `url(${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                user?.backgroundImage
-              })`,
+            backgroundImage: `url(${createImageUrl(
+              'users',
+              user?.id,
+              user?.backgroundImage
+            )}`,
           }}
         >
           <div className={styles.overlay} />
@@ -100,11 +100,7 @@ export function ProfileHeader({
                 size="xl"
                 radius={100}
                 src={
-                  user && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                    user?.avatar
-                  }`
+                  user.avatar && createImageUrl('users', user?.id, user?.avatar)
                 }
               />
             </UnstyledButton>

@@ -28,6 +28,8 @@ export interface IChatContext {
   userChatsList: IChat[] | null;
   followingList: IUser[] | null;
   isLoading: boolean;
+  isSearchLoading: boolean;
+  isUserLoading: boolean;
   error: string | null;
   handleAddFollowing: THandleAddFollowingFunction;
   handleRemoveFollowing: THandleRemoveFollowingFunction;
