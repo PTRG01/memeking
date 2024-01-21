@@ -71,6 +71,7 @@ export default {
       yourGroups: 'Your groups',
       followFirst: 'Follow someone first',
       lastVisited: 'Last visited:',
+      inviteFollowers: 'Invite following',
     },
     posts: {
       editPost: 'Edit post',

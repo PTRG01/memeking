@@ -14,6 +14,7 @@ export interface IChatWindowContext {
   chatId: string;
   avatar: string;
   messages: IMessage[] | null;
+  currentChat: IChat;
   currentChatUsers: IUser[] | IChat[] | null;
   currentChatUsersIds: string[];
   sendMessage: TSendMessageFunction;

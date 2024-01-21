@@ -20,6 +20,7 @@ import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { IGroup } from '../../../contexts/group-provider/group-provider.interface';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface IPostProps {
   post: IPost;
@@ -65,11 +66,7 @@ export function Post({ post, groups }: IPostProps) {
               radius={100}
               src={
                 authorData?.avatar &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                `${import.meta.env.VITE_FILES_URL}/users/${authorData?.id}/${
-                  authorData?.avatar
-                }`
+                createImageUrl('users', authorData?.id, authorData.avatar)
               }
             />
             <Stack spacing={1}>

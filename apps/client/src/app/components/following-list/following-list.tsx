@@ -72,7 +72,7 @@ export function FollowingList() {
             <FollowersSearch />
           </Collapse>
           {followersSearchList.length > 0 ? null : (
-            <ScrollArea type="hover">
+            <ScrollArea type="hover" mih={150}>
               <UserList
                 listItem={(item, values) => (
                   <UserListItemInline

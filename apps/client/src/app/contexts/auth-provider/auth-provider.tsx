@@ -22,12 +22,12 @@ const initialState: IAuthState = {
 export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
-  const [{ user, isLoading, isLoggedIn, error }, dispatch] = useReducer(
+  const [{ user, isLoading, isLoggedIn }, dispatch] = useReducer(
     authReducer,
     initialState
   );
 
-  const { loading, updateOne } = useUser(user?.id);
+  const { loading, updateOne, updateImage } = useUser(user?.id);
   const { data: updatedUser } = useUserSubscription(user?.id || '');
 
   useEffect(() => {
@@ -97,12 +97,12 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
   };
 
   const updateUserAvatar: TUpdateUserAvatarFunction = (image) => {
-    updateOne({
+    updateImage({
       avatar: image[0],
     });
   };
   const updateUserBackground: TUpdateUserBackgroundFunction = (image) => {
-    updateOne({
+    updateImage({
       backgroundImage: image[0],
     });
   };

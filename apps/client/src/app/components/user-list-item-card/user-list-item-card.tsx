@@ -17,6 +17,8 @@ import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-p
 import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-window-provider.interface';
 import { useTranslation } from 'react-i18next';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
+import { createImageUrl } from '../../utils/image-url';
+import { toUppercase } from '../../utils/uppercase';
 
 export interface IUserListItemCardProps {
   user: IUser;
@@ -52,27 +54,19 @@ function UserListItemCard({
           background: 'no-repeat',
           backgroundSize: 'cover',
           backgroundImage:
-            user?.avatar &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            `url(${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-              user?.backgroundImage
-            })`,
+            user?.backgroundImage &&
+            `url(${createImageUrl('users', user?.id, user?.backgroundImage)})`,
         }}
       />
       <Avatar
-        src={
-          user?.avatar && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${user?.avatar}`
-        }
+        src={user?.avatar && createImageUrl('users', user?.id, user?.avatar)}
         size={80}
         radius={80}
         mx="auto"
         mt={-30}
       />
       <Text ta="center" fz="lg" fw={500} mt="sm">
-        {user?.name}
+        {toUppercase(user?.name)}
       </Text>
       <Text ta="center" fz="sm" c="dimmed">
         {user?.aboutText ? user?.aboutText : <LineDashed size={10} />}

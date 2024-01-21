@@ -6,6 +6,7 @@ import LoaderComponent from '../../loader/loader';
 import ChatItem from '../chat-item/chat-item';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
+import { ChatWindowProvider } from '../../../contexts/chat-window-provider/chat-window-provider';
 
 export function ChatList() {
   const [active, setActive] = useState(false);
@@ -40,12 +41,13 @@ export function ChatList() {
               </Container>
             ) : (
               userChatsList?.map((chat) => (
-                <ChatItem
-                  key={chat.id}
-                  id={chat.id}
-                  avatar={chat.avatar}
-                  expand={chat.expand.users as IUser[]}
-                />
+                <ChatWindowProvider key={chat.id} currentChat={chat}>
+                  <ChatItem
+                    id={chat.id}
+                    avatar={chat.avatar}
+                    expand={chat.expand.users as IUser[]}
+                  />
+                </ChatWindowProvider>
               ))
             )}
           </ScrollArea>

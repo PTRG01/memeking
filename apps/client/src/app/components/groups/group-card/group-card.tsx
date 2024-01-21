@@ -15,6 +15,7 @@ import { useGroupContext } from '../../../contexts/group-provider/group-provider
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface IGroupCardProps {
   group: IGroup;
@@ -38,12 +39,7 @@ export function GroupCard({ group }: IGroupCardProps) {
           size="xl"
           radius={15}
           src={
-            group?.avatar &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            `${import.meta.env.VITE_FILES_URL}/groups/${group?.id}/${
-              group?.avatar
-            }`
+            group?.avatar && createImageUrl('groups', group?.id, group.avatar)
           }
         />
         <Stack>

@@ -36,7 +36,7 @@ export function GroupForm({ followingList }: IGroupFormProps) {
   const handleCreateGroup = useCallback(
     (title: string, groupUsers: string[]) => {
       createGroup(title, groupUsers);
-      navigate(navigateData.groups);
+      navigate(navigateData.groupsFeed);
     },
     [createGroup, navigate]
   );
