@@ -36,6 +36,7 @@ export const createSearchHook = <T extends Record>(
     const getList = useCallback(
       async ({ page = 1, perPage = 10, queryParams = {} }) => {
         setLoading(true);
+
         const result = await collection.getList<T>(page, perPage, queryParams);
         setData(result);
         setResult(result.items);
@@ -46,6 +47,7 @@ export const createSearchHook = <T extends Record>(
 
     const getFullList = useCallback(async (queryParams = {}) => {
       setLoading(true);
+
       const result = await collection.getFullList<T>(queryParams);
       setData(result);
       setResult(result);
