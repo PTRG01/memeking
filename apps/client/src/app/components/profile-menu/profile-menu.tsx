@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
+import { createImageUrl } from '../../utils/image-url';
 
 export function ProfileMenu() {
   const { user } = useAuthContext();
@@ -47,14 +48,7 @@ export function ProfileMenu() {
         >
           <Group spacing={7}>
             <Avatar
-              src={
-                user?.avatar &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                  user?.avatar
-                }`
-              }
+              src={user && createImageUrl('users', user?.id, user?.avatar)}
               alt={'User profile icon'}
               radius={100}
               size="md"
@@ -72,12 +66,7 @@ export function ProfileMenu() {
             <Avatar
               radius={100}
               src={
-                user?.avatar &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                  user?.avatar
-                }`
+                user?.avatar && createImageUrl('users', user?.id, user?.avatar)
               }
             />
           }

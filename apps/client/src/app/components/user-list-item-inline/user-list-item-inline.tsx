@@ -12,6 +12,8 @@ import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { useCallback } from 'react';
 import { CirclePlus, Dots, Loader, X } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
+import { createImageUrl } from '../../utils/image-url';
+import { toUppercase } from '../../utils/uppercase';
 
 export interface IUserListItemInlineProps {
   user: IUser;
@@ -55,11 +57,7 @@ function UserListItemInline({
             radius={100}
             size="md"
             src={
-              user?.avatar && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              `${import.meta.env.VITE_FILES_URL}/users/${user?.id}/${
-                user?.avatar
-              }`
+              user?.avatar && createImageUrl('users', user?.id, user?.avatar)
             }
           />
         }
@@ -68,11 +66,13 @@ function UserListItemInline({
         onClick={() => (onItemClick ? onItemClick(user.id) : null)}
       >
         <Title size={14} weight={500}>
-          {user.name}
+          {toUppercase(user?.name)}
         </Title>
       </Button>
       {isLoading ? (
-        <Loader size={'sm'} />
+        <Button size="md" variant="subtle" disabled color="gray">
+          <Loader size={30} />
+        </Button>
       ) : values?.includes(user.id) ? (
         <Menu variant="subtle">
           <Menu.Target>

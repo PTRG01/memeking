@@ -39,9 +39,13 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
     },
     dispatch,
   ] = useReducer(chatReducer, initialState);
-  const { user, updateCurrentUser } = useAuthContext();
+  const {
+    user,
+    updateCurrentUser,
+    isLoading: isUserLoading,
+  } = useAuthContext();
 
-  const { getList, result } = useUserList();
+  const { getList, result, loading: isSearchLoading } = useUserList();
   const { getOne, data: userData } = useUser(user?.id);
   const { getFullList, result: chatListResult } = useChatList();
   const { createOne } = useChat(user?.id);
@@ -56,6 +60,7 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
 
   const handleSearch = useCallback(
     (value: string) => {
+      // if (value.length > 0) dispatch({ type: 'LOADING' });
       if (value.length >= 3) {
         getList({
           queryParams: { filter: `name~"${value}"` },
@@ -97,7 +102,7 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
     if (user) {
       getFullList({
         sort: 'created',
-        expand: 'users',
+        expand: 'users,',
         filter: `users~"${user?.id}"`,
       });
     }
@@ -152,6 +157,8 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
     <ChatContext.Provider
       value={{
         isLoading,
+        isSearchLoading,
+        isUserLoading,
         handleSearch,
         followersSearchList,
         followingList,

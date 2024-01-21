@@ -3,6 +3,7 @@ import { DoorExit } from 'tabler-icons-react';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
+import { createImageUrl } from '../../../utils/image-url';
 interface IChatWindowMenuProps {
   user: IUser | null;
   chatAvatar: IUser;
@@ -39,11 +40,7 @@ function ChatWindowMenu({
         <UnstyledButton>
           <Group>
             <Avatar
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              src={`${import.meta.env.VITE_FILES_URL}/users/${chatAvatar?.id}/${
-                chatAvatar?.avatar
-              }`}
+              src={createImageUrl('users', chatAvatar?.id, chatAvatar.avatar)}
               size={45}
               radius="xl"
             />

@@ -89,18 +89,13 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
     );
 
     const createOne = useCallback(async (data: Partial<T>) => {
-      const formData = new FormData();
-      for (const key in data) {
-        formData.append(key, data[key] as string | Blob);
-      }
-
       setLoading(true);
-      const result = (await collection.create(formData)) as T;
+      const result = (await collection.create(data)) as T;
       setData(result);
       setLoading(false);
     }, []);
 
-    const updateOne = useCallback(
+    const updateImage = useCallback(
       async (data: Partial<T>, overrideId?: string) => {
         if (!id && !overrideId) {
           throw new Error('No id provided');
@@ -120,6 +115,23 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       [id]
     );
 
+    const updateOne = useCallback(
+      async (data: Partial<T>, overrideId?: string) => {
+        if (!id && !overrideId) {
+          throw new Error('No id provided');
+        }
+
+        setLoading(true);
+        const result = (await collection.update(
+          (overrideId ? overrideId : id) as string,
+          data
+        )) as T;
+        setData(result);
+        setLoading(false);
+      },
+      [id]
+    );
+
     const deleteOne = useCallback(
       async (overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
@@ -131,7 +143,15 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       [id]
     );
 
-    return { data, loading, getOne, createOne, updateOne, deleteOne };
+    return {
+      data,
+      loading,
+      getOne,
+      createOne,
+      updateOne,
+      deleteOne,
+      updateImage,
+    };
   };
 };
 
