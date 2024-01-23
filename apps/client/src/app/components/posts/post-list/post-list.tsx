@@ -12,8 +12,8 @@ export interface IPostListProps {
 
 export function PostList({ postList, isLoading }: IPostListProps) {
   return (
-    <LoaderComponent isLoading={isLoading}>
-      <Stack align="stretch">
+    <Stack align="stretch">
+      <LoaderComponent isLoading={isLoading}>
         <ScrollArea mih={720} type="hover">
           {postList?.map((post: IPost) => (
             <CommentProvider key={post.id} parentId={post.id}>
@@ -21,8 +21,8 @@ export function PostList({ postList, isLoading }: IPostListProps) {
             </CommentProvider>
           ))}
         </ScrollArea>
-      </Stack>
-    </LoaderComponent>
+      </LoaderComponent>
+    </Stack>
   );
 }
 

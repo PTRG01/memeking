@@ -1,4 +1,4 @@
-import { Stack } from '@mantine/core';
+import { Container, Stack } from '@mantine/core';
 import { useParams } from 'react-router-dom';
 import GroupContent from '../../components/groups/group-content/group-content';
 import GroupHeader from '../../components/groups/group-header/group-header';
@@ -13,12 +13,14 @@ export function Group() {
   if (groupId === 'create') return null;
   if (!user) return null;
   return (
-    <GroupWindowProvider groupId={groupId}>
-      <Stack align="stretch">
-        <GroupHeader user={user} groupId={groupId} />
-        <GroupContent />
-      </Stack>
-    </GroupWindowProvider>
+    <Container>
+      <GroupWindowProvider groupId={groupId}>
+        <Stack align="stretch" maw={1000}>
+          <GroupHeader user={user} groupId={groupId} />
+          <GroupContent />
+        </Stack>
+      </GroupWindowProvider>
+    </Container>
   );
 }
 
