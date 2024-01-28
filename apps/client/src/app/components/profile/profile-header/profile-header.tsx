@@ -1,13 +1,10 @@
 import {
   ActionIcon,
   Avatar,
-  Button,
   Card,
   Flex,
   Group,
   Menu,
-  Modal,
-  Stack,
   Text,
   Title,
   UnstyledButton,
@@ -35,21 +32,9 @@ export function ProfileHeader({
   onAvatarSubmit,
   onBackgroundSubmit,
 }: ProfileHeaderProps) {
-  const [isAvatarOpened, setIsAvatarOpened] = useState(false);
-  const [isBackgroundOpened, setIsBackgroundOpened] = useState(false);
-  const [avatar, setAvatar] = useState<FileWithPath[]>();
-  const [background, setBackground] = useState<FileWithPath[]>();
-
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const [isBackgroundOpen, setIsBackgroundOpen] = useState(false);
   const { t } = useTranslation();
-
-  const handleAvatarSubmit = () => {
-    if (avatar) onAvatarSubmit(avatar);
-    setIsAvatarOpened(false);
-  };
-  const handleBackgroundSubmit = () => {
-    if (background) onBackgroundSubmit(background);
-    setIsBackgroundOpened(false);
-  };
 
   return (
     <>
@@ -77,7 +62,7 @@ export function ProfileHeader({
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<FileUpload />}
-                  onClick={() => setIsBackgroundOpened(!isBackgroundOpened)}
+                  onClick={() => setIsBackgroundOpen(!isBackgroundOpen)}
                 >
                   {t('profile.selectImage')}
                 </Menu.Item>
@@ -108,7 +93,7 @@ export function ProfileHeader({
           <Menu.Dropdown>
             <Menu.Item
               icon={<FileUpload />}
-              onClick={() => setIsAvatarOpened(!isAvatarOpened)}
+              onClick={() => setIsAvatarOpen(!isAvatarOpen)}
             >
               {t('profile.selectImage')}
             </Menu.Item>
@@ -134,32 +119,18 @@ export function ProfileHeader({
           <Text>{user?.aboutText}</Text>
         </Flex>
       </Group>
-      <Modal
-        opened={isAvatarOpened}
-        onClose={() => setIsAvatarOpened(!isAvatarOpened)}
-      >
-        <Stack mb={15}>
-          <DropzoneButton onSubmit={(values) => setAvatar(values.images)} />
-          <Button fullWidth type="submit" onClick={() => handleAvatarSubmit()}>
-            {t('groups.submitImage')}
-          </Button>
-        </Stack>
-      </Modal>
-      <Modal
-        opened={isBackgroundOpened}
-        onClose={() => setIsBackgroundOpened(!isBackgroundOpened)}
-      >
-        <Stack mb={15}>
-          <DropzoneButton onSubmit={(values) => setBackground(values.images)} />
-          <Button
-            fullWidth
-            type="submit"
-            onClick={() => handleBackgroundSubmit()}
-          >
-            {t('groups.submitImage')}
-          </Button>
-        </Stack>
-      </Modal>
+
+      <DropzoneButton
+        onSubmit={onAvatarSubmit}
+        isOpen={isAvatarOpen}
+        onOpen={setIsAvatarOpen}
+      />
+
+      <DropzoneButton
+        onSubmit={onBackgroundSubmit}
+        isOpen={isBackgroundOpen}
+        onOpen={setIsBackgroundOpen}
+      />
     </>
   );
 }

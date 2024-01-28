@@ -1,5 +1,5 @@
 import { IUser } from '../auth-provider/auth-provider.interface';
-import { Record } from 'pocketbase';
+import Record from 'pocketbase';
 
 export type THandleOpenChatToggleFunction = (id: string) => void;
 

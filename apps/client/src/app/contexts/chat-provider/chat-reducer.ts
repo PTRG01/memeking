@@ -78,9 +78,10 @@ export const chatReducer = (
       return {
         ...state,
         isLoading: false,
-        followingList: (action.payload as IUser)?.expand.followers?.map(
-          (user: IUser) => user
-        ),
+        followingList:
+          (action.payload as IUser)?.expand?.followers?.map(
+            (user: IUser) => user
+          ) || [],
       };
     case Actions.UPDATE_CHATS_LIST:
       return {

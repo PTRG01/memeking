@@ -1,5 +1,5 @@
 import { FileWithPath } from '@mantine/dropzone';
-import { Record } from 'pocketbase';
+import Record from 'pocketbase';
 
 export type TCreateGroupFunction = (title: string, users: string[]) => void;
 export type TCreateGroupPostFunction = (
@@ -17,6 +17,7 @@ export interface IGroup extends Record {
   title: string;
   aboutText: string;
   users: string[];
+  author_id: string;
 }
 
 export interface IGroupContext {
