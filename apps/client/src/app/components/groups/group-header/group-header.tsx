@@ -30,9 +30,9 @@ import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
-import { FileWithPath } from '@mantine/dropzone';
 import { createImageUrl } from '../../../utils/image-url';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
+import ConfirmModal from '../../confirm-modal/confirm-modal';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -52,6 +52,8 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const { t } = useTranslation();
 
   const handleToggleForm = useCallback(() => {
@@ -147,7 +149,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                   <Menu.Dropdown>
                     <Menu.Item
                       icon={<DoorExit size={15} />}
-                      onClick={() => leaveGroup()}
+                      onClick={() => setIsConfirmOpen(true)}
                     >
                       {t('groups.leave')}
                     </Menu.Item>
@@ -208,6 +210,13 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           isOpen={isFormOpen}
           onCloseForm={handleToggleForm}
           onFormSubmit={handleCreatePost}
+        />
+        <ConfirmModal
+          message="Are you sure, you want to leave this group?"
+          onConfirm={() => leaveGroup()}
+          onCancel={() => setIsConfirmOpen(false)}
+          onClose={setIsConfirmOpen}
+          open={isConfirmOpen}
         />
       </>
     </LoaderComponent>

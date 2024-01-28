@@ -14,8 +14,9 @@ import { IGroup } from '../../../contexts/group-provider/group-provider.interfac
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { createImageUrl } from '../../../utils/image-url';
+import ConfirmModal from '../../confirm-modal/confirm-modal';
 
 export interface IGroupCardProps {
   group: IGroup;
@@ -25,6 +26,9 @@ export function GroupCard({ group }: IGroupCardProps) {
   const { user } = useAuthContext();
   const { leaveGroup, deleteGroup } = useGroupContext();
   const navigate = useNavigate();
+  const [isLeaveConfirmOpen, setIsLeaveConfirmOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
   const { t } = useTranslation();
 
   const currentUsersGroup = useMemo(
@@ -61,14 +65,14 @@ export function GroupCard({ group }: IGroupCardProps) {
           <Menu.Dropdown>
             <Menu.Item
               icon={<DoorExit />}
-              onClick={() => leaveGroup(group?.id, group?.users)}
+              onClick={() => setIsLeaveConfirmOpen(true)}
             >
               {t('groups.leave')}
             </Menu.Item>
             {currentUsersGroup && (
               <Menu.Item
                 icon={<SquareLetterX />}
-                onClick={() => deleteGroup(group?.id)}
+                onClick={() => setIsDeleteConfirmOpen(true)}
               >
                 {t('groups.delete')}
               </Menu.Item>
@@ -76,6 +80,20 @@ export function GroupCard({ group }: IGroupCardProps) {
           </Menu.Dropdown>
         </Menu>
       </Group>
+      <ConfirmModal
+        message="Are you sure, you want to leave this group?"
+        onConfirm={() => leaveGroup(group?.id, group?.users)}
+        onCancel={() => setIsLeaveConfirmOpen(false)}
+        onClose={setIsLeaveConfirmOpen}
+        open={isLeaveConfirmOpen}
+      />
+      <ConfirmModal
+        message="Are you sure, you want to delete this group?"
+        onConfirm={() => deleteGroup(group?.id)}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+        onClose={setIsDeleteConfirmOpen}
+        open={isDeleteConfirmOpen}
+      />
     </Paper>
   );
 }

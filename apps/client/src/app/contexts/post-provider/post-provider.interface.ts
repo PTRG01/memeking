@@ -1,4 +1,4 @@
-import { Record } from 'pocketbase';
+import Record from 'pocketbase';
 
 export type THandleOpenChatToggleFunction = (id: string) => void;
 
@@ -16,6 +16,7 @@ export interface IPost extends Record {
   title: string;
   contentText: string;
   upvote_ids: string[];
+  author_id: string;
 }
 
 export interface IPostContext {
