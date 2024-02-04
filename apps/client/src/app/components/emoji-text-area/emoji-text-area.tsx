@@ -6,6 +6,7 @@ import {
   ChangeEvent,
   Dispatch,
   KeyboardEvent,
+  ReactNode,
   SetStateAction,
   useCallback,
   useRef,
@@ -24,6 +25,7 @@ export interface IEmojiTextAreaProps {
   label?: string;
   withSendIcon: boolean;
   isLoading?: boolean;
+  error: ReactNode;
 }
 
 export function EmojiTextArea({
@@ -37,6 +39,7 @@ export function EmojiTextArea({
   label,
   withSendIcon,
   isLoading,
+  error,
 }: IEmojiTextAreaProps) {
   const textarea = useRef<HTMLTextAreaElement | null>(null);
 
@@ -88,6 +91,7 @@ export function EmojiTextArea({
       ref={textarea}
       value={value}
       label={label}
+      error={error}
       onChange={(event) => handleChatInput(event)}
       onKeyDown={(event) => {
         handleOnKeydown(event);
@@ -128,7 +132,7 @@ export function EmojiTextArea({
               />
             </Popover.Dropdown>
             <Popover.Target>
-              <ActionIcon size="xl" variant="filled" radius="xl">
+              <ActionIcon size="xl" variant="filled" radius="xl" mr={16}>
                 <MoodSmile size={28} />
               </ActionIcon>
             </Popover.Target>

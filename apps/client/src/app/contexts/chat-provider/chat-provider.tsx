@@ -49,7 +49,7 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
   const { getOne, data: userData } = useUser(user?.id);
   const { getFullList, result: chatListResult } = useChatList();
   const { createOne } = useChat(user?.id);
-
+  const { getOne: getOneChat } = useChat();
   //  LOAD USER
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
 
   const handleSearch = useCallback(
     (value: string) => {
-      // if (value.length > 0) dispatch({ type: 'LOADING' });
       if (value.length >= 3) {
         getList({
           queryParams: { filter: `name~"${value}"` },
@@ -108,6 +107,34 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
     }
   }, [user, getFullList]);
 
+  const handleOpenChatToggle: THandleOpenChatToggleFunction = async (chat) => {
+    dispatch({ type: 'UPDATE_OPEN_CHATS', payload: chat });
+  };
+
+  const createChatWithUser = async (otherUser: string) => {
+    const newChatUsers = [user?.id, otherUser];
+    const userChatsListUsers = userChatsList?.map((chat) => chat.users);
+    const chatExists = userChatsListUsers?.map((chatUsers) =>
+      chatUsers?.every((usersArr, i) => usersArr === newChatUsers[i])
+    );
+
+    if (chatExists?.some((chat) => chat === true)) return;
+    try {
+      const result = await createOne({ users: newChatUsers } as IChat);
+      const chatData = await getOneChat(
+        {
+          expand: 'users,',
+        },
+        (result as IChat)?.id
+      );
+      dispatch({
+        type: 'UPDATE_CREATED_CHAT',
+        payload: chatData as IChat,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     loadChats();
   }, [user?.id, loadChats]);
@@ -120,26 +147,11 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
       });
   }, [chatListResult]);
 
-  const createChatWithUser = (otherUser: string) => {
-    const newChatUsers = [user?.id, otherUser];
-    const userChatsListUsers = userChatsList?.map((chat) => chat.users);
-    const chatExists = userChatsListUsers?.map((chatUsers) =>
-      chatUsers?.every((usersArr, i) => usersArr === newChatUsers[i])
-    );
-
-    if (chatExists?.some((chat) => chat === true)) return;
-    createOne({ users: newChatUsers });
-  };
-
   useEffect(() => {
     pb.collection('chats').subscribe('*', async (e) => {
       loadChats();
     });
   }, [userChatsList, loadChats]);
-
-  const handleOpenChatToggle: THandleOpenChatToggleFunction = (id) => {
-    dispatch({ type: 'UPDATE_OPEN_CHATS', payload: id });
-  };
 
   // UPDATE USERS FOLLOWING LIST
 

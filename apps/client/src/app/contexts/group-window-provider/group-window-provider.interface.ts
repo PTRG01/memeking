@@ -24,4 +24,5 @@ export interface IGroupWindowContext {
   createGroupPost: TCreateGroupPostFunction;
   updateGroupImage: TUpdateGroupImageFunction;
   updateGroupDescription: TUpdateGroupDescriptionFunction;
+  error: string;
 }

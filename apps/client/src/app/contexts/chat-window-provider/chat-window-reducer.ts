@@ -59,10 +59,10 @@ export const chatWindowReducer = (
         isLoading: false,
         chatId: (action.payload as IChat)?.id,
         avatar: (action.payload as IChat).avatar,
-        currentChatUsers: (action.payload as IChat).expand.users
+        currentChatUsers: (action.payload as IChat).expand?.users
           .map((user: IUser) => user)
           .flat() as IUser[],
-        currentChatUsersIds: (action.payload as IChat)?.expand.users
+        currentChatUsersIds: (action.payload as IChat)?.expand?.users
           .map((user: IUser) => user.id)
           .flat(2) as string[],
       };

@@ -17,6 +17,8 @@ export interface IPost extends Record {
   contentText: string;
   upvote_ids: string[];
   author_id: string;
+  group_id: string;
+  expand: Record;
 }
 
 export interface IPostContext {

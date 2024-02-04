@@ -64,7 +64,8 @@ function UserListItemInline({
               }
             />
           }
-          size="md"
+          disabled={isLoading}
+          size="lg"
           variant="subtle"
           onClick={() => (onItemClick ? onItemClick(user.id) : null)}
         >
@@ -73,14 +74,14 @@ function UserListItemInline({
           </Title>
         </Button>
         {isLoading ? (
-          <Button size="md" variant="subtle" disabled color="gray">
+          <Button size="lg" variant="subtle" disabled color="gray">
             <Loader size={30} />
           </Button>
         ) : values?.includes(user.id) ? (
           <Menu variant="subtle">
             <Menu.Target>
-              <Button size="md" variant="subtle" color="gray">
-                <Dots />
+              <Button size="lg" variant="subtle" color="gray">
+                <Dots size={20} />
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
@@ -101,8 +102,10 @@ function UserListItemInline({
           <Button
             variant="subtle"
             color="gray"
-            size="md"
+            size="lg"
             onClick={handleValues}
+            loading={isLoading}
+            disabled={isLoading}
           >
             <CirclePlus stroke="green" />
           </Button>

@@ -32,7 +32,7 @@ export function FollowingList() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const handleItemClick = useCallback(
-    (id: string) => {
+    async (id: string) => {
       //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
       const currentUsers = [user?.id, id];
       const matchingChat = userChatsList?.find(
@@ -42,6 +42,7 @@ export function FollowingList() {
       );
       if (!matchingChat) {
         createChatWithUser(id);
+
         return;
       }
       const chatExists = matchingChat?.users?.includes(id);

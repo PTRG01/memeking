@@ -22,6 +22,7 @@ export type TChatActions =
   | { type: 'UPDATE_SEARCH'; payload: IUser[] | null }
   | { type: 'UPDATE_FOLLOWING'; payload: IUser | null }
   | { type: 'UPDATE_CHATS_LIST'; payload: IChat[] }
+  | { type: 'UPDATE_CREATED_CHAT'; payload: IChat }
   | { type: 'UPDATE_OPEN_CHATS'; payload: string };
 
 const Actions = {
@@ -32,6 +33,7 @@ const Actions = {
   CANCEL_SEARCH: 'CANCEL_SEARCH',
   UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
   UPDATE_CHATS_LIST: 'UPDATE_CHATS_LIST',
+  UPDATE_CREATED_CHAT: 'UPDATE_CREATED_CHAT',
   UPDATE_OPEN_CHATS: 'UPDATE_OPEN_CHATS',
   CLEAR_ERROR: 'CLEAR_ERROR',
   SIGNOUT: 'SIGNOUT',
@@ -89,7 +91,11 @@ export const chatReducer = (
         isLoading: false,
         userChatsList: action.payload as IChat[],
       };
-
+    case Actions.UPDATE_CREATED_CHAT:
+      return {
+        ...state,
+        openChats: [...(state.openChats as IChat[]), action.payload] as IChat[],
+      };
     case Actions.UPDATE_OPEN_CHATS:
       if (state.openChats?.some((chat) => chat.id === action.payload)) {
         return {

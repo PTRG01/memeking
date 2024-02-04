@@ -1,6 +1,6 @@
 import { IUser } from '../auth-provider/auth-provider.interface';
 import { IChat } from '../chat-provider/chat-provider.interface';
-import { Record } from 'pocketbase';
+import Client from 'pocketbase';
 
 export type TSendMessageFunction = (message: string, recordId: string) => void;
 
@@ -26,7 +26,7 @@ export interface IChatWindowContext {
   isLoading: boolean;
 }
 
-export interface IMessage extends Record {
+export interface IMessage extends Client {
   id: string;
   users: IUser[] | null;
   content: string;

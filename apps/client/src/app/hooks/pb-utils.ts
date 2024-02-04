@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
-import { ListResult, Record, RecordService } from 'pocketbase';
+import Record from 'pocketbase';
+import { ListResult, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
 import { IComment } from '../contexts/comment-provider/comment-provider.interface';
@@ -27,7 +28,7 @@ export const createSearchHook = <T extends Record>(
     const [data, setData] = useState<ListResult<T> | T[] | null>(null);
     const [result, setResult] = useState<T[] | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState<Error | null>(null);
     const items = useMemo(
       () => (Array.isArray(data) ? data : data?.items || []),
       [data]
@@ -36,34 +37,53 @@ export const createSearchHook = <T extends Record>(
     const getList = useCallback(
       async ({ page = 1, perPage = 10, queryParams = {} }) => {
         setLoading(true);
-
-        const result = await collection.getList<T>(page, perPage, queryParams);
-        setData(result);
-        setResult(result.items);
-        setLoading(false);
+        try {
+          const result = await collection.getList<T>(
+            page,
+            perPage,
+            queryParams
+          );
+          setData(result);
+          setResult(result.items);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+        } finally {
+          setLoading(false);
+        }
       },
       []
     );
 
     const getFullList = useCallback(async (queryParams = {}) => {
       setLoading(true);
-
-      const result = await collection.getFullList<T>(queryParams);
-      setData(result);
-      setResult(result);
-      setLoading(false);
+      try {
+        const result = await collection.getFullList<T>(queryParams);
+        setData(result);
+        setResult(result);
+      } catch (error) {
+        setError(
+          error instanceof Error ? error : new Error('An unknown error occured')
+        );
+      } finally {
+        setLoading(false);
+      }
     }, []);
 
     return useMemo(
       () => ({
         data,
         result,
+        error,
         loading,
         items,
         getList,
         getFullList,
       }),
-      [data, getFullList, getList, items, loading, result]
+      [data, getFullList, getList, items, loading, result, error]
     );
   };
 };
@@ -72,18 +92,28 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
   return (id?: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
     const getOne = useCallback(
       async (query = {}, overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-
-        const result = (await collection.getOne(
-          (overrideId ? overrideId : id) as string,
-          query
-        )) as T;
-        setData(result);
-        setLoading(false);
+        try {
+          const result = (await collection.getOne(
+            (overrideId ? overrideId : id) as string,
+            query
+          )) as T;
+          setData(result);
+          return result;
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
@@ -93,6 +123,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       const result = (await collection.create(data)) as T;
       setData(result);
       setLoading(false);
+      return result;
     }, []);
 
     const updateImage = useCallback(
@@ -105,12 +136,21 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
           formData.append(key, data[key] as string | Blob);
         }
         setLoading(true);
-        const result = (await collection.update(
-          (overrideId ? overrideId : id) as string,
-          formData
-        )) as T;
-        setData(result);
-        setLoading(false);
+        try {
+          const result = (await collection.update(
+            (overrideId ? overrideId : id) as string,
+            formData
+          )) as T;
+          setData(result);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
@@ -122,12 +162,21 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
         }
 
         setLoading(true);
-        const result = (await collection.update(
-          (overrideId ? overrideId : id) as string,
-          data
-        )) as T;
-        setData(result);
-        setLoading(false);
+        try {
+          const result = (await collection.update(
+            (overrideId ? overrideId : id) as string,
+            data
+          )) as T;
+          setData(result);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
@@ -136,15 +185,25 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        await collection.delete((overrideId ? overrideId : id) as string);
-        setData(null);
-        setLoading(false);
+        try {
+          await collection.delete((overrideId ? overrideId : id) as string);
+          setData(null);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
 
     return {
       data,
+      error,
       loading,
       getOne,
       createOne,
@@ -161,11 +220,13 @@ const createSubscriptionHook = <T extends Record>(
   return (id?: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
     const unsubscribe = useCallback(async () => {
       setLoading(true);
       await collection.unsubscribe(id);
       setData(null);
+      setError(null);
       setLoading(false);
     }, [id]);
 
@@ -173,6 +234,7 @@ const createSubscriptionHook = <T extends Record>(
       if (!id) return;
       collection.subscribe(id, (e) => {
         setData(e.record as T);
+        setError(null);
       });
 
       return () => {
@@ -180,7 +242,7 @@ const createSubscriptionHook = <T extends Record>(
       };
     }, [id, unsubscribe]);
 
-    return { data, loading, unsubscribe };
+    return { data, error, loading, unsubscribe };
   };
 };
 

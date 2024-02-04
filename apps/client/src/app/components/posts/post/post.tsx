@@ -21,6 +21,7 @@ import { IGroup } from '../../../contexts/group-provider/group-provider.interfac
 import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../../utils/image-url';
+import ConfirmModal from '../../confirm-modal/confirm-modal';
 
 export interface IPostProps {
   post: IPost;
@@ -30,6 +31,7 @@ export interface IPostProps {
 export function Post({ post, groups }: IPostProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const { user } = useAuthContext();
   const { deletePost, updatePost, handleUpvote } = usePostContext();
   const { commentListResult, isLoading } = useCommentContext();
@@ -88,7 +90,7 @@ export function Post({ post, groups }: IPostProps) {
                   <Menu.Item onClick={() => handleOpenPostForm(editFormOpen)}>
                     {t('posts.editPost')}
                   </Menu.Item>
-                  <Menu.Item onClick={() => deletePost(post?.id)}>
+                  <Menu.Item onClick={() => setIsDeleteConfirmOpen(true)}>
                     {t('posts.deletePost')}
                   </Menu.Item>
                 </>
@@ -118,6 +120,13 @@ export function Post({ post, groups }: IPostProps) {
           onCloseForm={handleOpenPostForm}
           isEditing={true}
           onFormSubmit={handleEditPost}
+        />
+        <ConfirmModal
+          message="Are you sure, you want to delete this post?"
+          onConfirm={() => deletePost(post?.id)}
+          onCancel={() => setIsDeleteConfirmOpen(false)}
+          onClose={setIsDeleteConfirmOpen}
+          open={isDeleteConfirmOpen}
         />
       </Paper>
     </Stack>

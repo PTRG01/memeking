@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../../utils/image-url';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
 import ConfirmModal from '../../confirm-modal/confirm-modal';
+import ErrorMessage from '../../error-message/error-message';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -218,6 +219,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           onClose={setIsConfirmOpen}
           open={isConfirmOpen}
         />
+        {/* <ErrorMessage message={error} /> */}
       </>
     </LoaderComponent>
   );

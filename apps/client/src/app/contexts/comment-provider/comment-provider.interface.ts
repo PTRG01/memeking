@@ -1,4 +1,4 @@
-import { Record } from 'pocketbase';
+import Record from 'pocketbase';
 
 export type TCreateCommentFuntction = (contentText: string) => void;
 
