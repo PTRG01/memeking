@@ -1,4 +1,4 @@
-import Record from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 
 export type THandleOpenChatToggleFunction = (id: string) => void;
 
@@ -10,7 +10,7 @@ export type THandleEditPostFunction = (post: IPost) => void;
 export type TUpdatePostFunction = (values: IPost, post: IPost) => void;
 export type THandleUpvoteFunction = (post: IPost) => void;
 export type TLoadFollowingPostsFunction = (userId: string) => void;
-export interface IPost extends Record {
+export interface IPost extends RecordModel {
   id: string;
   avatar: string;
   title: string;
@@ -18,7 +18,7 @@ export interface IPost extends Record {
   upvote_ids: string[];
   author_id: string;
   group_id: string;
-  expand: Record;
+  expand: RecordModel;
 }
 
 export interface IPostContext {

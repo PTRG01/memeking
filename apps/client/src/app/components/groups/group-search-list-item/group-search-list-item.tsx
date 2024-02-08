@@ -21,7 +21,7 @@ export interface IGroupSearchListItemProps {
 }
 
 export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
-  const { joinGroup } = useGroupContext();
+  const { joinGroup, isLoading } = useGroupContext();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -53,7 +53,13 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
             <Text>{group?.aboutText}</Text>
           </Stack>
         </Group>
-        <Button onClick={() => handleJoinGroup()}>{t('groups.join')}</Button>
+        <Button
+          onClick={() => handleJoinGroup()}
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          {t('groups.join')}
+        </Button>
       </Group>
     </Paper>
   );

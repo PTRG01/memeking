@@ -49,6 +49,10 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     leaveGroup,
     createGroupPost,
     isLoading,
+    postError,
+    setPostError,
+    groupError,
+    setGroupError,
   } = useGroupWindowContext();
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -109,21 +113,23 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
               }}
             >
               <Flex h="100%" justify="flex-end" align="flex-end">
-                <Menu>
-                  <Menu.Target>
-                    <ActionIcon variant="filled">
-                      <Dots />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      icon={<FileUpload />}
-                      onClick={() => setIsImageOpen(true)}
-                    >
-                      {t('profile.selectImage')}
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
+                {currentUserJoined && isAdmin && (
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon variant="filled">
+                        <Dots />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        icon={<FileUpload />}
+                        onClick={() => setIsImageOpen(true)}
+                      >
+                        {t('profile.selectImage')}
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                )}
               </Flex>
             </Card.Section>
           </Card>
@@ -160,6 +166,8 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                 <Button
                   leftIcon={<Plus />}
                   onClick={() => joinGroup(groupResult?.users)}
+                  loading={isLoading}
+                  disabled={isLoading}
                 >
                   {t('groups.join')}
                 </Button>
@@ -195,6 +203,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
               <GroupEditForm
                 group={groupResult}
                 onSubmitAbout={handleUpdateDescription}
+                isLoading={isLoading}
               />
             </Modal>
           </Stack>
@@ -206,6 +215,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           onSubmit={updateGroupImage}
           isOpen={isImageOpen}
           onOpen={setIsImageOpen}
+          isLoading={isLoading}
         />
         <PostForm
           isOpen={isFormOpen}
@@ -219,7 +229,15 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           onClose={setIsConfirmOpen}
           open={isConfirmOpen}
         />
-        {/* <ErrorMessage message={error} /> */}
+        {postError && (
+          <ErrorMessage error={postError} onClose={() => setPostError(null)} />
+        )}
+        {groupError && (
+          <ErrorMessage
+            error={groupError}
+            onClose={() => setGroupError(null)}
+          />
+        )}
       </>
     </LoaderComponent>
   );

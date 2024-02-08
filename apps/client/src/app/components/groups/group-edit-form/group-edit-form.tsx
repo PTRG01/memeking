@@ -6,9 +6,14 @@ import { useTranslation } from 'react-i18next';
 export interface IGroupEditFormProps {
   group: IGroup;
   onSubmitAbout: (aboutText: string | null) => void;
+  isLoading: boolean;
 }
 
-export function GroupEditForm({ group, onSubmitAbout }: IGroupEditFormProps) {
+export function GroupEditForm({
+  group,
+  onSubmitAbout,
+  isLoading,
+}: IGroupEditFormProps) {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -36,7 +41,12 @@ export function GroupEditForm({ group, onSubmitAbout }: IGroupEditFormProps) {
             autosize
             {...form.getInputProps('aboutText')}
           ></Textarea>
-          <Button fullWidth type="submit">
+          <Button
+            fullWidth
+            type="submit"
+            loading={isLoading}
+            disabled={isLoading}
+          >
             {t('groups.submitDescription')}
           </Button>
         </Stack>

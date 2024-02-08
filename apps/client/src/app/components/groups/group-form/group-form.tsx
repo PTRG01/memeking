@@ -13,7 +13,7 @@ export interface IGroupFormProps {
 }
 
 export function GroupForm({ followingList }: IGroupFormProps) {
-  const { createGroup } = useGroupContext();
+  const { createGroup, isLoading } = useGroupContext();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -60,7 +60,12 @@ export function GroupForm({ followingList }: IGroupFormProps) {
             searchable
             {...form.getInputProps('groupUsers')}
           />
-          <Button type="submit" fullWidth>
+          <Button
+            type="submit"
+            fullWidth
+            loading={isLoading}
+            disabled={isLoading}
+          >
             {t('groups.createGroup')}
           </Button>
         </Stack>

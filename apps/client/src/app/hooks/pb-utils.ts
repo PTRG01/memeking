@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
-import Record from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 import { ListResult, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
@@ -21,7 +21,7 @@ const postCollection = createPbCollection('posts');
 const commentCollection = createPbCollection('comments');
 const groupCollection = createPbCollection('groups');
 
-export const createSearchHook = <T extends Record>(
+export const createSearchHook = <T extends RecordModel>(
   collection: RecordService
 ) => {
   return () => {
@@ -36,6 +36,7 @@ export const createSearchHook = <T extends Record>(
 
     const getList = useCallback(
       async ({ page = 1, perPage = 10, queryParams = {} }) => {
+        setError(null);
         setLoading(true);
         try {
           const result = await collection.getList<T>(
@@ -59,6 +60,7 @@ export const createSearchHook = <T extends Record>(
     );
 
     const getFullList = useCallback(async (queryParams = {}) => {
+      setError(null);
       setLoading(true);
       try {
         const result = await collection.getFullList<T>(queryParams);
@@ -78,6 +80,7 @@ export const createSearchHook = <T extends Record>(
         data,
         result,
         error,
+        setError,
         loading,
         items,
         getList,
@@ -88,7 +91,9 @@ export const createSearchHook = <T extends Record>(
   };
 };
 
-export const createCRUDHook = <T extends Record>(collection: RecordService) => {
+export const createCRUDHook = <T extends RecordModel>(
+  collection: RecordService
+) => {
   return (id?: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(false);
@@ -98,6 +103,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (query = {}, overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
+        setError(null);
         try {
           const result = (await collection.getOne(
             (overrideId ? overrideId : id) as string,
@@ -120,10 +126,19 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
 
     const createOne = useCallback(async (data: Partial<T>) => {
       setLoading(true);
-      const result = (await collection.create(data)) as T;
-      setData(result);
-      setLoading(false);
-      return result;
+      setError(null);
+      try {
+        const result = (await collection.create(data)) as T;
+        setData(result);
+        setLoading(false);
+        return result;
+      } catch (error) {
+        setError(
+          error instanceof Error ? error : new Error('An unknown error occured')
+        );
+      } finally {
+        setLoading(false);
+      }
     }, []);
 
     const updateImage = useCallback(
@@ -136,6 +151,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
           formData.append(key, data[key] as string | Blob);
         }
         setLoading(true);
+        setError(null);
         try {
           const result = (await collection.update(
             (overrideId ? overrideId : id) as string,
@@ -160,8 +176,8 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
         if (!id && !overrideId) {
           throw new Error('No id provided');
         }
-
         setLoading(true);
+        setError(null);
         try {
           const result = (await collection.update(
             (overrideId ? overrideId : id) as string,
@@ -185,6 +201,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
+        setError(null);
         try {
           await collection.delete((overrideId ? overrideId : id) as string);
           setData(null);
@@ -204,6 +221,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
     return {
       data,
       error,
+      setError,
       loading,
       getOne,
       createOne,
@@ -214,7 +232,7 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
   };
 };
 
-const createSubscriptionHook = <T extends Record>(
+const createSubscriptionHook = <T extends RecordModel>(
   collection: RecordService
 ) => {
   return (id?: string) => {

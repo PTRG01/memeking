@@ -34,7 +34,7 @@ export function GroupListItem({
         root: { display: 'flex' },
       })}
     >
-      <Title size={14} weight={500}>
+      <Title size={14} weight={500} truncate="end" maw={170}>
         {title}
       </Title>
     </Button>

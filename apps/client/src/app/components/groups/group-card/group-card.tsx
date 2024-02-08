@@ -81,6 +81,7 @@ export function GroupCard({ group }: IGroupCardProps) {
         </Menu>
       </Group>
       <ConfirmModal
+        title="Confirm leave"
         message="Are you sure, you want to leave this group?"
         onConfirm={() => leaveGroup(group?.id, group?.users)}
         onCancel={() => setIsLeaveConfirmOpen(false)}
@@ -88,6 +89,7 @@ export function GroupCard({ group }: IGroupCardProps) {
         open={isLeaveConfirmOpen}
       />
       <ConfirmModal
+        title="Confirm delete"
         message="Are you sure, you want to delete this group?"
         onConfirm={() => deleteGroup(group?.id)}
         onCancel={() => setIsDeleteConfirmOpen(false)}

@@ -1,6 +1,7 @@
+import { Dispatch, SetStateAction } from 'react';
 import { IUser } from '../auth-provider/auth-provider.interface';
 import { IChat } from '../chat-provider/chat-provider.interface';
-import Client from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 
 export type TSendMessageFunction = (message: string, recordId: string) => void;
 
@@ -24,11 +25,17 @@ export interface IChatWindowContext {
   isSearchUsed: boolean;
   handleSearchToAdd: THandleSearchToAddFunction;
   isLoading: boolean;
+  sendError: Error | null;
+  loadingError: Error | null;
+  setSendError: Dispatch<SetStateAction<Error | null>>;
+  setLoadingError: Dispatch<SetStateAction<Error | null>>;
 }
 
-export interface IMessage extends Client {
+export interface IMessage extends RecordModel {
   id: string;
   users: IUser[] | null;
   content: string;
   timestamp: string;
+  author_id: string;
+  created: string;
 }

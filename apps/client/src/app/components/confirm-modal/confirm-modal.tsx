@@ -4,6 +4,7 @@ export interface IConfirmModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   onClose: (value: boolean) => void;
+  title: string;
   message: string;
   open: boolean;
 }
@@ -12,6 +13,7 @@ export function ConfirmModal({
   onConfirm,
   onCancel,
   onClose,
+  title,
   message = 'Do you want to proceed?',
   open,
 }: IConfirmModalProps) {
@@ -21,6 +23,7 @@ export function ConfirmModal({
   };
   return (
     <Modal
+      title={title}
       radius={15}
       onClose={() => onClose(!open)}
       opened={open}
@@ -28,8 +31,10 @@ export function ConfirmModal({
     >
       <Text mb={25}>{message}</Text>
       <Group position="apart">
+        <Button variant="default" onClick={() => onCancel()}>
+          Cancel
+        </Button>
         <Button onClick={() => handleConfirm()}>Confirm</Button>
-        <Button onClick={() => onCancel()}>Cancel</Button>
       </Group>
     </Modal>
   );

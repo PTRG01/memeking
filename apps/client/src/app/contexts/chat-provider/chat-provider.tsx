@@ -50,6 +50,7 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
   const { getFullList, result: chatListResult } = useChatList();
   const { createOne } = useChat(user?.id);
   const { getOne: getOneChat } = useChat();
+
   //  LOAD USER
 
   useEffect(() => {

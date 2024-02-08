@@ -1,17 +1,21 @@
-import { Alert, Notification, Text } from '@mantine/core';
+import { Alert, Text } from '@mantine/core';
 import { X } from 'tabler-icons-react';
 
 export interface IErrorMessageProps {
-  message: string;
+  error: Error;
+  onClose: () => void;
 }
 
-export function ErrorMessage({
-  message = 'Something went wrong',
-}: IErrorMessageProps) {
-  console.log(message);
+export function ErrorMessage({ error, onClose }: IErrorMessageProps) {
   return (
-    <Alert icon={<X size="1.1rem" />} color="red" radius={15}>
-      <Text color="red">{message}</Text>
+    <Alert
+      icon={<X size="1.1rem" />}
+      color="red"
+      radius={15}
+      onClose={() => onClose()}
+      withCloseButton
+    >
+      <Text color="red">{error?.message}</Text>
     </Alert>
   );
 }

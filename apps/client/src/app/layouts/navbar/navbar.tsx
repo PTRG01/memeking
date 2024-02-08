@@ -20,6 +20,7 @@ import GroupTabs from '../../components/groups/groups-tabs/group-tabs';
 import GroupSearch from '../../components/groups/group-search/group-search';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
+import ErrorMessage from '../../components/error-message/error-message';
 
 export function Navbar() {
   const { isLoggedIn } = useAuthContext();
@@ -28,7 +29,8 @@ export function Navbar() {
   const { user } = useAuthContext();
   const { t } = useTranslation();
 
-  const { groupListResult, isLoading } = useGroupContext();
+  const { groupListResult, isLoading, groupError, setGroupError } =
+    useGroupContext();
 
   const handleGroupItemClick = (groupId: string) => {
     navigate(`/groups/${groupId}`);
@@ -74,6 +76,12 @@ export function Navbar() {
                 >
                   {t('groups.createNewGroup')}
                 </Button>
+                {groupError && (
+                  <ErrorMessage
+                    error={groupError}
+                    onClose={() => setGroupError(null)}
+                  />
+                )}
                 <Divider />
                 <GroupList
                   isLoading={isLoading}

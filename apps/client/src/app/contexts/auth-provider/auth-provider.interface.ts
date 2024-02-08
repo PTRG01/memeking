@@ -1,5 +1,5 @@
 import { FileWithPath } from '@mantine/dropzone';
-import RecordModel from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 import Admin from 'pocketbase';
 
 export type TSignInFunction = (params: {

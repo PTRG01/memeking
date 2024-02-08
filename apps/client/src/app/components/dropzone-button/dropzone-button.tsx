@@ -18,12 +18,14 @@ export interface IDopzoneButtonProps {
   onSubmit: (images: FileWithPath[]) => void;
   isOpen: boolean;
   onOpen: (value: boolean) => void;
+  isLoading: boolean;
 }
 
 export function DropzoneButton({
   onSubmit,
   isOpen,
   onOpen,
+  isLoading,
 }: IDopzoneButtonProps) {
   const theme = useMantineTheme();
   const openRef = useRef<() => void>(null);
@@ -104,7 +106,13 @@ export function DropzoneButton({
             {t('dropzone.select')}
           </Button>
         </Group>
-        <Button fullWidth type="submit" onClick={() => handleSubmit()}>
+        <Button
+          fullWidth
+          type="submit"
+          onClick={() => handleSubmit()}
+          loading={isLoading}
+          disabled={isLoading}
+        >
           {t('groups.submitImage')}
         </Button>
       </div>

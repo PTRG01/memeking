@@ -1,6 +1,6 @@
 import Client from 'pocketbase';
 import { IUser } from '../auth-provider/auth-provider.interface';
-import RecordModel from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 
 export type THandleOpenChatToggleFunction = (id: string) => void;
 
@@ -18,6 +18,7 @@ export interface IChat extends RecordModel {
   avatar: string;
   lastMessage?: string;
   expand: RecordModel;
+  chatId: string;
 }
 
 export interface IChatContext {
