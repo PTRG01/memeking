@@ -1,4 +1,3 @@
-import Client from 'pocketbase';
 import { IUser } from '../auth-provider/auth-provider.interface';
 import { RecordModel } from 'pocketbase';
 
@@ -11,7 +10,7 @@ export type THandleSearchFuntion = (value: string) => void;
 export type TGetListFunction = (value: string) => void;
 export type THandleAddFollowingFunction = (id: string) => void;
 export type THandleRemoveFollowingFunction = (id: string) => void;
-
+export type THandleClearOpenChatsFunction = () => void;
 export interface IChat extends RecordModel {
   id: string;
   users: string[] | null;
@@ -36,4 +35,5 @@ export interface IChatContext {
   error: string | null;
   handleAddFollowing: THandleAddFollowingFunction;
   handleRemoveFollowing: THandleRemoveFollowingFunction;
+  handleClearOpenChats: THandleClearOpenChatsFunction;
 }

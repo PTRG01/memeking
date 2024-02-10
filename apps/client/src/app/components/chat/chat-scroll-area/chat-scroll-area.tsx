@@ -20,7 +20,6 @@ function ChatScrollArea({ error, onClearError }: IChatScrollAreaProps) {
       listRef.current.scrollIntoView({ behavior: 'instant', block: 'end' });
     }
   }, [messages]);
-  console.log(error);
   return (
     <LoaderComponent isLoading={false}>
       <ScrollArea px={20} mb={20} mt={20} h={300} viewportRef={viewport}>

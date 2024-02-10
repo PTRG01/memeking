@@ -11,6 +11,7 @@ import { useAuthContext } from '../auth-provider/auth-provider';
 import {
   IChat,
   IChatContext,
+  THandleClearOpenChatsFunction,
   THandleOpenChatToggleFunction,
 } from './chat-provider.interface';
 import { IChatState, chatReducer } from './chat-reducer';
@@ -111,7 +112,9 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
   const handleOpenChatToggle: THandleOpenChatToggleFunction = async (chat) => {
     dispatch({ type: 'UPDATE_OPEN_CHATS', payload: chat });
   };
-
+  const handleClearOpenChats: THandleClearOpenChatsFunction = () => {
+    dispatch({ type: 'CLEAR_OPEN_CHATS', payload: null });
+  };
   const createChatWithUser = async (otherUser: string) => {
     const newChatUsers = [user?.id, otherUser];
     const userChatsListUsers = userChatsList?.map((chat) => chat.users);
@@ -178,6 +181,7 @@ export function ChatProvider({ children }: React.PropsWithChildren) {
         userChatsList,
         createChatWithUser,
         handleOpenChatToggle,
+        handleClearOpenChats,
         openChats,
         loadChats,
         handleAddFollowing,

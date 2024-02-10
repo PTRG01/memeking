@@ -23,7 +23,8 @@ export type TChatActions =
   | { type: 'UPDATE_FOLLOWING'; payload: IUser | null }
   | { type: 'UPDATE_CHATS_LIST'; payload: IChat[] }
   | { type: 'UPDATE_CREATED_CHAT'; payload: IChat }
-  | { type: 'UPDATE_OPEN_CHATS'; payload: string };
+  | { type: 'UPDATE_OPEN_CHATS'; payload: string }
+  | { type: 'CLEAR_OPEN_CHATS'; payload: null };
 
 const Actions = {
   LOADING: 'LOADING',
@@ -35,6 +36,7 @@ const Actions = {
   UPDATE_CHATS_LIST: 'UPDATE_CHATS_LIST',
   UPDATE_CREATED_CHAT: 'UPDATE_CREATED_CHAT',
   UPDATE_OPEN_CHATS: 'UPDATE_OPEN_CHATS',
+  CLEAR_OPEN_CHATS: 'CLEAR_OPEN_CHATS',
   CLEAR_ERROR: 'CLEAR_ERROR',
   SIGNOUT: 'SIGNOUT',
 };
@@ -115,6 +117,11 @@ export const chatReducer = (
           ].flat() as IChat[],
         };
       }
+    case Actions.CLEAR_OPEN_CHATS:
+      return {
+        ...state,
+        openChats: [],
+      };
     case Actions.CLEAR_ERROR:
       return {
         ...state,
