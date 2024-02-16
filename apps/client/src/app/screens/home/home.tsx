@@ -1,7 +1,7 @@
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { FeedProvider } from '../../contexts/feed-provider/feed-provider';
 import Feed from '../feed/feed';
-import Signin from '../signin/signin';
+import HeroHeader from '../../components/header/hero-header';
 
 export function Home() {
   const { isLoggedIn } = useAuthContext();
@@ -10,7 +10,7 @@ export function Home() {
       <Feed groupFeed={false} />
     </FeedProvider>
   ) : (
-    <Signin />
+    <HeroHeader />
   );
 }
 

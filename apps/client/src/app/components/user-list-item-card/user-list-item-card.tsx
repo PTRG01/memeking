@@ -19,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { usePostContext } from '../../contexts/post-provider/post-provider';
 import { createImageUrl } from '../../utils/image-url';
 import { toUppercase } from '../../utils/uppercase';
+import ConfirmModal from '../confirm-modal/confirm-modal';
+import { useState } from 'react';
 
 export interface IUserListItemCardProps {
   user: IUser;
@@ -41,6 +43,7 @@ function UserListItemCard({
   const theme = useMantineTheme();
   const { t } = useTranslation();
   const { fullPostsList } = usePostContext();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const usersPosts = fullPostsList?.filter(
     (post) => post.author_id === user?.id
@@ -130,13 +133,20 @@ function UserListItemCard({
                   color={theme.colors.blue[5]}
                 />
               }
-              onClick={() => onRemoveUser(user?.id)}
+              onClick={() => setIsConfirmOpen(true)}
             >
               {t('profile.unfollow')}
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </Group>
+      <ConfirmModal
+        message="Are you sure, you want to unfollow this user?"
+        onConfirm={() => onRemoveUser(user?.id)}
+        onCancel={() => setIsConfirmOpen(false)}
+        onClose={setIsConfirmOpen}
+        open={isConfirmOpen}
+      />
     </Card>
   );
 }

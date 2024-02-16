@@ -1,5 +1,5 @@
 import { Container, Button, Box, Flex, Modal } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { useForm, hasLength } from '@mantine/form';
 import { IPost } from '../../../contexts/post-provider/post-provider.interface';
 import EmojiTextArea from '../../emoji-text-area/emoji-text-area';
 import { useCallback } from 'react';
@@ -33,8 +33,10 @@ export function PostForm({
     initialValues: formValues,
 
     validate: {
-      contentText: (value) =>
-        value.length < 10 ? 'Text must have at least 10 letters' : null,
+      contentText: hasLength(
+        { min: 10, max: 250 },
+        'Text must have between 10-250 characters'
+      ),
     },
   });
 
@@ -69,7 +71,9 @@ export function PostForm({
               radius="sm"
               withSendIcon={false}
               minRows={6}
+              maxRows={15}
               onSubmit={() => ''}
+              error={form.errors}
               {...form.getInputProps('contentText')}
             />
 

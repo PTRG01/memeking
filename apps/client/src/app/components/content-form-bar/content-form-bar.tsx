@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { createImageUrl } from '../../utils/image-url';
 
-/* eslint-disable-next-line */
 export interface IContentFormBarProps {
   onFormClick: () => void;
 }
@@ -21,7 +20,7 @@ export function ContentFormBar({ onFormClick }: IContentFormBarProps) {
   const { user } = useAuthContext();
   return (
     <Stack align="stretch">
-      <Paper radius={15} p={20}>
+      <Paper radius={15} p={20} mb={10}>
         <Group noWrap mb={15}>
           <UnstyledButton>
             <Avatar

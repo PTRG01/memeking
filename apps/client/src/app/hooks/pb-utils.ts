@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { pb } from '../utils/pocketbase';
-import { ListResult, Record, RecordService } from 'pocketbase';
+import { RecordModel } from 'pocketbase';
+import { ListResult, RecordService } from 'pocketbase';
 import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
 import { IComment } from '../contexts/comment-provider/comment-provider.interface';
 import { IGroup } from '../contexts/group-provider/group-provider.interface';
+import { notifications } from '@mantine/notifications';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
@@ -20,14 +22,14 @@ const postCollection = createPbCollection('posts');
 const commentCollection = createPbCollection('comments');
 const groupCollection = createPbCollection('groups');
 
-export const createSearchHook = <T extends Record>(
+export const createSearchHook = <T extends RecordModel>(
   collection: RecordService
 ) => {
   return () => {
     const [data, setData] = useState<ListResult<T> | T[] | null>(null);
     const [result, setResult] = useState<T[] | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState<Error | null>(null);
     const items = useMemo(
       () => (Array.isArray(data) ? data : data?.items || []),
       [data]
@@ -35,64 +37,141 @@ export const createSearchHook = <T extends Record>(
 
     const getList = useCallback(
       async ({ page = 1, perPage = 10, queryParams = {} }) => {
+        setError(null);
         setLoading(true);
-
-        const result = await collection.getList<T>(page, perPage, queryParams);
-        setData(result);
-        setResult(result.items);
-        setLoading(false);
+        try {
+          const result = await collection.getList<T>(
+            page,
+            perPage,
+            queryParams
+          );
+          setData(result);
+          setResult(result.items);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
+        } finally {
+          setLoading(false);
+        }
       },
       []
     );
 
     const getFullList = useCallback(async (queryParams = {}) => {
+      setError(null);
       setLoading(true);
-
-      const result = await collection.getFullList<T>(queryParams);
-      setData(result);
-      setResult(result);
-      setLoading(false);
+      try {
+        const result = await collection.getFullList<T>(queryParams);
+        setData(result);
+        setResult(result);
+      } catch (error) {
+        setError(
+          error instanceof Error ? error : new Error('An unknown error occured')
+        );
+        notifications.show({
+          title: 'Error',
+          message: (error as Error).message,
+          color: 'red',
+          withCloseButton: true,
+          onClose: () => setError(null),
+          autoClose: 5000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }, []);
 
     return useMemo(
       () => ({
         data,
         result,
+        error,
+        setError,
         loading,
         items,
         getList,
         getFullList,
       }),
-      [data, getFullList, getList, items, loading, result]
+      [data, getFullList, getList, items, loading, result, error]
     );
   };
 };
 
-export const createCRUDHook = <T extends Record>(collection: RecordService) => {
+export const createCRUDHook = <T extends RecordModel>(
+  collection: RecordService
+) => {
   return (id?: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
     const getOne = useCallback(
       async (query = {}, overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-
-        const result = (await collection.getOne(
-          (overrideId ? overrideId : id) as string,
-          query
-        )) as T;
-        setData(result);
-        setLoading(false);
+        setError(null);
+        try {
+          const result = (await collection.getOne(
+            (overrideId ? overrideId : id) as string,
+            query
+          )) as T;
+          setData(result);
+          return result;
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
 
     const createOne = useCallback(async (data: Partial<T>) => {
       setLoading(true);
-      const result = (await collection.create(data)) as T;
-      setData(result);
-      setLoading(false);
+      setError(null);
+      try {
+        const result = (await collection.create(data)) as T;
+        setData(result);
+        setLoading(false);
+        return result;
+      } catch (error) {
+        setError(
+          error instanceof Error ? error : new Error('An unknown error occured')
+        );
+        notifications.show({
+          title: 'Error',
+          message: (error as Error).message,
+          color: 'red',
+          withCloseButton: true,
+          onClose: () => setError(null),
+          autoClose: 5000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }, []);
 
     const updateImage = useCallback(
@@ -105,12 +184,30 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
           formData.append(key, data[key] as string | Blob);
         }
         setLoading(true);
-        const result = (await collection.update(
-          (overrideId ? overrideId : id) as string,
-          formData
-        )) as T;
-        setData(result);
-        setLoading(false);
+        setError(null);
+        try {
+          const result = (await collection.update(
+            (overrideId ? overrideId : id) as string,
+            formData
+          )) as T;
+          setData(result);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
@@ -120,14 +217,31 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
         if (!id && !overrideId) {
           throw new Error('No id provided');
         }
-
         setLoading(true);
-        const result = (await collection.update(
-          (overrideId ? overrideId : id) as string,
-          data
-        )) as T;
-        setData(result);
-        setLoading(false);
+        setError(null);
+        try {
+          const result = (await collection.update(
+            (overrideId ? overrideId : id) as string,
+            data
+          )) as T;
+          setData(result);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
@@ -136,15 +250,35 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
       async (overrideId?: string) => {
         if (!id && !overrideId) throw new Error('No id provided');
         setLoading(true);
-        await collection.delete((overrideId ? overrideId : id) as string);
-        setData(null);
-        setLoading(false);
+        setError(null);
+        try {
+          await collection.delete((overrideId ? overrideId : id) as string);
+          setData(null);
+        } catch (error) {
+          setError(
+            error instanceof Error
+              ? error
+              : new Error('An unknown error occured')
+          );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
+        } finally {
+          setLoading(false);
+        }
       },
       [id]
     );
 
     return {
       data,
+      error,
+      setError,
       loading,
       getOne,
       createOne,
@@ -155,17 +289,19 @@ export const createCRUDHook = <T extends Record>(collection: RecordService) => {
   };
 };
 
-const createSubscriptionHook = <T extends Record>(
+const createSubscriptionHook = <T extends RecordModel>(
   collection: RecordService
 ) => {
   return (id?: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
     const unsubscribe = useCallback(async () => {
       setLoading(true);
       await collection.unsubscribe(id);
       setData(null);
+      setError(null);
       setLoading(false);
     }, [id]);
 
@@ -173,6 +309,7 @@ const createSubscriptionHook = <T extends Record>(
       if (!id) return;
       collection.subscribe(id, (e) => {
         setData(e.record as T);
+        setError(null);
       });
 
       return () => {
@@ -180,7 +317,7 @@ const createSubscriptionHook = <T extends Record>(
       };
     }, [id, unsubscribe]);
 
-    return { data, loading, unsubscribe };
+    return { data, error, loading, unsubscribe };
   };
 };
 

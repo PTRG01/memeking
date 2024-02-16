@@ -1,21 +1,23 @@
 import { IUser } from '../auth-provider/auth-provider.interface';
-import { Record } from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 
 export type THandleOpenChatToggleFunction = (id: string) => void;
 
 export type TLoadChatsFunction = () => void;
-/* eslint-disable-next-line */
+
 export type TCreateChatWithUserFunction = (otherUser: string) => void;
 export type THandleSearchFuntion = (value: string) => void;
 export type TGetListFunction = (value: string) => void;
 export type THandleAddFollowingFunction = (id: string) => void;
 export type THandleRemoveFollowingFunction = (id: string) => void;
-
-export interface IChat extends Record {
+export type THandleClearOpenChatsFunction = () => void;
+export interface IChat extends RecordModel {
   id: string;
   users: string[] | null;
   avatar: string;
   lastMessage?: string;
+  expand: RecordModel;
+  chatId: string;
 }
 
 export interface IChatContext {
@@ -33,4 +35,5 @@ export interface IChatContext {
   error: string | null;
   handleAddFollowing: THandleAddFollowingFunction;
   handleRemoveFollowing: THandleRemoveFollowingFunction;
+  handleClearOpenChats: THandleClearOpenChatsFunction;
 }

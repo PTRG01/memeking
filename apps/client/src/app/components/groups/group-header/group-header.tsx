@@ -1,8 +1,10 @@
 import {
+  ActionIcon,
   Button,
+  Card,
   Divider,
+  Flex,
   Group,
-  Image,
   Menu,
   Modal,
   Paper,
@@ -14,6 +16,7 @@ import {
   DoorExit,
   Dots,
   Edit,
+  FileUpload,
   Plus,
   TriangleInverted,
   UserCheck,
@@ -27,8 +30,10 @@ import ContentFormBar from '../../content-form-bar/content-form-bar';
 import PostForm from '../../posts/post-form/post-form';
 import { IUser } from '../../../contexts/auth-provider/auth-provider.interface';
 import { useTranslation } from 'react-i18next';
-import { FileWithPath } from '@mantine/dropzone';
 import { createImageUrl } from '../../../utils/image-url';
+import { DropzoneButton } from '../../dropzone-button/dropzone-button';
+import ConfirmModal from '../../confirm-modal/confirm-modal';
+import ErrorMessage from '../../error-message/error-message';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -44,13 +49,20 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     leaveGroup,
     createGroupPost,
     isLoading,
+    postError,
+    setPostError,
+    groupError,
+    setGroupError,
   } = useGroupWindowContext();
-  const [isOpened, setIsOpened] = useState(false);
-  const [isFormOpen, setIsOpen] = useState(false);
+  const [isImageOpen, setIsImageOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const { t } = useTranslation();
 
   const handleToggleForm = useCallback(() => {
-    setIsOpen(!isFormOpen);
+    setIsFormOpen(!isFormOpen);
   }, [isFormOpen]);
 
   const handleCreatePost = useCallback(
@@ -64,14 +76,11 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     (aboutText: string | null) => {
       if (!aboutText) return;
       updateGroupDescription(aboutText);
-      setIsOpened(!isOpened);
+      setIsImageOpen(!isImageOpen);
     },
-    [isOpened, updateGroupDescription]
+    [isImageOpen, updateGroupDescription]
   );
-  const handleUpdateImage = (image: FileWithPath[]) => {
-    updateGroupImage(image);
-    setIsOpened(false);
-  };
+
   const currentUserJoined = useMemo(
     () => groupResult?.users.includes(user.id),
     [groupResult, user]
@@ -86,17 +95,45 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     <LoaderComponent isLoading={isLoading}>
       <>
         <Paper radius={15} mb={10}>
-          <Image
-            height={200}
-            radius={15}
-            mb={15}
-            withPlaceholder
-            src={
-              groupResult?.avatar &&
-              groupId &&
-              createImageUrl('groups', groupId, groupResult?.avatar)
-            }
-          />
+          <Card mb={15}>
+            <Card.Section
+              mih={200}
+              style={{
+                background: 'no-repeat',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundImage:
+                  groupResult?.avatar &&
+                  groupId &&
+                  `url(${createImageUrl(
+                    'groups',
+                    groupId,
+                    groupResult?.avatar
+                  )}`,
+              }}
+            >
+              <Flex h="100%" justify="flex-end" align="flex-end">
+                {currentUserJoined && isAdmin && (
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon variant="filled">
+                        <Dots />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        icon={<FileUpload />}
+                        onClick={() => setIsImageOpen(true)}
+                      >
+                        {t('profile.selectImage')}
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                )}
+              </Flex>
+            </Card.Section>
+          </Card>
+
           <Stack mah={500} px={15}>
             <Title>{groupResult?.title}</Title>
             <Text>
@@ -119,7 +156,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                   <Menu.Dropdown>
                     <Menu.Item
                       icon={<DoorExit size={15} />}
-                      onClick={() => leaveGroup()}
+                      onClick={() => setIsConfirmOpen(true)}
                     >
                       {t('groups.leave')}
                     </Menu.Item>
@@ -129,6 +166,8 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                 <Button
                   leftIcon={<Plus />}
                   onClick={() => joinGroup(groupResult?.users)}
+                  loading={isLoading}
+                  disabled={isLoading}
                 >
                   {t('groups.join')}
                 </Button>
@@ -143,7 +182,7 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
                   <Menu.Dropdown>
                     {isAdmin ? (
                       <Menu.Item
-                        onClick={() => setIsOpened(!isOpened)}
+                        onClick={() => setIsEditOpen(!isEditOpen)}
                         icon={<Edit size={15} />}
                       >
                         {t('groups.editGroup')}
@@ -157,11 +196,14 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
             </Group>
 
             <Divider mb={20} />
-            <Modal opened={isOpened} onClose={() => setIsOpened(!isOpened)}>
+            <Modal
+              opened={isEditOpen}
+              onClose={() => setIsEditOpen(!isEditOpen)}
+            >
               <GroupEditForm
                 group={groupResult}
                 onSubmitAbout={handleUpdateDescription}
-                onSubmitImage={handleUpdateImage}
+                isLoading={isLoading}
               />
             </Modal>
           </Stack>
@@ -169,11 +211,33 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
         {currentUserJoined ? (
           <ContentFormBar onFormClick={handleToggleForm} />
         ) : null}
+        <DropzoneButton
+          onSubmit={updateGroupImage}
+          isOpen={isImageOpen}
+          onOpen={setIsImageOpen}
+          isLoading={isLoading}
+        />
         <PostForm
           isOpen={isFormOpen}
           onCloseForm={handleToggleForm}
           onFormSubmit={handleCreatePost}
         />
+        <ConfirmModal
+          message="Are you sure, you want to leave this group?"
+          onConfirm={() => leaveGroup()}
+          onCancel={() => setIsConfirmOpen(false)}
+          onClose={setIsConfirmOpen}
+          open={isConfirmOpen}
+        />
+        {postError && (
+          <ErrorMessage error={postError} onClose={() => setPostError(null)} />
+        )}
+        {groupError && (
+          <ErrorMessage
+            error={groupError}
+            onClose={() => setGroupError(null)}
+          />
+        )}
       </>
     </LoaderComponent>
   );

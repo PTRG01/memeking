@@ -60,10 +60,12 @@ export function ChatWindowProvider({
     getFullList,
     result: messageDataResult,
     loading: isLoading,
+    error: loadingError,
+    setError: setLoadingError,
   } = useMessageList();
   const { updateOne } = useChat(chatId);
   const { user } = useAuthContext();
-  const { createOne } = useMessage();
+  const { createOne, error: sendError, setError: setSendError } = useMessage();
   const { getList, result: searchToAddResult } = useUserList();
 
   useEffect(() => {
@@ -164,6 +166,10 @@ export function ChatWindowProvider({
         isSearchUsed,
         handleSearchToAdd,
         isLoading,
+        sendError,
+        loadingError,
+        setSendError,
+        setLoadingError,
       }}
     >
       {children}

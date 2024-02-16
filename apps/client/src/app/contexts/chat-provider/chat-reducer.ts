@@ -22,7 +22,9 @@ export type TChatActions =
   | { type: 'UPDATE_SEARCH'; payload: IUser[] | null }
   | { type: 'UPDATE_FOLLOWING'; payload: IUser | null }
   | { type: 'UPDATE_CHATS_LIST'; payload: IChat[] }
-  | { type: 'UPDATE_OPEN_CHATS'; payload: string };
+  | { type: 'UPDATE_CREATED_CHAT'; payload: IChat }
+  | { type: 'UPDATE_OPEN_CHATS'; payload: string }
+  | { type: 'CLEAR_OPEN_CHATS'; payload: null };
 
 const Actions = {
   LOADING: 'LOADING',
@@ -32,7 +34,9 @@ const Actions = {
   CANCEL_SEARCH: 'CANCEL_SEARCH',
   UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
   UPDATE_CHATS_LIST: 'UPDATE_CHATS_LIST',
+  UPDATE_CREATED_CHAT: 'UPDATE_CREATED_CHAT',
   UPDATE_OPEN_CHATS: 'UPDATE_OPEN_CHATS',
+  CLEAR_OPEN_CHATS: 'CLEAR_OPEN_CHATS',
   CLEAR_ERROR: 'CLEAR_ERROR',
   SIGNOUT: 'SIGNOUT',
 };
@@ -78,9 +82,10 @@ export const chatReducer = (
       return {
         ...state,
         isLoading: false,
-        followingList: (action.payload as IUser)?.expand.followers?.map(
-          (user: IUser) => user
-        ),
+        followingList:
+          (action.payload as IUser)?.expand?.followers?.map(
+            (user: IUser) => user
+          ) || [],
       };
     case Actions.UPDATE_CHATS_LIST:
       return {
@@ -88,7 +93,11 @@ export const chatReducer = (
         isLoading: false,
         userChatsList: action.payload as IChat[],
       };
-
+    case Actions.UPDATE_CREATED_CHAT:
+      return {
+        ...state,
+        openChats: [...(state.openChats as IChat[]), action.payload] as IChat[],
+      };
     case Actions.UPDATE_OPEN_CHATS:
       if (state.openChats?.some((chat) => chat.id === action.payload)) {
         return {
@@ -108,6 +117,11 @@ export const chatReducer = (
           ].flat() as IChat[],
         };
       }
+    case Actions.CLEAR_OPEN_CHATS:
+      return {
+        ...state,
+        openChats: [],
+      };
     case Actions.CLEAR_ERROR:
       return {
         ...state,

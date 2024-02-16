@@ -1,8 +1,8 @@
-import { Record } from 'pocketbase';
+import { RecordModel } from 'pocketbase';
 
 export type TCreateCommentFuntction = (contentText: string) => void;
 
-export interface IComment extends Record {
+export interface IComment extends RecordModel {
   id: string;
   author_id: string;
   contentText: string;

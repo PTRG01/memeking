@@ -14,13 +14,14 @@ import { useNavigate } from 'react-router-dom';
 import { navigateData } from '../../../utils/navigate';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { createImageUrl } from '../../../utils/image-url';
 
 export interface IGroupSearchListItemProps {
   group: IGroup;
 }
 
 export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
-  const { joinGroup } = useGroupContext();
+  const { joinGroup, isLoading } = useGroupContext();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -32,7 +33,11 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
     <Paper p={15} mb={10} radius={15}>
       <Group position="apart" noWrap>
         <Group noWrap align="flex-start">
-          <Avatar size="lg" radius={10} />
+          <Avatar
+            size="lg"
+            radius={10}
+            src={group && createImageUrl('groups', group?.id, group?.avatar)}
+          />
 
           <Stack spacing={0}>
             <UnstyledButton
@@ -48,7 +53,13 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
             <Text>{group?.aboutText}</Text>
           </Stack>
         </Group>
-        <Button onClick={() => handleJoinGroup()}>{t('groups.join')}</Button>
+        <Button
+          onClick={() => handleJoinGroup()}
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          {t('groups.join')}
+        </Button>
       </Group>
     </Paper>
   );

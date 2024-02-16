@@ -30,6 +30,10 @@ export function ChatWindow() {
     sendMessage,
     isLoading,
     leaveChat,
+    sendError,
+    setSendError,
+    loadingError,
+    setLoadingError,
   } = useChatWindowContext();
   const [isOpened, setIsOpened] = useState(false);
 
@@ -37,7 +41,10 @@ export function ChatWindow() {
     () => currentChatUsers?.filter((chatUser) => chatUser.id !== user?.id)[0],
     [currentChatUsers, user]
   );
-
+  const handleClearError = () => {
+    setSendError(null);
+    setLoadingError(null);
+  };
   return isOpened ? (
     <Flex align="flex-end">
       <UnstyledButton onClick={() => setIsOpened(!isOpened)}>
@@ -75,7 +82,10 @@ export function ChatWindow() {
           </UnstyledButton>
         </Group>
       </Group>
-      <ChatScrollArea />
+      <ChatScrollArea
+        error={sendError || loadingError}
+        onClearError={handleClearError}
+      />
       <Flex align="center" justify="space-evenly" gap={1}>
         <Popover position="top" offset={25}>
           <Popover.Dropdown maw={300}>

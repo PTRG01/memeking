@@ -10,7 +10,7 @@ export function Profile() {
     useAuthContext();
   const { userPostsList } = usePostContext();
 
-  if (!user) return;
+  if (!user) return <div />;
   return (
     <Container>
       <Stack align="stretch" maw={1000}>

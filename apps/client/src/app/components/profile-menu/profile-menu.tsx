@@ -21,16 +21,22 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../utils/image-url';
+import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 
 export function ProfileMenu() {
   const { user } = useAuthContext();
   const { logout } = useAuthContext();
+  const { handleClearOpenChats } = useChatContext();
   const navigate = useNavigate();
   const theme = useMantineTheme();
   const { t } = useTranslation();
 
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
+  const handleLogout = () => {
+    logout();
+    handleClearOpenChats();
+  };
   return (
     <Menu
       width={260}
@@ -107,7 +113,7 @@ export function ProfileMenu() {
 
         <Menu.Item
           icon={<Logout style={{ width: rem(16), height: rem(16) }} />}
-          onClick={() => logout()}
+          onClick={() => handleLogout()}
         >
           {t('profileMenu.logout')}
         </Menu.Item>

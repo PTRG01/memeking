@@ -25,7 +25,13 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
     loading: isGroupSearchLoading,
   } = useGroupList();
 
-  const { createOne, deleteOne, updateOne } = useGroup();
+  const {
+    createOne,
+    deleteOne,
+    updateOne,
+    error: groupError,
+    setError: setGroupError,
+  } = useGroup();
   const [isSearching, setIsSearching] = useState(false);
   const loadGroups = useCallback(() => {
     getList({
@@ -102,6 +108,8 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
         deleteGroup,
         isGroupSearchLoading,
         isSearching,
+        groupError,
+        setGroupError,
       }}
     >
       {children}

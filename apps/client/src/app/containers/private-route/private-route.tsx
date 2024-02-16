@@ -19,7 +19,7 @@ export const PrivateRoute = ({
   if (isLoading) {
     return <Loader />;
   }
-  if (hasToBeAuth === isLoggedIn) return children ? children : <Outlet />;
+  if (hasToBeAuth === isLoggedIn) return children ? <>children</> : <Outlet />;
   else return <Navigate to={redirectPath} />;
 };
 

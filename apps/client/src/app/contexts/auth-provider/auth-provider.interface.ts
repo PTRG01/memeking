@@ -1,5 +1,6 @@
 import { FileWithPath } from '@mantine/dropzone';
-import { Record, Admin } from 'pocketbase';
+import { RecordModel } from 'pocketbase';
+import Admin from 'pocketbase';
 
 export type TSignInFunction = (params: {
   email: string;
@@ -18,7 +19,7 @@ export type TLogoutFunction = () => void;
 export type TUpdateUserAvatarFunction = (images: FileWithPath[]) => void;
 export type TUpdateUserBackgroundFunction = (images: FileWithPath[]) => void;
 
-export interface IUser extends Record {
+export interface IUser extends RecordModel {
   id: string;
   email: string;
   name: string;
@@ -26,9 +27,10 @@ export interface IUser extends Record {
   followers: string[];
   aboutText: string;
   backgroundImage: FileWithPath;
+  expand: IUser[];
 }
 export type TUseUpdateUser = (params: IUser) => Promise<void>;
-export type TUserModel = Record | Admin | null;
+export type TUserModel = RecordModel | Admin | null;
 
 export interface IAuthContext {
   signIn: TSignInFunction;
