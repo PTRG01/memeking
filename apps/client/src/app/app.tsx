@@ -11,9 +11,7 @@ import Footer from './layouts/footer/footer';
 import Home from './screens/home/home';
 import Signin from './screens/signin/signin';
 import Signup from './screens/signup/signup';
-import Groups from './screens/groups/groups';
 import Group from './screens/group/group';
-import Creator from './screens/creator/creator';
 import Create from './screens/create/create';
 import Games from './screens/games/games';
 import Game from './screens/game/game';
@@ -26,8 +24,8 @@ import UserGroupList from './components/groups/user-group-list/user-group-list';
 import GroupSearchList from './components/groups/group-search-list/group-search-list';
 import { FeedProvider } from './contexts/feed-provider/feed-provider';
 import Feed from './screens/feed/feed';
+import { Notifications } from '@mantine/notifications';
 
-/* eslint-disable-next-line */
 export function App() {
   return (
     <MantineProvider
@@ -35,6 +33,7 @@ export function App() {
       withGlobalStyles
       theme={{ colorScheme: 'dark' }}
     >
+      <Notifications />
       <AuthProvider>
         <ChatProvider>
           <PostProvider>

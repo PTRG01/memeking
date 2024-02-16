@@ -1,11 +1,18 @@
-import { TextInput, Button, Group, Center, PasswordInput } from '@mantine/core';
+import {
+  TextInput,
+  Button,
+  Group,
+  PasswordInput,
+  Stack,
+  Container,
+} from '@mantine/core';
 import { useForm, hasLength } from '@mantine/form/';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import PasswordStrenghtInput from '../../components/password-input/password-strength-input';
 
 export function Signup() {
-  const { signUp } = useAuthContext();
+  const { signUp, isLoading } = useAuthContext();
   const { t } = useTranslation();
 
   const form = useForm({
@@ -26,40 +33,56 @@ export function Signup() {
     },
   });
   return (
-    <Center>
-      <Group title="Sign Up">
+    <Container fluid maw={500}>
+      <Stack align="stretch">
         <form onSubmit={form.onSubmit((values) => signUp(values))}>
-          <TextInput
-            withAsterisk
-            label={t('signup.username')}
-            placeholder={t('signup.username')}
-            {...form.getInputProps('username')}
-          />
-          <TextInput
-            withAsterisk
-            label={t('signup.name')}
-            placeholder={t('signup.placeholderName')}
-            {...form.getInputProps('name')}
-          />
-          <TextInput
-            withAsterisk
-            label={t('signup.email')}
-            placeholder={t('signup.placeholderEmail')}
-            {...form.getInputProps('email')}
-          />
-          <PasswordStrenghtInput {...form.getInputProps('password')} />
-          <PasswordInput
-            withAsterisk
-            label={t('signup.confirm')}
-            {...form.getInputProps('passwordConfirm')}
-          />
+          <Stack>
+            <TextInput
+              mb={10}
+              size="md"
+              withAsterisk
+              disabled={isLoading}
+              label={t('signup.username')}
+              placeholder={t('signup.username')}
+              {...form.getInputProps('username')}
+            />
+            <TextInput
+              mb={10}
+              size="md"
+              withAsterisk
+              disabled={isLoading}
+              label={t('signup.name')}
+              placeholder={t('signup.placeholderName')}
+              {...form.getInputProps('name')}
+            />
+            <TextInput
+              mb={10}
+              size="md"
+              withAsterisk
+              disabled={isLoading}
+              label={t('signup.email')}
+              placeholder={t('signup.placeholderEmail')}
+              {...form.getInputProps('email')}
+            />
+            <PasswordStrenghtInput {...form.getInputProps('password')} />
+            <PasswordInput
+              mt={10}
+              size="md"
+              withAsterisk
+              disabled={isLoading}
+              label={t('signup.confirm')}
+              {...form.getInputProps('passwordConfirm')}
+            />
+          </Stack>
 
-          <Group position="right" mt="md">
-            <Button type="submit">{t('header.signup')}</Button>
+          <Group position="right" mt="lg">
+            <Button disabled={isLoading} loading={isLoading} type="submit">
+              {t('header.signup')}
+            </Button>
           </Group>
         </form>
-      </Group>
-    </Center>
+      </Stack>{' '}
+    </Container>
   );
 }
 

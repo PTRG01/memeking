@@ -11,6 +11,7 @@ import {
   TUpdateUserAvatarFunction,
 } from './auth-provider.interface';
 import { authReducer, IAuthState } from './auth-reducer';
+import { notifications } from '@mantine/notifications';
 
 const initialState: IAuthState = {
   user: null,
@@ -85,8 +86,16 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
       dispatch({ type: 'LOADING', payload: null });
 
       await pb.collection('users').authWithPassword(email, password);
-    } catch (e) {
-      dispatch({ type: 'AUTH_FAILURE', payload: (e as Error).message });
+    } catch (error) {
+      dispatch({ type: 'AUTH_FAILURE', payload: (error as Error).message });
+      notifications.show({
+        title: 'Error',
+        message: (error as Error).message,
+        color: 'red',
+        withCloseButton: true,
+        onClose: () => dispatch({ type: 'CLEAR_ERROR', payload: null }),
+        autoClose: 5000,
+      });
     }
     dispatch({ type: 'LOADING_STOP', payload: null });
   };

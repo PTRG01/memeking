@@ -21,9 +21,10 @@ import GroupSearch from '../../components/groups/group-search/group-search';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import ErrorMessage from '../../components/error-message/error-message';
+import LoaderComponent from '../../components/loader/loader';
 
 export function Navbar() {
-  const { isLoggedIn } = useAuthContext();
+  const { isLoggedIn, isAuthLoading } = useAuthContext();
   const navigate = useNavigate();
   const { followingList } = useChatContext();
   const { user } = useAuthContext();
@@ -35,9 +36,9 @@ export function Navbar() {
   const handleGroupItemClick = (groupId: string) => {
     navigate(`/groups/${groupId}`);
   };
-  if (!user) return;
-  return (
-    isLoggedIn && (
+  if (!user) return <div />;
+  return isLoggedIn ? (
+    <LoaderComponent isLoading={isAuthLoading}>
       <Stack>
         <Routes>
           <Route
@@ -110,7 +111,9 @@ export function Navbar() {
           ></Route>
         </Routes>
       </Stack>
-    )
+    </LoaderComponent>
+  ) : (
+    <></>
   );
 }
 

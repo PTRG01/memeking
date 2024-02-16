@@ -6,6 +6,7 @@ import { IUser } from '../contexts/auth-provider/auth-provider.interface';
 import { IPost } from '../contexts/post-provider/post-provider.interface';
 import { IComment } from '../contexts/comment-provider/comment-provider.interface';
 import { IGroup } from '../contexts/group-provider/group-provider.interface';
+import { notifications } from '@mantine/notifications';
 
 const createPbCollection = (collectionName: string) =>
   pb.collection(collectionName);
@@ -52,6 +53,14 @@ export const createSearchHook = <T extends RecordModel>(
               ? error
               : new Error('An unknown error occured')
           );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
         } finally {
           setLoading(false);
         }
@@ -70,6 +79,14 @@ export const createSearchHook = <T extends RecordModel>(
         setError(
           error instanceof Error ? error : new Error('An unknown error occured')
         );
+        notifications.show({
+          title: 'Error',
+          message: (error as Error).message,
+          color: 'red',
+          withCloseButton: true,
+          onClose: () => setError(null),
+          autoClose: 5000,
+        });
       } finally {
         setLoading(false);
       }
@@ -117,6 +134,14 @@ export const createCRUDHook = <T extends RecordModel>(
               ? error
               : new Error('An unknown error occured')
           );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
         } finally {
           setLoading(false);
         }
@@ -136,6 +161,14 @@ export const createCRUDHook = <T extends RecordModel>(
         setError(
           error instanceof Error ? error : new Error('An unknown error occured')
         );
+        notifications.show({
+          title: 'Error',
+          message: (error as Error).message,
+          color: 'red',
+          withCloseButton: true,
+          onClose: () => setError(null),
+          autoClose: 5000,
+        });
       } finally {
         setLoading(false);
       }
@@ -164,6 +197,14 @@ export const createCRUDHook = <T extends RecordModel>(
               ? error
               : new Error('An unknown error occured')
           );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
         } finally {
           setLoading(false);
         }
@@ -190,6 +231,14 @@ export const createCRUDHook = <T extends RecordModel>(
               ? error
               : new Error('An unknown error occured')
           );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
         } finally {
           setLoading(false);
         }
@@ -211,6 +260,14 @@ export const createCRUDHook = <T extends RecordModel>(
               ? error
               : new Error('An unknown error occured')
           );
+          notifications.show({
+            title: 'Error',
+            message: (error as Error).message,
+            color: 'red',
+            withCloseButton: true,
+            onClose: () => setError(null),
+            autoClose: 5000,
+          });
         } finally {
           setLoading(false);
         }

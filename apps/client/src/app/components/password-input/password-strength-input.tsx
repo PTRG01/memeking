@@ -89,6 +89,7 @@ export function PasswordStrenghtInput({
   return (
     <div>
       <PasswordInput
+        size="md"
         value={value}
         onChange={onChange}
         placeholder={t('signup.password')}
