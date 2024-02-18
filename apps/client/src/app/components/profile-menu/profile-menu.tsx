@@ -22,6 +22,7 @@ import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../utils/image-url';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
+import { navigateData } from '../../utils/navigate';
 
 export function ProfileMenu() {
   const { user } = useAuthContext();
@@ -76,7 +77,7 @@ export function ProfileMenu() {
               }
             />
           }
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate(`${navigateData.profile}/${user?.id}`)}
         >
           <Title order={4}>{user?.name}</Title>
         </Menu.Item>
@@ -87,7 +88,7 @@ export function ProfileMenu() {
               color={theme.colors.yellow[6]}
             />
           }
-          onClick={() => navigate('/profile/memes')}
+          onClick={() => navigate(`${navigateData.profileMemes}/${user?.id}`)}
         >
           {t('profileMenu.yourMemes')}
         </Menu.Item>
@@ -98,7 +99,7 @@ export function ProfileMenu() {
               color={theme.colors.blue[6]}
             />
           }
-          onClick={() => navigate('/profile/posts')}
+          onClick={() => navigate(`${navigateData.profilePosts}/${user?.id}`)}
         >
           {t('profileMenu.yourPosts')}
         </Menu.Item>
@@ -106,7 +107,9 @@ export function ProfileMenu() {
         <Menu.Label> {t('profileMenu.settings')}</Menu.Label>
         <Menu.Item
           icon={<Settings style={{ width: rem(16), height: rem(16) }} />}
-          onClick={() => navigate('/profile/settings')}
+          onClick={() =>
+            navigate(`${navigateData.profileSettings}/${user?.id}`)
+          }
         >
           {t('profileMenu.accSettings')}
         </Menu.Item>

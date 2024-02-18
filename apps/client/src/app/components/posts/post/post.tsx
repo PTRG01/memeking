@@ -8,6 +8,8 @@ import {
   Stack,
   Text,
   Title,
+  rem,
+  useMantineTheme,
 } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import VoteBar from '../../vote-bar/vote-bar';
@@ -22,6 +24,9 @@ import { useAuthContext } from '../../../contexts/auth-provider/auth-provider';
 import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../../utils/image-url';
 import ConfirmModal from '../../confirm-modal/confirm-modal';
+import { User } from 'tabler-icons-react';
+import { navigateData } from '../../../utils/navigate';
+import { useNavigate } from 'react-router-dom';
 
 export interface IPostProps {
   post: IPost;
@@ -37,9 +42,10 @@ export function Post({ post, groups }: IPostProps) {
   const { commentListResult, isLoading } = useCommentContext();
   const [commentsOpen, setCommentsOpen] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   const isAdmin = useMemo(() => post?.author_id === user?.id, [post, user]);
-
   const currentGroup = useMemo(
     () => groups?.find((group) => group?.id === post.group_id),
     [groups, post]
@@ -95,7 +101,19 @@ export function Post({ post, groups }: IPostProps) {
                   </Menu.Item>
                 </>
               ) : (
-                <Menu.Item> {t('posts.editingNot')}</Menu.Item>
+                <Menu.Item
+                  icon={
+                    <User
+                      style={{ width: rem(16), height: rem(16) }}
+                      color={theme.colors.blue[5]}
+                    />
+                  }
+                  onClick={() =>
+                    navigate(`${navigateData.profile}/${post?.author_id}`)
+                  }
+                >
+                  {t('profile.viewProfile')}
+                </Menu.Item>
               )}
             </Menu.Dropdown>
           </Menu>
@@ -122,6 +140,7 @@ export function Post({ post, groups }: IPostProps) {
           onFormSubmit={handleEditPost}
         />
         <ConfirmModal
+          title="Confirm"
           message="Are you sure, you want to delete this post?"
           onConfirm={() => deletePost(post?.id)}
           onCancel={() => setIsDeleteConfirmOpen(false)}

@@ -14,25 +14,29 @@ import ProfileSettings from '../profile-settings/profile-settings';
 
 export interface ProfileTabsProps {
   user: IUser;
-  userPostsList: IPost[];
+  profilePostsList: IPost[] | null;
+  profileFollowingList: IUser[] | null;
+  isLoading: boolean;
+  isCurrentUser: boolean;
 }
 
-export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
+export function ProfileTabs({
+  user,
+  profilePostsList,
+  profileFollowingList,
+  isLoading,
+  isCurrentUser,
+}: ProfileTabsProps) {
   const { profileTab } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
-    followingList,
-    handleAddFollowing,
     handleRemoveFollowing,
     userChatsList,
     createChatWithUser,
     handleOpenChatToggle,
-    isLoading,
   } = useChatContext();
-  // const currentUsersPostsList = userPostsList?.filter(
-  //   (post) => post?.author_Id === user?.id
-  // );
+
   const handleItemClick = useCallback(
     (id: string) => {
       //  Function compares chats users ids with current chat users ids, if true it opens matching chat, if not creates new chat with provided user
@@ -58,7 +62,7 @@ export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
         <Tabs.Tab
           value="memes"
           icon={<Photo size="0.8rem" />}
-          onClick={() => navigate(navigateData.profileMemes)}
+          onClick={() => navigate(`${navigateData.profileMemes}/${user?.id}`)}
         >
           {t('profile.memes')}
         </Tabs.Tab>
@@ -66,57 +70,67 @@ export function ProfileTabs({ user, userPostsList }: ProfileTabsProps) {
         <Tabs.Tab
           value="posts"
           icon={<MessageCircle size="0.8rem" />}
-          onClick={() => navigate(navigateData.profilePosts)}
+          onClick={() => navigate(`${navigateData.profilePosts}/${user?.id}`)}
         >
           {t('profile.posts')}
         </Tabs.Tab>
         <Tabs.Tab
           value="following"
           icon={<Friends size="0.8rem" />}
-          onClick={() => navigate(navigateData.profileFollowing)}
+          onClick={() =>
+            navigate(`${navigateData.profileFollowing}/${user?.id}`)
+          }
         >
           {t('profile.following')}
         </Tabs.Tab>
-        <Tabs.Tab
-          value="settings"
-          icon={<Settings size="0.8rem" />}
-          onClick={() => navigate(navigateData.profileSettings)}
-        >
-          {t('profile.settings')}
-        </Tabs.Tab>
+        {isCurrentUser && (
+          <Tabs.Tab
+            value="settings"
+            icon={<Settings size="0.8rem" />}
+            onClick={() =>
+              navigate(`${navigateData.profileSettings}/${user?.id}`)
+            }
+          >
+            {t('profile.settings')}
+          </Tabs.Tab>
+        )}
       </Tabs.List>
       <Tabs.Panel value="memes" pt="xs">
         <Text>""</Text>
       </Tabs.Panel>
       <Tabs.Panel value="posts" pt="xs">
-        <PostList postList={userPostsList} isLoading={isLoading} />
+        {profilePostsList && (
+          <PostList postList={profilePostsList} isLoading={isLoading} />
+        )}
       </Tabs.Panel>
       <Tabs.Panel value="following" pt="xs">
         <ScrollArea>
           <SimpleGrid cols={3} variant="hover">
-            <UserList
-              listItem={(item, values) => (
-                <UserListItemCard
-                  user={item}
-                  values={values}
-                  onAddUser={handleAddFollowing}
-                  onRemoveUser={handleRemoveFollowing}
-                  handleItemClick={handleItemClick}
-                  itemActive={false}
-                  isLoading={isLoading}
-                />
-              )}
-              userList={followingList}
-              currentList={followingList}
-              isLoading={isLoading}
-              hideExisting={false}
-            />
+            {profileFollowingList && (
+              <UserList
+                listItem={(item, values) => (
+                  <UserListItemCard
+                    user={item}
+                    onRemoveUser={handleRemoveFollowing}
+                    handleItemClick={handleItemClick}
+                    isLoading={isLoading}
+                    isCurrentUser={isCurrentUser}
+                  />
+                )}
+                userList={profileFollowingList}
+                currentList={profileFollowingList}
+                isLoading={isLoading}
+                hideExisting={false}
+              />
+            )}
           </SimpleGrid>
         </ScrollArea>
       </Tabs.Panel>
-      <Tabs.Panel value="settings" pt="xs">
-        <ProfileSettings user={user} />
-      </Tabs.Panel>
+      {isCurrentUser && (
+        <Tabs.Panel value="settings" pt="xs">
+          <ProfileSettings user={user} />
+        </Tabs.Panel>
+      )}
     </Tabs>
   );
 }

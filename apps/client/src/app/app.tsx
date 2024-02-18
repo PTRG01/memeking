@@ -83,9 +83,9 @@ export function App() {
                       <Route path="/create/:createId" element={<Create />} />
                       <Route path="/games" element={<Games />} />
                       <Route path="/games/:gameId" element={<Game />} />
-                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/profile/:userId" element={<Profile />} />
                       <Route
-                        path="/profile/:profileTab"
+                        path="/profile/:profileTab/:userId"
                         element={<Profile />}
                       />
 

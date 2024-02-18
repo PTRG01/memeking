@@ -33,7 +33,6 @@ import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../../utils/image-url';
 import { DropzoneButton } from '../../dropzone-button/dropzone-button';
 import ConfirmModal from '../../confirm-modal/confirm-modal';
-import ErrorMessage from '../../error-message/error-message';
 
 export interface IGroupHeaderProps {
   groupId: string;
@@ -49,10 +48,6 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
     leaveGroup,
     createGroupPost,
     isLoading,
-    postError,
-    setPostError,
-    groupError,
-    setGroupError,
   } = useGroupWindowContext();
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -223,21 +218,13 @@ export function GroupHeader({ groupId, user }: IGroupHeaderProps) {
           onFormSubmit={handleCreatePost}
         />
         <ConfirmModal
+          title={'Confirm'}
           message="Are you sure, you want to leave this group?"
           onConfirm={() => leaveGroup()}
           onCancel={() => setIsConfirmOpen(false)}
           onClose={setIsConfirmOpen}
           open={isConfirmOpen}
         />
-        {postError && (
-          <ErrorMessage error={postError} onClose={() => setPostError(null)} />
-        )}
-        {groupError && (
-          <ErrorMessage
-            error={groupError}
-            onClose={() => setGroupError(null)}
-          />
-        )}
       </>
     </LoaderComponent>
   );

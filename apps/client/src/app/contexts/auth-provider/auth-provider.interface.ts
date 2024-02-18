@@ -27,7 +27,6 @@ export interface IUser extends RecordModel {
   followers: string[];
   aboutText: string;
   backgroundImage: FileWithPath;
-  expand: IUser[];
 }
 export type TUseUpdateUser = (params: IUser) => Promise<void>;
 export type TUserModel = RecordModel | Admin | null;
