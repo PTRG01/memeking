@@ -27,8 +27,6 @@ export function GroupWindowProvider({
     getOne,
     data: groupResult,
     loading: isLoading,
-    error: groupError,
-    setError: setGroupError,
   } = useGroup(groupId);
 
   const {
@@ -37,11 +35,7 @@ export function GroupWindowProvider({
     loading: isPostsLoading,
   } = usePostList();
 
-  const {
-    createOne: createOnePost,
-    error: postError,
-    setError: setPostError,
-  } = usePost();
+  const { createOne: createOnePost } = usePost();
 
   const loadGroup = useCallback(() => {
     if (!groupId) return;
@@ -139,10 +133,6 @@ export function GroupWindowProvider({
         createGroupPost,
         updateGroupImage,
         updateGroupDescription,
-        postError,
-        setPostError,
-        groupError,
-        setGroupError,
       }}
     >
       {children}

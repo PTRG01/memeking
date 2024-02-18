@@ -10,11 +10,13 @@ import { TUpdateChatFunction } from '../../contexts/chat-window-provider/chat-wi
 import { THandleAddFollowingFunction } from '../../contexts/chat-provider/chat-provider.interface';
 import { IUser } from '../../contexts/auth-provider/auth-provider.interface';
 import { useCallback, useState } from 'react';
-import { CirclePlus, Dots, Loader, X } from 'tabler-icons-react';
+import { CirclePlus, Dots, Loader, User, X } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
 import { createImageUrl } from '../../utils/image-url';
 import { toUppercase } from '../../utils/uppercase';
 import ConfirmModal from '../confirm-modal/confirm-modal';
+import { useNavigate } from 'react-router-dom';
+import { navigateData } from '../../utils/navigate';
 
 export interface IUserListItemInlineProps {
   user: IUser;
@@ -37,6 +39,7 @@ function UserListItemInline({
   const theme = useMantineTheme();
   const { t } = useTranslation();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const navigate = useNavigate();
   const handleValues = useCallback(() => {
     if (values?.includes(user.id)) {
       onRemoveUser(user.id);
@@ -87,6 +90,17 @@ function UserListItemInline({
             <Menu.Dropdown>
               <Menu.Item
                 icon={
+                  <User
+                    style={{ width: rem(16), height: rem(16) }}
+                    color={theme.colors.blue[5]}
+                  />
+                }
+                onClick={() => navigate(`${navigateData.profile}/${user?.id}`)}
+              >
+                {t('profile.viewProfile')}
+              </Menu.Item>
+              <Menu.Item
+                icon={
                   <X
                     style={{ width: rem(16), height: rem(16) }}
                     color={theme.colors.blue[5]}
@@ -112,6 +126,7 @@ function UserListItemInline({
         )}
       </Button.Group>
       <ConfirmModal
+        title={'Confirm'}
         message="Are you sure, you want to unfollow this user?"
         onConfirm={() => onRemoveUser(user?.id)}
         onCancel={() => setIsConfirmOpen(false)}

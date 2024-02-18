@@ -1,7 +1,6 @@
 import { IPost } from '../post-provider/post-provider.interface';
 import { IGroup } from '../group-provider/group-provider.interface';
 import { FileWithPath } from '@mantine/dropzone';
-import { Dispatch, SetStateAction } from 'react';
 
 export type TCreateGroupPostFunction = (
   contentText: string,
@@ -25,8 +24,4 @@ export interface IGroupWindowContext {
   createGroupPost: TCreateGroupPostFunction;
   updateGroupImage: TUpdateGroupImageFunction;
   updateGroupDescription: TUpdateGroupDescriptionFunction;
-  postError: Error | null;
-  setPostError: Dispatch<SetStateAction<Error | null>>;
-  groupError: Error | null;
-  setGroupError: Dispatch<SetStateAction<Error | null>>;
 }

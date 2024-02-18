@@ -98,6 +98,7 @@ export default {
       posts: 'Posts',
       sendMessage: 'Send message',
       unfollow: 'Unfollow',
+      follow: 'Follow',
       settings: 'Settings',
       submit: 'Submit',
       selectImage: 'Select image',
@@ -107,6 +108,7 @@ export default {
       updatePassword: 'Update your password:',
       nameReq: 'Name must be at lest 2 characters long',
       aboutReq: 'Description must be between 5 and 50 characters.',
+      viewProfile: 'View profile',
     },
     languages: {
       currentLang: 'English',

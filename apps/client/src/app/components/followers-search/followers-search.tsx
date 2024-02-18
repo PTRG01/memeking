@@ -4,6 +4,7 @@ import UserList from '../user-list/user-list';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
 import UserListItemInline from '../user-list-item-inline/user-list-item-inline';
 import LoaderComponent from '../loader/loader';
+import { useNavigate } from 'react-router-dom';
 
 export function FollowersSearch() {
   const {
@@ -17,6 +18,7 @@ export function FollowersSearch() {
     isSearchLoading,
   } = useChatContext();
 
+  const navigate = useNavigate();
   return (
     <Flex>
       <UserSearch handleSearch={handleSearch}>
@@ -33,6 +35,7 @@ export function FollowersSearch() {
                     values={values}
                     onAddUser={handleAddFollowing}
                     onRemoveUser={handleRemoveFollowing}
+                    onItemClick={() => navigate(`profile/${item?.id}`)}
                     itemActive={false}
                     isLoading={isUserLoading}
                   />
