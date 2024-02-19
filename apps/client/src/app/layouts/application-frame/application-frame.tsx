@@ -10,6 +10,7 @@ import {
   Group,
   useMantineTheme,
 } from '@mantine/core';
+import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 
 export interface ApplicationFrameProps extends React.PropsWithChildren {
   navbar?: JSX.Element;
@@ -27,8 +28,10 @@ export const ApplicationFrame = ({
 }: ApplicationFrameProps) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  const { isAppHidden } = useAuthContext();
   return (
     <AppShell
+      hidden={isAppHidden}
       styles={{
         main: {
           background:
@@ -44,8 +47,8 @@ export const ApplicationFrame = ({
           <Navbar
             p="sm"
             hiddenBreakpoint="sm"
-            hidden={!opened}
             width={{ sm: 200, lg: 300 }}
+            hidden={isAppHidden}
           >
             {navbar}
           </Navbar>
@@ -54,7 +57,12 @@ export const ApplicationFrame = ({
       aside={
         sidebar && (
           <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-            <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+            <Aside
+              hidden={isAppHidden}
+              p="md"
+              hiddenBreakpoint="sm"
+              width={{ sm: 200, lg: 300 }}
+            >
               {sidebar}
             </Aside>
           </MediaQuery>

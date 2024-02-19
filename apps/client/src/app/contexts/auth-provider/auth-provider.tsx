@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer, useState } from 'react';
 import { pb } from '../../utils/pocketbase';
 import { useUser, useUserSubscription } from '../../hooks/pb-utils';
 import {
@@ -23,6 +23,8 @@ const initialState: IAuthState = {
 export const AuthContext = React.createContext<IAuthContext | null>(null);
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
+  const [isAppHidden, setIsAppHidden] = useState(false);
+
   const [{ user, isLoading, isLoggedIn }, dispatch] = useReducer(
     authReducer,
     initialState
@@ -97,12 +99,14 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         autoClose: 5000,
       });
     }
+    setIsAppHidden(false);
     dispatch({ type: 'LOADING_STOP', payload: null });
   };
 
   const logout: TLogoutFunction = async () => {
     pb.authStore.clear();
     dispatch({ type: 'SIGNOUT', payload: null });
+    setIsAppHidden(true);
   };
 
   const updateUserAvatar: TUpdateUserAvatarFunction = (image) => {
@@ -129,6 +133,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         updateCurrentUser: updateOne,
         updateUserAvatar,
         updateUserBackground,
+        isAppHidden,
       }}
     >
       {children}

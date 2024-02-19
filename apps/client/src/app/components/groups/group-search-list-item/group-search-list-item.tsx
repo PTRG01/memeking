@@ -30,7 +30,7 @@ export function GroupSearchListItem({ group }: IGroupSearchListItemProps) {
     navigate(`/groups/${group?.id}`);
   }, [group, joinGroup, navigate]);
   return (
-    <Paper p={15} mb={10} radius={15}>
+    <Paper p={15} mb={10} radius={15} maw={1000}>
       <Group position="apart" noWrap>
         <Group noWrap align="flex-start">
           <Avatar

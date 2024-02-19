@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useGroup, useGroupList } from '../../hooks/pb-utils';
 import { useAuthContext } from '../auth-provider/auth-provider';
 import { pb } from '../../utils/pocketbase';
-import { IGroupContext } from './group-provider.interface';
+import { IGroup, IGroupContext } from './group-provider.interface';
 
 /* eslint-disable-next-line */
 export interface IGroupProviderProps {
@@ -13,6 +13,9 @@ export interface IGroupProviderProps {
 export const GroupContext = React.createContext<IGroupContext | null>(null);
 
 export function GroupProvider({ children, parentId }: IGroupProviderProps) {
+  const [groupSearchListResult, setGroupSearchListResult] = useState<
+    IGroup[] | null
+  >(null);
   const { user } = useAuthContext();
   const {
     getList,
@@ -21,17 +24,11 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
   } = useGroupList();
   const {
     getList: getGroupSearchList,
-    result: groupSearchListResult,
+    result: groupSearchList,
     loading: isGroupSearchLoading,
   } = useGroupList();
 
-  const {
-    createOne,
-    deleteOne,
-    updateOne,
-    error: groupError,
-    setError: setGroupError,
-  } = useGroup();
+  const { createOne, deleteOne, updateOne } = useGroup();
   const [isSearching, setIsSearching] = useState(false);
   const loadGroups = useCallback(() => {
     getList({
@@ -69,9 +66,14 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
           queryParams: { filter: `title~"${value}"` },
         });
       } else setIsSearching(false);
+      setGroupSearchListResult(null);
     },
     [getGroupSearchList]
   );
+  useEffect(() => {
+    if (groupSearchList) setGroupSearchListResult(groupSearchList);
+  }, [groupSearchList]);
+
   const joinGroup = (users: string[], groupId: string) => {
     if (!users || !user) return;
     updateOne(
@@ -80,6 +82,7 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
       },
       groupId
     );
+    setGroupSearchListResult(null);
   };
 
   const leaveGroup = (groupId: string, users: string[]) => {
@@ -108,8 +111,6 @@ export function GroupProvider({ children, parentId }: IGroupProviderProps) {
         deleteGroup,
         isGroupSearchLoading,
         isSearching,
-        groupError,
-        setGroupError,
       }}
     >
       {children}

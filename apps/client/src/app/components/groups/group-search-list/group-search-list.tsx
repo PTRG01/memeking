@@ -1,4 +1,4 @@
-import { ScrollArea, Stack } from '@mantine/core';
+import { Container, ScrollArea, Stack } from '@mantine/core';
 import { useGroupContext } from '../../../contexts/group-provider/group-provider';
 import GroupSearchListItem from '../group-search-list-item/group-search-list-item';
 import LoaderComponent from '../../loader/loader';
@@ -16,16 +16,18 @@ export function GroupSearchList() {
   );
 
   return (
-    <LoaderComponent isLoading={isGroupSearchLoading}>
+    <Container>
       <Stack align="stretch">
-        <ScrollArea>
-          {isSearching &&
-            notJoinedGroups?.map((group) => (
-              <GroupSearchListItem key={group.id} group={group} />
-            ))}
-        </ScrollArea>
+        <LoaderComponent isLoading={isGroupSearchLoading}>
+          <ScrollArea>
+            {isSearching &&
+              notJoinedGroups?.map((group) => (
+                <GroupSearchListItem key={group.id} group={group} />
+              ))}
+          </ScrollArea>
+        </LoaderComponent>
       </Stack>
-    </LoaderComponent>
+    </Container>
   );
 }
 
