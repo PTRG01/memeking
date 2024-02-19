@@ -22,7 +22,7 @@ function ChatScrollArea({ error, onClearError }: IChatScrollAreaProps) {
   }, [messages]);
   return (
     <LoaderComponent isLoading={false}>
-      <ScrollArea px={20} mb={20} mt={20} h={300} viewportRef={viewport}>
+      <ScrollArea px={20} mb={10} mt={5} h={300} viewportRef={viewport}>
         {messages?.map((message) => (
           <Message
             content={message?.content}

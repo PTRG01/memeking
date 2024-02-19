@@ -9,6 +9,7 @@ import {
   Title,
   Divider,
   Text,
+  Popover,
 } from '@mantine/core';
 import { Cards, Plus, Social } from 'tabler-icons-react';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +21,6 @@ import GroupTabs from '../../components/groups/groups-tabs/group-tabs';
 import GroupSearch from '../../components/groups/group-search/group-search';
 import { useAuthContext } from '../../contexts/auth-provider/auth-provider';
 import { useChatContext } from '../../contexts/chat-provider/chat-provider';
-import ErrorMessage from '../../components/error-message/error-message';
 import LoaderComponent from '../../components/loader/loader';
 
 export function Navbar() {
@@ -30,8 +30,7 @@ export function Navbar() {
   const { user } = useAuthContext();
   const { t } = useTranslation();
 
-  const { groupListResult, isLoading, groupError, setGroupError } =
-    useGroupContext();
+  const { groupListResult, isLoading } = useGroupContext();
 
   const handleGroupItemClick = (groupId: string) => {
     navigate(`/groups/${groupId}`);
@@ -70,6 +69,24 @@ export function Navbar() {
               <Stack align="stretch">
                 <Title size="h2">{t('nav.groups')}</Title>
                 <GroupSearch user={user} />
+                <Popover width={200} position="bottom" withArrow shadow="md">
+                  <Popover.Target>
+                    <Button variant="subtle" color="red">
+                      Click here for groups list!
+                    </Button>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Text size="sm">
+                      Adventure Seekers, Tech Innovators, Culinary Connoisseurs,
+                      Fitness Fanatics, Bookworms Society, Artistic Minds, Green
+                      Thumbs Collective, Movie Buffs Club, Travel Explorers,
+                      Gaming Guild, Pet Lovers United, Photography Enthusiasts,
+                      Music Maestros, DIY Crafts Crew, Science Explorers,
+                      Fashion Forward, Health and Wellness Warriors, Language
+                      Exchange Hub, Environmental Champions, Parenting Circle,
+                    </Text>
+                  </Popover.Dropdown>
+                </Popover>
                 <GroupTabs />
                 <Button
                   onClick={() => navigate('/groups/create')}
@@ -77,12 +94,6 @@ export function Navbar() {
                 >
                   {t('groups.createNewGroup')}
                 </Button>
-                {groupError && (
-                  <ErrorMessage
-                    error={groupError}
-                    onClose={() => setGroupError(null)}
-                  />
-                )}
                 <Divider />
                 <GroupList
                   isLoading={isLoading}
@@ -113,7 +124,7 @@ export function Navbar() {
       </Stack>
     </LoaderComponent>
   ) : (
-    <></>
+    <div />
   );
 }
 

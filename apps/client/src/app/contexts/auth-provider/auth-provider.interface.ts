@@ -45,4 +45,5 @@ export interface IAuthContext {
   ) => Promise<void>;
   updateUserAvatar: TUpdateUserAvatarFunction;
   updateUserBackground: TUpdateUserBackgroundFunction;
+  isAppHidden: boolean;
 }

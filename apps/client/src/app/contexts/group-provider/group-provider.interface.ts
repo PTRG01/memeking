@@ -1,6 +1,5 @@
 import { FileWithPath } from '@mantine/dropzone';
 import { RecordModel } from 'pocketbase';
-import { Dispatch, SetStateAction } from 'react';
 
 export type TCreateGroupFunction = (title: string, users: string[]) => void;
 export type TCreateGroupPostFunction = (
@@ -33,6 +32,4 @@ export interface IGroupContext {
   deleteGroup: TDeleteGroupFunction;
   isGroupSearchLoading: boolean;
   isSearching: boolean;
-  groupError: Error | null;
-  setGroupError: Dispatch<SetStateAction<Error | null>>;
 }

@@ -17,8 +17,8 @@ export function GroupList({
   isLoading,
 }: GroupListProps) {
   return (
-    <LoaderComponent isLoading={isLoading}>
-      <Stack align="stretch">
+    <Stack align="stretch">
+      <LoaderComponent isLoading={isLoading}>
         <ScrollArea type="hover" mah={500} maw={300}>
           {groupList?.map((group) => (
             <GroupProvider key={group.id} parentId={group.id}>
@@ -31,8 +31,8 @@ export function GroupList({
             </GroupProvider>
           ))}
         </ScrollArea>
-      </Stack>
-    </LoaderComponent>
+      </LoaderComponent>
+    </Stack>
   );
 }
 
