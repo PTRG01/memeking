@@ -11,6 +11,7 @@ import {
   Box,
   Collapse,
   Center,
+  BackgroundImage,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import Signin from '../../screens/signin/signin';
@@ -32,12 +33,15 @@ export function HeroHeader() {
     setIsSigninOpened(false);
   };
   return (
-    <Stack align="stretch" justify="space-between" mah={500}>
-      <AspectRatio
-        ratio={isSigninOpened || isSignupOpened === true ? 16 / 10 : 16 / 8}
-        mah={1100}
-      >
-        <Overlay color="#000" opacity={0.65} zIndex={1} blur={30}>
+    <Overlay
+      style={{
+        background: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundImage: `url(https://cdn.pixabay.com/photo/2021/02/24/20/53/abstract-6047465_1280.jpg`,
+      }}
+    >
+      <Overlay color="#000" opacity={0.65} zIndex={1} blur={30}>
+        <Center>
           <Stack align="stretch" p={100} justify="space-between">
             <Title
               size={50}
@@ -77,8 +81,8 @@ export function HeroHeader() {
                 {t('header.signup')}
               </Button>
             </Group>
-            <Collapse in={isSigninOpened}>
-              <Center mb={15}>
+            <Collapse in={isSigninOpened} mt={30}>
+              <Center mb={30}>
                 <Stack>
                   <Text color="red">
                     Preview mode, for testing purposes use following data:
@@ -87,20 +91,15 @@ export function HeroHeader() {
                   <Text color="red">password: !Password1</Text>
                 </Stack>
               </Center>
-
               <Signin />
             </Collapse>
-            <Collapse in={isSignupOpened}>
+            <Collapse in={isSignupOpened} mt={30}>
               <Signup />
             </Collapse>
           </Stack>
-        </Overlay>
-        <Image
-          src="https://cdn.pixabay.com/photo/2021/02/24/20/53/abstract-6047465_1280.jpg"
-          radius={15}
-        />
-      </AspectRatio>
-    </Stack>
+        </Center>
+      </Overlay>
+    </Overlay>
   );
 }
 

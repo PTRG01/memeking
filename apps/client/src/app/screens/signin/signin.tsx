@@ -12,7 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 export function Signin() {
-  const { signIn, isAuthLoading, isLoggedIn } = useAuthContext();
+  const { signIn, isAuthLoading, isLoggedIn, setIsAppHidden } =
+    useAuthContext();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const form = useForm({
@@ -28,6 +29,7 @@ export function Signin() {
   const handleSignin = () => {
     signIn(form.values);
     if (isLoggedIn) navigate('/feed');
+    if (isLoggedIn && !isAuthLoading) setIsAppHidden(false);
   };
 
   return (

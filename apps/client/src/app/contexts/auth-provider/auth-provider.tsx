@@ -43,10 +43,12 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         type: 'AUTH_SUCCESS',
         payload: pb.authStore.model as IUser,
       });
+      setIsAppHidden(false);
     });
 
     return () => {
       unregister();
+      setIsAppHidden(true);
     };
   }, []);
 
@@ -63,6 +65,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         // @ts-ignore
         if ((e as Error).status === 401) {
           logout();
+          setIsAppHidden(true);
         }
       }
     };
@@ -99,7 +102,6 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         autoClose: 5000,
       });
     }
-    setIsAppHidden(false);
     dispatch({ type: 'LOADING_STOP', payload: null });
   };
 
@@ -134,6 +136,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         updateUserAvatar,
         updateUserBackground,
         isAppHidden,
+        setIsAppHidden,
       }}
     >
       {children}
