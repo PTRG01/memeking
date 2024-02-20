@@ -6,12 +6,8 @@ import {
   Title,
   Group,
   Stack,
-  Image,
-  AspectRatio,
-  Box,
   Collapse,
   Center,
-  BackgroundImage,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import Signin from '../../screens/signin/signin';
