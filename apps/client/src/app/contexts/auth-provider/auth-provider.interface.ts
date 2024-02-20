@@ -1,6 +1,7 @@
 import { FileWithPath } from '@mantine/dropzone';
 import { RecordModel } from 'pocketbase';
 import Admin from 'pocketbase';
+import { Dispatch, SetStateAction } from 'react';
 
 export type TSignInFunction = (params: {
   email: string;
@@ -46,4 +47,5 @@ export interface IAuthContext {
   updateUserAvatar: TUpdateUserAvatarFunction;
   updateUserBackground: TUpdateUserBackgroundFunction;
   isAppHidden: boolean;
+  setIsAppHidden: Dispatch<SetStateAction<boolean>>;
 }
